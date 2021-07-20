@@ -1,0 +1,19 @@
+{
+  "remoteServiceBaseUrl": "http://localhost:21021",
+  "appBaseUrl": "http://localhost:5500",
+  "enableNormalLogin": true,
+  "localeMappings": [
+    {
+      "from": "pt-BR",
+      "to": "pt"
+    },
+    {
+      "from": "zh-CN",
+      "to": "zh"
+    },
+    {
+      "from": "he-IL",
+      "to": "he"
+    }
+  ]
+}
