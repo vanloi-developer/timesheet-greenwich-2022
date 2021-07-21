@@ -1,6 +1,8 @@
 import { Router } from 'express';
 import testRouter from "./TestRouter";
+import authLoginRouter from "./AuthLoginRouter";
 import bodyParser = require('body-parser');
+import cors = require('cors')
 
 class MasterRouter {
   private _router = Router();
@@ -16,6 +18,15 @@ class MasterRouter {
 
   private configure() {
     // define onfigurations
+    this._router.use(cors());
+
+    this._router.use(bodyParser.json()); // to support JSON-encoded bodies
+    this._router.use(
+      bodyParser.urlencoded({
+        // to support URL-encoded bodies
+        extended: true
+      })
+    );
   }
 
   /**
@@ -23,6 +34,7 @@ class MasterRouter {
    */
   private initMasterRouter() {
     this._router.use("/test", testRouter);
+    this._router.use("/services/app", authLoginRouter);
   }
 }
 
