@@ -1,30 +1,25 @@
-import { Router } from 'express';
-import testRouter from "./TestRouter";
 import authLoginRouter from "./AuthLoginRouter";
-import bodyParser = require('body-parser');
-import cors = require('cors')
+import { BaseRouter } from "./BaseRouter";
+import testRouter from "./TestRouter";
+import bodyParser = require("body-parser");
+import cors = require("cors");
 
-class MasterRouter {
-  private _router = Router();
-
-  get router() {
-    return this._router;
-  }
-
+class MasterRouter extends BaseRouter {
   constructor() {
+    super();
     this.configure();
-    this.initMasterRouter();
+    this.init();
   }
 
   private configure() {
     // define onfigurations
-    this._router.use(cors());
+    this.router.use(cors());
 
-    this._router.use(bodyParser.json()); // to support JSON-encoded bodies
-    this._router.use(
+    this.router.use(bodyParser.json()); // to support JSON-encoded bodies
+    this.router.use(
       bodyParser.urlencoded({
         // to support URL-encoded bodies
-        extended: true
+        extended: true,
       })
     );
   }
@@ -32,9 +27,9 @@ class MasterRouter {
   /**
    * Connect routes to their matching routers.
    */
-  private initMasterRouter() {
-    this._router.use("/test", testRouter);
-    this._router.use("/services/app", authLoginRouter);
+   protected init() {
+    this.router.use("/test", testRouter);
+    this.router.use("/services/app", authLoginRouter);
   }
 }
 

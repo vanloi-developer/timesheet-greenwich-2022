@@ -2,35 +2,32 @@
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-const express_1 = require("express");
-const TestRouter_1 = __importDefault(require("./TestRouter"));
 const AuthLoginRouter_1 = __importDefault(require("./AuthLoginRouter"));
+const BaseRouter_1 = require("./BaseRouter");
+const TestRouter_1 = __importDefault(require("./TestRouter"));
 const bodyParser = require("body-parser");
 const cors = require("cors");
-class MasterRouter {
+class MasterRouter extends BaseRouter_1.BaseRouter {
     constructor() {
-        this._router = express_1.Router();
+        super();
         this.configure();
-        this.initMasterRouter();
-    }
-    get router() {
-        return this._router;
+        this.init();
     }
     configure() {
         // define onfigurations
-        this._router.use(cors());
-        this._router.use(bodyParser.json()); // to support JSON-encoded bodies
-        this._router.use(bodyParser.urlencoded({
+        this.router.use(cors());
+        this.router.use(bodyParser.json()); // to support JSON-encoded bodies
+        this.router.use(bodyParser.urlencoded({
             // to support URL-encoded bodies
-            extended: true
+            extended: true,
         }));
     }
     /**
      * Connect routes to their matching routers.
      */
-    initMasterRouter() {
-        this._router.use("/test", TestRouter_1.default);
-        this._router.use("/services/app", AuthLoginRouter_1.default);
+    init() {
+        this.router.use("/test", TestRouter_1.default);
+        this.router.use("/services/app", AuthLoginRouter_1.default);
     }
 }
 module.exports = new MasterRouter().router;

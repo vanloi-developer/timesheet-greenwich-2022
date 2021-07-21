@@ -1,5 +1,5 @@
 "use strict";
-const express_1 = require("express");
+const BaseRouter_1 = require("./BaseRouter");
 const fakeData = {
     result: {
         application: {
@@ -19,19 +19,16 @@ const fakeData = {
 /**
  * @description AuthLoginRouter
  */
-class AuthLoginRouter {
+class AuthLoginRouter extends BaseRouter_1.BaseRouter {
     constructor() {
-        this._router = express_1.Router();
+        super();
         this.init();
-    }
-    get router() {
-        return this._router;
     }
     /**
      * Connect routes to their matching controller endpoints.
      */
     init() {
-        this._router.get("/Session/GetCurrentLoginInformations", (req, res, next) => {
+        this.router.get("/Session/GetCurrentLoginInformations", (req, res, next) => {
             res.status(200).json(fakeData);
         });
     }

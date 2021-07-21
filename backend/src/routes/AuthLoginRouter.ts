@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response, Router } from "express";
 import fs = require("fs");
+import { BaseRouter } from "./BaseRouter";
 
 const fakeData = {
   result: {
@@ -21,22 +22,19 @@ const fakeData = {
 /**
  * @description AuthLoginRouter
  */
-class AuthLoginRouter {
-  private _router = Router();
+class AuthLoginRouter extends BaseRouter{
 
-  get router() {
-    return this._router;
-  }
 
   constructor() {
+    super();
     this.init();
   }
 
   /**
    * Connect routes to their matching controller endpoints.
    */
-  private init() {
-    this._router.get(
+  protected init() {
+    this.router.get(
       "/Session/GetCurrentLoginInformations",
       (req: Request, res: Response, next: NextFunction) => {
         res.status(200).json(fakeData);
