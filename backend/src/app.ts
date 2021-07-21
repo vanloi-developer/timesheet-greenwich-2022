@@ -1,9 +1,13 @@
-import { Server } from "./server";
+import { Server } from "./Server";
+import dotenv from "dotenv";
 
 /**
  * Application class.
  * @description Handle init config and components.
  */
+ dotenv.config({
+  path: ".env",
+});
 
 export class Application {
   server: Server;
@@ -21,6 +25,7 @@ export class Application {
       this.server.app.listen(port, () =>
         console.log(`> Listening on port ${port}`)
       );
+      this.server.app.use('/api', this.server.router);
     })();
   }
 }

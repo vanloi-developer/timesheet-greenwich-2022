@@ -1,5 +1,5 @@
 import express from 'express';
-import MasterRoute from './routes/master-route';
+import MasterRoute from './routes/MasterRoute';
 /**
  * Express server application class.
  * @description Will later contain the routing system.
