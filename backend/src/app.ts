@@ -1,4 +1,6 @@
 import Server from "./Server";
+import MongooseConnection from "./dataAccess";
+
 import config from "./configs/app";
 
 import Logger from "./app/Providers/winston";
@@ -19,9 +21,13 @@ class Application implements IApplication {
     this._server = new Server();
   }
 
+  async accessDatabase() {
+    await MongooseConnection.connect();
+  }
+
   start() {
     ((port = config.APP_PORT || 5007) => {
-      this._server._app.listen(port, () => {        
+      this._server._app.listen(port, () => {
         Logger.logger.info(`Server is running at ${config.APP_HOST}:${port}`);
       });
 

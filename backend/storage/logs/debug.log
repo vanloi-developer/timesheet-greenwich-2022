@@ -29,3 +29,9 @@
 17-08-2021 10:31:50:3150 [32minfo[39m: [32mServer is running at localhost:5000[39m
 17-08-2021 10:32:00:320 [32minfo[39m: [32mServer is running at localhost:5000[39m
 17-08-2021 10:32:17:3217 [32minfo[39m: [32mServer is running at localhost:5000[39m
+17-08-2021 11:16:52:1652 [32minfo[39m: [32mServer is running at localhost:5000[39m
+17-08-2021 11:16:52:1652 [35mdebug[39m: [35mFailed to connecting to the database, error: MongoParseError: Invalid connection string[39m
+17-08-2021 11:18:01:181 [32minfo[39m: [32mServer is running at localhost:5000[39m
+17-08-2021 11:18:02:182 [32minfo[39m: [32mSuccessfully connected to the database[39m
+17-08-2021 11:27:03:273 [32minfo[39m: [32mServer is running at localhost:5000[39m
+17-08-2021 11:27:03:273 [32minfo[39m: [32mSuccessfully connected to the database[39m
