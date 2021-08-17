@@ -1,10 +1,10 @@
-import express from 'express';
+import express, { Application } from 'express';
 import MasterRouter from './routes/MasterRouter';
-/**
- * Express server application class.
- * @description Will later contain the routing system.
- */
-export class Server {
-  public app = express();
-  public router = MasterRouter;
+
+class Server {
+  public _app: Application = express();
+  public _routes = MasterRouter;
 }
+
+Object.seal(Server);
+export = Server;

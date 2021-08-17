@@ -1,31 +1,34 @@
-import { Server } from "./Server";
-import dotenv from "dotenv";
+import Server from "./Server";
+import config from "./configs/app";
+
+import Logger from "./app/Providers/winston";
 
 /**
  * Application class.
  * @description Handle init config and components.
  */
- dotenv.config({
-  path: ".env",
-});
 
-export class Application {
-  server: Server;
+interface IApplication {
+  _server: Server;
+}
 
-  init() {
-    this.initServer();
-  }
+class Application implements IApplication {
+  _server: Server;
 
-  private initServer() {
-    this.server = new Server();
+  constructor() {
+    this._server = new Server();
   }
 
   start() {
-    ((port = process.env.APP_PORT || 5000) => {
-      this.server.app.listen(port, () =>
-        console.log(`> Listening on port ${port}`)
-      );
-      this.server.app.use('/api', this.server.router);
+    ((port = config.APP_PORT || 5007) => {
+      this._server._app.listen(port, () => {        
+        Logger.logger.info(`Server is running at ${config.APP_HOST}:${port}`);
+      });
+
+      this._server._app.use("/api", this._server._routes);
     })();
   }
 }
+
+Object.seal(Application);
+export = Application;

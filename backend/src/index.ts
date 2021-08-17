@@ -1,11 +1,7 @@
-import { Application } from "./app";
+import Application from "./app";
 
-// load the environment variables from the .env file
-
-function bootstrap() {
-  const application = new Application();
-  application.init();
-  application.start();
+function start(_app: Application) {
+  _app.start();
 }
 
-bootstrap();
+start(new Application());
