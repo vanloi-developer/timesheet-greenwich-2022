@@ -1,39 +1,14 @@
-17-08-2021 10:05:21:521 [32minfo[39m: [32mServer is running at undefined:5007[39m
-17-08-2021 10:05:27:527 [32minfo[39m: [32mServer is running at undefined:5007[39m
-17-08-2021 10:18:02:182 [32minfo[39m: [32mServer is running at undefined:5007[39m
-17-08-2021 10:18:06:186 [32minfo[39m: [32mServer is running at undefined:5007[39m
-17-08-2021 10:18:19:1819 [32minfo[39m: [32mServer is running at undefined:5007[39m
-17-08-2021 10:19:24:1924 [32minfo[39m: [32mServer is running at undefined:5007[39m
-17-08-2021 10:19:41:1941 [32minfo[39m: [32mServer is running at undefined:5007[39m
-17-08-2021 10:20:05:205 [32minfo[39m: [32mServer is running at undefined:5007[39m
-17-08-2021 10:20:24:2024 [32minfo[39m: [32mServer is running at undefined:5007[39m
-17-08-2021 10:20:56:2056 [32minfo[39m: [32mServer is running at undefined:5007[39m
-17-08-2021 10:21:27:2127 [32minfo[39m: [32mServer is running at undefined:5007[39m
-17-08-2021 10:22:44:2244 [32minfo[39m: [32mServer is running at undefined:5007[39m
-17-08-2021 10:22:48:2248 [32minfo[39m: [32mServer is running at undefined:5007[39m
-17-08-2021 10:23:08:238 [32minfo[39m: [32mServer is running at undefined:5007[39m
-17-08-2021 10:24:45:2445 [32minfo[39m: [32mServer is running at undefined:5007[39m
-17-08-2021 10:25:07:257 [32minfo[39m: [32mServer is running at undefined:5007[39m
-17-08-2021 10:25:12:2512 [32minfo[39m: [32mServer is running at undefined:5000[39m
-17-08-2021 10:25:27:2527 [32minfo[39m: [32mServer is running at undefined:5000[39m
-17-08-2021 10:27:40:2740 [32minfo[39m: [32mServer is running at undefined:5000[39m
-17-08-2021 10:27:51:2751 [32minfo[39m: [32mServer is running at undefined:5000[39m
-17-08-2021 10:28:09:289 [32minfo[39m: [32mServer is running at undefined:5000[39m
-17-08-2021 10:28:41:2841 [32minfo[39m: [32mServer is running at undefined:5000[39m
-17-08-2021 10:28:52:2852 [32minfo[39m: [32mServer is running at undefined:5000[39m
-17-08-2021 10:29:34:2934 [32minfo[39m: [32mServer is running at undefined:5000[39m
-17-08-2021 10:29:42:2942 [32minfo[39m: [32mServer is running at undefined:5000[39m
-17-08-2021 10:30:11:3011 [32minfo[39m: [32mServer is running at localhost:5000[39m
-17-08-2021 10:30:27:3027 [32minfo[39m: [32mServer is running at localhost:5000[39m
-17-08-2021 10:30:32:3032 [32minfo[39m: [32mServer is running at localhost:5000[39m
-17-08-2021 10:31:50:3150 [32minfo[39m: [32mServer is running at localhost:5000[39m
-17-08-2021 10:32:00:320 [32minfo[39m: [32mServer is running at localhost:5000[39m
-17-08-2021 10:32:17:3217 [32minfo[39m: [32mServer is running at localhost:5000[39m
-17-08-2021 11:16:52:1652 [32minfo[39m: [32mServer is running at localhost:5000[39m
-17-08-2021 11:16:52:1652 [35mdebug[39m: [35mFailed to connecting to the database, error: MongoParseError: Invalid connection string[39m
-17-08-2021 11:18:01:181 [32minfo[39m: [32mServer is running at localhost:5000[39m
-17-08-2021 11:18:02:182 [32minfo[39m: [32mSuccessfully connected to the database[39m
-17-08-2021 11:27:03:273 [32minfo[39m: [32mServer is running at localhost:5000[39m
-17-08-2021 11:27:03:273 [32minfo[39m: [32mSuccessfully connected to the database[39m
-17-08-2021 11:28:38:2838 [32minfo[39m: [32mServer is running at localhost:5000[39m
-17-08-2021 11:28:38:2838 [32minfo[39m: [32mSuccessfully connected to the database[39m
+17-08-2021 11:58:30:5830 [37mhttp[39m: [37m[0mPOST /api/TokenAuth/Authenticate [32m200[0m 1.355 ms - 191[0m[39m
+[37m[39m
+17-08-2021 11:59:26:5926 [32minfo[39m: [32mServer is running at localhost:5000[39m
+17-08-2021 11:59:26:5926 [32minfo[39m: [32mSuccessfully connected to the database[39m
+17-08-2021 11:59:54:5954 [32minfo[39m: [32mServer is running at localhost:5000[39m
+17-08-2021 11:59:54:5954 [32minfo[39m: [32mSuccessfully connected to the database[39m
+17-08-2021 12:00:07:07 [37mhttp[39m: [37m[0mPOST /api/TokenAuth/Authenticate [32m200[0m 5.818 ms - 191[0m[39m
+[37m[39m
+17-08-2021 12:00:25:025 [32minfo[39m: [32mServer is running at localhost:5000[39m
+17-08-2021 12:00:25:025 [32minfo[39m: [32mSuccessfully connected to the database[39m
+17-08-2021 12:37:06:376 [32minfo[39m: [32mServer is running at localhost:5000[39m
+17-08-2021 12:37:06:376 [32minfo[39m: [32mSuccessfully connected to the database[39m
+17-08-2021 13:27:54:2754 [32minfo[39m: [32mServer is running at localhost:5000[39m
+17-08-2021 13:27:54:2754 [32minfo[39m: [32mSuccessfully connected to the database[39m

@@ -1,36 +1,44 @@
-import authLoginRouter from "./AuthLoginRouter";
-import { BaseRouter } from "./BaseRouter";
-import testRouter from "./TestRouter";
-import bodyParser = require("body-parser");
-import cors = require("cors");
+import AuthRouter from "./AuthRouter";
+import BaseRouter from "./BaseRouter";
+
+import { json, urlencoded } from "express";
+import cors from "cors";
+import morgan from "morgan";
+import Logger from "../app/Providers/winston";
 
 class MasterRouter extends BaseRouter {
   constructor() {
     super();
-    this.configure();
+
+    this.initializeMiddleware();
+
+    this.initializeRouting();
+  }
+
+  protected initializeMiddleware() {
+    this.router.use(json());
+
+    this.router.use(urlencoded({ extended: true }));
+
+    this.router.use(cors());
+
+    this.router.use(morgan('dev', { stream: Logger.stream }));
+
+    // this.router.use(HandleException.handleError);
+
+  }
+
+  protected initializeRouting() {
     this.init();
   }
 
-  private configure() {
-    // define onfigurations
-    this.router.use(cors());
-
-    this.router.use(bodyParser.json()); // to support JSON-encoded bodies
-    this.router.use(
-      bodyParser.urlencoded({
-        // to support URL-encoded bodies
-        extended: true,
-      })
-    );
-  }
-
-  /**
-   * Connect routes to their matching routers.
-   */
-   protected init() {
-    this.router.use("/test", testRouter);
-    this.router.use("/services/app", authLoginRouter);
+  protected init() {
+    //this.router.use(`/services/app/user`, UserRouter);
+    //this.router.use('/services/app/session', SessionRouter);
+    this.router.use('/TokenAuth', AuthRouter);
   }
 }
+
+Object.seal(MasterRouter);
 
 export = new MasterRouter().router;

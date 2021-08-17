@@ -1,12 +1,14 @@
 import { Router } from "express";
-import bodyParser = require("body-parser");
 
-export abstract class BaseRouter {
-  private _router = Router();
+abstract class BaseRouter {
+  private _router: Router = Router();
 
-  get router() {
+  get router(): Router {
     return this._router;
   }
 
-  protected abstract init();
+  protected abstract init(): void;
 }
+
+Object.seal(BaseRouter);
+export = BaseRouter;
