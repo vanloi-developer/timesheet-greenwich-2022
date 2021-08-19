@@ -3,7 +3,7 @@ import MongooseConnection from "./dataAccess";
 
 import config from "./configs/app";
 
-import Logger from "./app/Providers/winston";
+import _ from "./app/Providers/winston";
 
 /**
  * Application class.
@@ -27,9 +27,11 @@ class Application implements IApplication {
 
   start() {
     ((port = config.APP_PORT || 5007) => {
-      this._server._app.listen(port, () => {
-        Logger.logger.info(`Server is running at ${config.APP_HOST}:${port}`);
-      });
+      this._server._app
+        .listen(port, () => {
+          _.logger.info(`Running server at port: ${port}`);
+        })
+        .on("error", (e) => _.logger.error(e));
 
       this._server._app.use("/api", this._server._routes);
     })();

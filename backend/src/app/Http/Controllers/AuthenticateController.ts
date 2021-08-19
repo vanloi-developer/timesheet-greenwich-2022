@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import AuthenticateBusiness from "../../Business/Authenticate";
 
+
 class AuthenticateController {
   private _business = new AuthenticateBusiness();
 
@@ -13,9 +14,9 @@ class AuthenticateController {
   ) => {
     try {
       const response = await this._business.authenticate(req.body);
-      res.status(200).json(response);
+    //  if (response) return new ResponseJson(`Passing authentication`).json(res);
     } catch (error) {
-      res.send(error).status(401);
+      //return new AuthenticateFailureResponse(`Errorrrrrr`).json(res);
     }
   };
 }

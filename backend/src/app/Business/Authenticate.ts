@@ -1,5 +1,6 @@
 import { AuthenticateRequest } from "../Http/Requests/AuthenticateRequest";
 
+
 interface IBusiness {}
 
 class AuthenticateBusiness implements IBusiness {
@@ -19,7 +20,7 @@ class AuthenticateBusiness implements IBusiness {
         },
       };
 
-      return await response;
+      return response
     } catch (error) {
       throw new Error(`Forbidden !`);
     }
