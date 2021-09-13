@@ -1,8 +1,6 @@
-class HttpError extends Error {
-    constructor(public status: number, message: string) {
-      super();
+export class HttpError extends Error {
+    constructor(public code: number,message: string) {
+      super(message);
     }
   }
   
-  Object.seal(HttpError)
-  export = HttpError

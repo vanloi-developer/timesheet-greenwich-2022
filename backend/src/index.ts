@@ -1,8 +1,10 @@
 import Application from "./app";
 
-function start(_app: Application) {
-  _app.start();
-  _app.accessDatabase();
-}
+(async function bootstrap(app: Application) {
+  app.initializeMiddleware();
+  app.init();
 
-start(new Application());
+  await app.connectDatabase();
+
+  //app.initializeErrorHandling();
+})(new Application());

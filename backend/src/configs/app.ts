@@ -1,10 +1,10 @@
 import dotenv from "dotenv";
 dotenv.config({
-  path: `.env`,
+  path: ".env",
 });
 
-export = {
-  APP_HOST: process.env.APP_HOST,
-  APP_PORT: process.env.APP_PORT,
+export const APP = {
   NODE_ENV: process.env.NODE_ENV,
+  PORT: process.env.APP_PORT,
+  HOST: process.env.APP_HOST,
 };

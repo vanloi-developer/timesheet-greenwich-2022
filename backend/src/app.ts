@@ -1,40 +1,45 @@
-import Server from "./Server";
-import MongooseConnection from "./dataAccess";
+import express from "express";
+import morgan from "morgan";
+import cors from "cors";
 
-import config from "./configs/app";
+import { APP } from "./configs";
 
-import _ from "./app/Providers/winston";
+import ApiRouter from "./routes/ApiRouter";
 
-/**
- * Application class.
- * @description Handle init config and components.
- */
+import { DataAccess } from "./dataAccess";
 
-interface IApplication {
-  _server: Server;
-}
+import { handleError, handleNotFoundPage } from "./app/exceptions";
 
-class Application implements IApplication {
-  _server: Server;
+class Application {
+  public readonly application: express.Application;
 
   constructor() {
-    this._server = new Server();
+    this.application = express();
   }
 
-  async accessDatabase() {
-    await MongooseConnection.connect();
+  public initializeMiddleware() {
+    this.application.use(express.json());
+    this.application.use(express.urlencoded({ extended: false }));
+    this.application.use(morgan("tiny"));
+    this.application.use(cors());
   }
 
-  start() {
-    ((port = config.APP_PORT || 5007) => {
-      this._server._app
-        .listen(port, () => {
-          _.logger.info(`Running server at port: ${port}`);
-        })
-        .on("error", (e) => _.logger.error(e));
+  public async connectDatabase() {
+    await DataAccess.connect();
+  }
 
-      this._server._app.use("/api", this._server._routes);
-    })();
+  public initializeErrorHandling() {
+    this.application.use([handleNotFoundPage, handleError]);
+  }
+
+  public init() {
+    this.application.use("/api", ApiRouter);
+
+    this.application.listen(APP.PORT, () => {
+      console.log(`Successfully connected to SERVER at PORT: ${APP.PORT}`);
+    });
+
+    this.application.use([handleError, handleNotFoundPage]);
   }
 }
 

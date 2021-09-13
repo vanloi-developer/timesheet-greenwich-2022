@@ -1,55 +1,45 @@
-import { Response } from "express";
-import config from "../../configs/app";
+import { Request, Response, NextFunction } from "express";
+import { HttpError } from "./http-error";
 
-import {
-  AuthFailureResponse,
-  AccessTokenErrorResponse,
-  InternalErrorResponse,
-  NotFoundResponse,
-  BadRequestResponse,
-  ForbidenResponse,
-} from "../Helpers/Responses";
+export const handleError = (
+  error: HttpError,
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const status: number = error.code || 500;
+  const message: string =
+    error.message || "Internal server error, something went wrong.";
+  const response = {
+    result: null,
+    targetUrl: null,
+    success: false,
+    unAuthorizedRequest: false,
+    __abp: true,
+    error: {
+      code: status,
+      message,
+      details: error.stack,
+      validationErrors: null,
+    },
+  };
 
-import { ErrorType } from "../Enums";
+  return res.status(status).json(response);
+};
 
-abstract class HttpException extends Error {
-  constructor(public type: ErrorType, public message: string = "Error") {
-    super(type);
-  }
-
-  public static handle(error: HttpException, res: Response): Response {
-    switch (error.type) {
-      case ErrorType.BAD_REQUEST:
-        return new BadRequestResponse(error.message).json(res);
-
-      case ErrorType.INTERNAL:
-        return new InternalErrorResponse(error.message).json(res);
-
-      case ErrorType.BAD_TOKEN:
-      case ErrorType.TOKEN_EXPIRED:
-      case ErrorType.UNAUTHORIZED:
-        return new AuthFailureResponse(error.message).json(res);
-
-      case ErrorType.ACCESS_TOKEN:
-        return new AccessTokenErrorResponse(error.message).json(res);
-
-      case ErrorType.NOT_FOUND:
-      case ErrorType.NO_DATA:
-      case ErrorType.NO_DATA:
-        return new NotFoundResponse(error.message).json(res);
-
-      case ErrorType.FORBIDDEN:
-        return new ForbidenResponse(error.message).json(res);
-
-      default: {
-        let message = error.message;
-        // Do not send failure message in production as it may send sensitive data
-        if (config.NODE_ENV === "production")
-          message = "Something wrong happened.";
-        return new InternalErrorResponse(message).json(res);
-      }
-    }
-  }
-}
-
-export {HttpException};
+export const handleNotFoundPage = (req: Request, res: Response) => {
+  const response = {
+    result: null,
+    targetUrl: null,
+    success: false,
+    unAuthorizedRequest: false,
+    __abp: true,
+    error: {
+      code: 404,
+      message: `${req.method} ${req.url} is not found.`,
+      details: null,
+      validationErrors: null,
+    },
+  };
+  return res.json(response);
+};

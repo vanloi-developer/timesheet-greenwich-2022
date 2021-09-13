@@ -1,0 +1,1 @@
+export { IMongoOption } from "./IMongoOption";
