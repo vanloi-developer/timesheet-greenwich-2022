@@ -1,1 +1,3 @@
-export { userRepos } from "./UserRepository";
+export { TaskRepository } from "./TaskRepos";
+
+export { UserRepository } from "./UserRepos";

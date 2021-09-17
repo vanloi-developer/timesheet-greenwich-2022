@@ -1,47 +1,50 @@
 import express from "express";
+
 import morgan from "morgan";
+
 import cors from "cors";
 
-import { APP } from "./configs";
-
-import ApiRouter from "./routes/ApiRouter";
-
-import { DataAccess } from "./dataAccess";
-
-import { handleError, handleNotFoundPage } from "./app/exceptions";
+import { PORT } from "./configs";
+import { ApiRouter } from "./routes/ApiRouter";
+import { handlingError, catch404 } from "./app/core";
+import { DataAccess } from "./dataAccess/mongo/connection";
 
 class Application {
-  public readonly application: express.Application;
+  private _server = express();
 
   constructor() {
-    this.application = express();
+    this.initializeMiddleware();
+    this.connectDatabase()
+    this.start();
+
+    this.initializeHttpException();
   }
 
   public initializeMiddleware() {
-    this.application.use(express.json());
-    this.application.use(express.urlencoded({ extended: false }));
-    this.application.use(morgan("tiny"));
-    this.application.use(cors());
+    this._server.use(morgan("tiny"));
+
+    this._server.use(cors());
+
+    this._server.use(express.json());
+
+    this._server.use(express.urlencoded({ extended: false }));
+  }
+
+  public async initializeHttpException() {
+    this._server.use([handlingError, catch404]);
   }
 
   public async connectDatabase() {
     await DataAccess.connect();
   }
-
-  public initializeErrorHandling() {
-    this.application.use([handleNotFoundPage, handleError]);
-  }
-
-  public init() {
-    this.application.use("/api", ApiRouter);
-
-    this.application.listen(APP.PORT, () => {
-      console.log(`Successfully connected to SERVER at PORT: ${APP.PORT}`);
+  public start() {
+    this._server.listen(PORT, () => {
+      console.log(`PORT: ${PORT}`);
     });
 
-    this.application.use([handleError, handleNotFoundPage]);
+    this._server.use("/api", new ApiRouter()._router);
   }
 }
 
 Object.seal(Application);
-export = Application;
+export { Application };

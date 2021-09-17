@@ -1,9 +1,6 @@
+import { AuthRouter } from "./auth/AuthRouter";
 import { BaseRouter } from "./base";
-
-import services from "./services";
-
-import { AuthRouter } from "./auth";
-
+import { ServiceRouter } from "./services";
 
 class ApiRouter extends BaseRouter {
   constructor() {
@@ -11,10 +8,10 @@ class ApiRouter extends BaseRouter {
     this.init();
   }
 
-  protected init() {
-    this.router.use("/services/app", services);
-    this.router.use("/TokenAuth", new AuthRouter().router);
+  public init() {
+    this._router.use("/services/app", new ServiceRouter()._router);
+    this._router.use("/TokenAuth", new AuthRouter()._router);
   }
 }
 
-export = new ApiRouter().router;
+export { ApiRouter };

@@ -1,5 +1,21 @@
-export { APP } from "./app";
+import dotenv from "dotenv";
+dotenv.config({
+  path: ".env",
+});
 
-export { DATABASE } from "./database";
+const NODE_ENV = process.env.NODE_ENV;
 
-export { TOKEN } from "./token";
+const PORT = process.env.PORT;
+
+const OPTIONS = {
+  expiresIn: 84000,
+};
+
+const MONGO_URI = process.env.MONGO_URI;
+
+const TOKEN = {
+  SECRET_KEY: process.env.SECRET_KEY,
+  OPTIONS,
+};
+
+export { PORT, MONGO_URI, NODE_ENV, TOKEN };

@@ -1,1 +1,3 @@
-export { userModel } from "./UserSchema";
+export { UserSchema } from "./UserSchema";
+
+export { TaskSchema } from "./Task";

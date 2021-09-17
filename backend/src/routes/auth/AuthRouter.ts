@@ -1,16 +1,16 @@
-import { authController } from "../../app/Http/Controllers";
+import { AuthController } from "../../app/controllers";
 import { BaseRouter } from "../base";
 
 class AuthRouter extends BaseRouter {
-  private controller: typeof authController = authController;
+  private controller: AuthController = new AuthController();
 
   constructor() {
     super();
     this.init();
   }
 
-  protected init() {
-    this.router.post("/authenticate", this.controller.authenticate);
+  public init() {
+    this._router.post("/authenticate", this.controller.authenticate);
   }
 }
 

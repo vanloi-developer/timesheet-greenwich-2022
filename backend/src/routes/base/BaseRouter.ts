@@ -1,11 +1,14 @@
-import { Router } from "express";
+import { IRouter, Router } from "express";
 
-export abstract class BaseRouter {
-  private _router: Router = Router();
+abstract class BaseRouter {
+  private router: IRouter = Router();
 
-  get router() {
-    return this._router;
+  get _router() {
+    return this.router;
   }
 
-  protected abstract init();
+  abstract init(): void;
 }
+
+Object.seal(BaseRouter);
+export { BaseRouter };

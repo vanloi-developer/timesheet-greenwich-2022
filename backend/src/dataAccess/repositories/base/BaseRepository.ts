@@ -1,27 +1,77 @@
-import { IRead, IWrite } from "../interfaces";
+import { Model, Document, model, Schema } from "mongoose";
+import { HttpStatusCode } from "../../../app/enums";
+import { ApiError } from "../../../app/core";
 
-import * as mongoose from "mongoose";
-
-abstract class BaseRepository<T extends mongoose.Document>
-  implements IRead<T>, IWrite<T>
-{
-  public _model: mongoose.Model<T>;
-
-  constructor(model: mongoose.Model<T>) {
-    this._model = model;
+/**
+ * Lack of interface, need to implement 2 interfaces more, IWrite<T>, IRead<T>
+ */
+abstract class BaseRepository<T extends Document> {
+  public _model;
+  constructor(modelName: string, schema: Schema) {
+    this._model = model<T>(modelName, schema);
   }
 
-  public async retrieve(): Promise<T[]> {
-    return await this._model.find();
-  }
+  public save = async (item: T) => {
+    try {
+      return await item.save();
+    } catch (error) {
+      throw new ApiError(HttpStatusCode.NOT_FOUND, `Error in repository`);
+    }
+  };
 
-  public async findById(_id: string): Promise<T> {
-    return await this._model.findById(_id);
-  }
+  public update = async (item: T) => {
+    try {
+      const id = item.id;
 
-  public async create(item: T): Promise<T> {
-    return await item.save();
-  }
+      const isUpdated = await this._model.replaceOne(id, item);
+
+      return isUpdated
+        ? isUpdated
+        : new ApiError(HttpStatusCode.NOT_FOUND, `Error in repository`);
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  public delete = async (id: number) => {
+    try {
+      const isDeleted = await this._model.deleteOne({ id });
+
+      return true
+        ? isDeleted
+        : new ApiError(HttpStatusCode.NOT_FOUND, `Error in repository`);
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  public findById = async (id: number) => {
+    try {
+      return await this._model.findOne({ id: id });
+    } catch (error) {
+      throw new ApiError(HttpStatusCode.NOT_FOUND, `Error in repository`);
+    }
+  };
+
+  public findByUsername = async (userName: string) => {
+    try {
+      return await this._model.findOne({ userName });
+    } catch (error) {
+      throw new ApiError(HttpStatusCode.NOT_FOUND, `Error in repository`);
+    }
+  };
+
+  public retrieve = async () => {
+    try {
+      const items = await this._model.find();
+
+      return items
+        ? items
+        : new ApiError(HttpStatusCode.NOT_FOUND, `Error in repository`);
+    } catch (error) {
+      throw error;
+    }
+  };
 }
 
 Object.seal(BaseRepository);
