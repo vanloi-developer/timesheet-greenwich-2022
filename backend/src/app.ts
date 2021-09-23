@@ -1,31 +1,33 @@
 import { Server } from "./Server";
 import dotenv from "dotenv";
-
+import db from "./config/db";
+import express from "express";
 /**
  * Application class.
  * @description Handle init config and components.
  */
- dotenv.config({
-  path: ".env",
+dotenv.config({
+   path: ".env",
 });
 
 export class Application {
-  server: Server;
+   server: Server;
 
-  init() {
-    this.initServer();
-  }
+   init() {
+      this.initServer();
+      this.server.initRouter();
+      db.connect();
+   }
 
-  private initServer() {
-    this.server = new Server();
-  }
+   private initServer() {
+      this.server = new Server();
+   }
 
-  start() {
-    ((port = process.env.APP_PORT || 5000) => {
-      this.server.app.listen(port, () =>
-        console.log(`> Listening on port ${port}`)
-      );
-      this.server.app.use('/api', this.server.router);
-    })();
-  }
+   start() {
+      ((port = process.env.APP_PORT || 5000) => {
+         this.server.app.listen(port, () =>
+            console.log(`> Listening on port ${port}`)
+         );
+      })();
+   }
 }
