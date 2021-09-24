@@ -20,11 +20,48 @@ class UserRepository implements IUserRepository {
       }
    }
 
+   async findByUserName(userName: String) {
+      try {
+         return await this._db.findOne({ userName });
+      } catch (error) {
+         logger.error('findByID UserRepository error: ', error.message);
+      }
+   }
+
    async create(data) {
       try {
          return await this._db.create(data);
       } catch (error) {
          logger.error('findByUserNameEmail UserRepository error: ', error.message);
+      }
+   }
+
+   async generateToken(userName) {
+      try {
+         const user = await this._db.findOne({ userName });
+
+         return await user.generateAuthToken();
+      } catch (error) {
+         logger.error('generateToken UserRepository error: ', error.message);
+      }
+   }
+
+   async comparePassword(userName, plainPass) {
+      try {
+         const user = await this._db.findOne({ userName });
+
+         return await user.comparePassHash(plainPass);
+      } catch (error) {
+         logger.error('generateToken UserRepository error: ', error.message);
+      }
+   }
+
+   async findByID(id: Number) {
+      console.log(id);
+      try {
+         return await this._db.findOne({ id });
+      } catch (error) {
+         logger.error('findByID UserRepository error: ', error.message);
       }
    }
 }

@@ -2,30 +2,23 @@ import { Request, Response, NextFunction } from 'express';
 import { BaseResDto } from '../../dto/BaseResDto';
 import { INVALID_REQUEST } from '../../dto/BaseErrorDto';
 
-const REQUIRED_FIELD = ['name', 'surname', 'userName', 'emailAddress'];
+const REQUIRED_FIELD = ['password', 'userNameOrEmailAddress'];
 
-export const createUser = (req: Request, res: Response, next: NextFunction) => {
+export const validLogin = (req: Request, res: Response, next: NextFunction) => {
    const data = { ...req.body };
 
-   let details = 'The following errors were detected during validation.\r\n ';
+   let details = INVALID_REQUEST.details;
    let validationErrors = [];
 
    const { emailAddress } = data;
 
    // Check missing required field
    const invalidField = checkField(REQUIRED_FIELD);
-   const invalidEmail = checkFormatEmail(emailAddress);
 
    if (invalidField)
       return res.status(400).json({
          ...BaseResDto,
          error: { ...invalidField },
-      });
-
-   if (invalidEmail)
-      return res.status(400).json({
-         ...BaseResDto,
-         error: { ...invalidEmail },
       });
 
    next();
@@ -36,15 +29,6 @@ export const createUser = (req: Request, res: Response, next: NextFunction) => {
       });
 
       if (validationErrors.length) return { ...INVALID_REQUEST, details, validationErrors };
-
-      return false;
-   }
-
-   function checkFormatEmail(emailAddress) {
-      if (!emailAddress.includes('@')) {
-         errorMess('emailAddress', 'field is not a valid e-mail address');
-         return { ...INVALID_REQUEST, details, validationErrors };
-      }
 
       return false;
    }

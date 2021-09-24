@@ -26,4 +26,6 @@ export interface IUserModel {
    afternoonEndAt: String;
    afternoonWorking: Number;
    createdAt: Date;
+   generateAuthToken: () => Promise<String>;
+   comparePassHash: (plainPass: String) => Promise<Boolean>;
 }

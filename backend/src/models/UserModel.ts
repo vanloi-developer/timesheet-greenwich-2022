@@ -2,6 +2,7 @@ import dotenv from 'dotenv';
 import mongoose, { Schema } from 'mongoose';
 import jwt from 'jsonwebtoken';
 import { IUserModel } from '../types/IUserModel';
+import bcrypt from 'bcrypt';
 
 dotenv.config();
 
@@ -37,17 +38,19 @@ const UserSchema: Schema = new Schema({
    createdAt: { type: Date, default: new Date() },
 });
 
-UserSchema.methods.generateAuthToken = function () {
-   const token = jwt.sign(
+UserSchema.methods.generateAuthToken = async function () {
+   const token = await jwt.sign(
       {
-         id: parseInt(this.userCode),
-         name: this.name,
-         email: this.email,
-         type: this.type,
+         id: this.id,
+         roleNames: this.roleNames,
       },
       JWT_KEY,
    );
    return token;
+};
+
+UserSchema.methods.comparePassHash = async function (plainPass: String) {
+   return await bcrypt.compare(plainPass, this.password);
 };
 
 export default mongoose.model<IUserModel>('User', UserSchema);
