@@ -1,0 +1,29 @@
+export interface IUserModel {
+   id: Number;
+   password: String;
+   roleNames: Array<String>;
+   isActive: Boolean;
+   allowedLeaveDay: Number;
+   branch: Number;
+   userName: String;
+   emailAddress: String;
+   type: Number;
+   name: String;
+   surname: String;
+   sex: Boolean;
+   userCode: String;
+   isStopWork: Boolean;
+   managerId: Number;
+   level: Number;
+   salary: Number;
+   salaryAt: String;
+   address: String;
+   phoneNumber: String;
+   morningStartAt: String;
+   morningEndAt: String;
+   morningWorking: Number;
+   afternoonStartAt: String;
+   afternoonEndAt: String;
+   afternoonWorking: Number;
+   createdAt: Date;
+}

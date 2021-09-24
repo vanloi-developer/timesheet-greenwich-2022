@@ -1,5 +1,6 @@
 import dotenv from "dotenv";
 import mongoose from "mongoose";
+import logger from "./logger";
 dotenv.config();
 
 interface ConnectOptions extends mongoose.ConnectOptions {
@@ -18,10 +19,10 @@ export default {
          // useFindAndModify: false,
       } as ConnectOptions);
       mongoose.connection.on("connected", () => {
-         console.log("Connect to MongoDB successfully !!!");
+         logger.succeed("Connect to MongoDB successfully !!!");
       });
       mongoose.connection.on("error", (err) => {
-         console.log(`Mongoose default connection has occured error: ${err} `);
+         logger.error(`Mongoose default connection has occured error: ${err}`);
       });
    },
 };

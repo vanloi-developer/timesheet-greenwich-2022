@@ -1,31 +1,53 @@
-import mongoose, { Schema } from "mongoose";
+import dotenv from 'dotenv';
+import mongoose, { Schema } from 'mongoose';
+import jwt from 'jsonwebtoken';
+import { IUserModel } from '../types/IUserModel';
+
+dotenv.config();
+
+const JWT_KEY = process.env.JWT_KEY;
 
 const UserSchema: Schema = new Schema({
    id: { type: Number, required: true },
-   name: { type: String, required: true },
    password: { type: String, required: true },
-   surname: { type: String, required: true },
-   userName: { type: String, required: true },
-   emailAddress: { type: String, required: true },
+   roleNames: { type: Array },
+   isActive: { type: Boolean },
    allowedLeaveDay: { type: Number },
-   type: { type: Array },
-   level: { type: Array },
-   sex: { type: Boolean },
    branch: { type: Number },
-   avatarPath: { type: String },
-   morningWorking: { type: String },
-   morningStartAt: { type: String },
-   morningEndAt: { type: String },
-   afternoonWorking: { type: String },
-   afternoonStartAt: { type: String },
-   afternoonEndAt: { type: String },
-   isWorkingTimeDefault: { type: Boolean },
-   projects: { type: Array },
+   userName: { type: String },
+   emailAddress: { type: String },
+   type: { type: Number },
+   name: { type: String },
+   surname: { type: String },
+   sex: { type: Boolean },
+   userCode: { type: String },
+   isStopWork: { type: Boolean },
+   managerId: { type: Number },
+   level: { type: Number },
    salary: { type: Number },
    salaryAt: { type: String },
-   manager: { type: Number },
-   IsActive: { type: Boolean, default: true },
-   creationTime: { type: Date, default: new Date() },
+   address: { type: String },
+   phoneNumber: { type: String },
+   morningStartAt: { type: String },
+   morningEndAt: { type: String },
+   morningWorking: { type: Number },
+   afternoonStartAt: { type: String },
+   afternoonEndAt: { type: String },
+   afternoonWorking: { type: Number },
+   createdAt: { type: Date, default: new Date() },
 });
 
-export default mongoose.model("User", UserSchema);
+UserSchema.methods.generateAuthToken = function () {
+   const token = jwt.sign(
+      {
+         id: parseInt(this.userCode),
+         name: this.name,
+         email: this.email,
+         type: this.type,
+      },
+      JWT_KEY,
+   );
+   return token;
+};
+
+export default mongoose.model<IUserModel>('User', UserSchema);

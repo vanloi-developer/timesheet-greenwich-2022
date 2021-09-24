@@ -1,7 +1,7 @@
 import { Server } from "./Server";
 import dotenv from "dotenv";
 import db from "./config/db";
-import express from "express";
+import logger from "./config/logger";
 /**
  * Application class.
  * @description Handle init config and components.
@@ -26,7 +26,7 @@ export class Application {
    start() {
       ((port = process.env.APP_PORT || 5000) => {
          this.server.app.listen(port, () =>
-            console.log(`> Listening on port ${port}`)
+            logger.cyan(`> Listening on port ${port}`)
          );
       })();
    }

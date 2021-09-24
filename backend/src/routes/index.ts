@@ -1,8 +1,9 @@
-import ApiRouter from "./ApiRouter";
-import { BaseRouter } from "./BaseRouter";
-import express from "express";
+import { error } from './../middlewares/error';
+import ApiRouter from './ApiRouter';
+import { BaseRouter } from './BaseRouter';
+import express from 'express';
 // import bodyParser = require("body-parser");
-import cors = require("cors");
+import cors = require('cors');
 
 class IndexRouter extends BaseRouter {
    constructor() {
@@ -19,7 +20,9 @@ class IndexRouter extends BaseRouter {
 
    //Manage all routes
    protected init() {
-      this.router.use("/api", ApiRouter);
+      this.router.use('/api', ApiRouter);
+
+      this.router.use(error);
    }
 }
 

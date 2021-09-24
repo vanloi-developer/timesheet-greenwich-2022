@@ -1,3 +1,3 @@
 import User from "./UserModel";
 
-export { User };
+export default { User };

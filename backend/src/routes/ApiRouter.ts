@@ -1,8 +1,7 @@
-import authLoginRouter from "./AuthLoginRouter";
+import appRouter from "./AppRouter";
 import { BaseRouter } from "./BaseRouter";
 import testRouter from "./TestRouter";
-import bodyParser = require("body-parser");
-import cors = require("cors");
+import authenService from "../services/AuthenService";
 
 class ApiRouter extends BaseRouter {
    constructor() {
@@ -15,7 +14,9 @@ class ApiRouter extends BaseRouter {
     */
    protected init() {
       this.router.use("/test", testRouter);
-      this.router.use("/services/app", authLoginRouter);
+      this.router.use("/services/app", appRouter);
+
+      this.router.post("/TokenAuth/Authenticate", authenService);
    }
 }
 
