@@ -11,15 +11,16 @@ const JWT_KEY = process.env.JWT_KEY;
 const UserSchema: Schema = new Schema({
    id: { type: Number, required: true },
    password: { type: String, required: true },
+   userName: { type: String },
+   emailAddress: { type: String },
+   name: { type: String },
+   surname: { type: String },
+
    roleNames: { type: Array },
    isActive: { type: Boolean },
    allowedLeaveDay: { type: Number },
    branch: { type: Number },
-   userName: { type: String },
-   emailAddress: { type: String },
    type: { type: Number },
-   name: { type: String },
-   surname: { type: String },
    sex: { type: Boolean },
    userCode: { type: String },
    isStopWork: { type: Boolean },
@@ -27,14 +28,19 @@ const UserSchema: Schema = new Schema({
    level: { type: Number },
    salary: { type: Number },
    salaryAt: { type: String },
+
    address: { type: String },
    phoneNumber: { type: String },
+
    morningStartAt: { type: String },
    morningEndAt: { type: String },
    morningWorking: { type: Number },
    afternoonStartAt: { type: String },
    afternoonEndAt: { type: String },
    afternoonWorking: { type: Number },
+
+   jobTitle: { type: String },
+
    createdAt: { type: Date, default: new Date() },
 });
 

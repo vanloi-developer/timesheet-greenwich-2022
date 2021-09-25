@@ -1,9 +1,10 @@
 import { IUserModel } from './IUserModel';
 export interface IUserRepository {
-   findByUserNameEmail(userName: String, emailAddress: String);
+   findByUserNameEmail(userName: string, emailAddress: string);
    create(data: IUserModel);
-   generateToken(userName: String);
-   comparePassword(userName: String, plainPass: String);
+   generateToken(userName: string);
+   comparePassword(userName: string, plainPass: string);
    findByID(id: Number);
-   findByUserName(userName: String);
+   findByUserName(userName: string);
+   findUserNotPagging();
 }

@@ -83,7 +83,7 @@ class UserRouter extends BaseRouter_1.BaseRouter {
         this.init();
     }
     init() {
-        this.router.post('/Create', UserValidate.createUser, this._service.createUser.bind(this._service));
+        this.router.post('/Create', UserValidate.createUser, this._service.createUser);
     }
 }
 module.exports = new UserRouter().router;

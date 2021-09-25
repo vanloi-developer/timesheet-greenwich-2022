@@ -1,41 +1,29 @@
 import { Request, Response, NextFunction } from 'express';
-import { BaseResDto } from '../../dto/BaseResDto';
 import { INVALID_REQUEST } from '../../dto/BaseErrorDto';
 
 const REQUIRED_FIELD = ['name', 'surname', 'userName', 'emailAddress'];
 
 export const createUser = (req: Request, res: Response, next: NextFunction) => {
    const data = { ...req.body };
-
-   let details = 'The following errors were detected during validation.\r\n ';
-   let validationErrors = [];
-
    const { emailAddress } = data;
 
+   let RESPONSE_JSON = { ...INVALID_REQUEST };
+   RESPONSE_JSON.error.validationErrors = [];
    // Check missing required field
    const invalidField = checkField(REQUIRED_FIELD);
    const invalidEmail = checkFormatEmail(emailAddress);
 
-   if (invalidField)
-      return res.status(400).json({
-         ...BaseResDto,
-         error: { ...invalidField },
-      });
-
-   if (invalidEmail)
-      return res.status(400).json({
-         ...BaseResDto,
-         error: { ...invalidEmail },
-      });
+   if (invalidField) return res.status(400).json(RESPONSE_JSON);
+   if (invalidEmail) return res.status(400).json(RESPONSE_JSON);
 
    next();
 
-   function checkField(arr: Array<String>) {
+   function checkField(arr: Array<string>) {
       arr.forEach((item) => {
          if (!data[item as string]) errorMess(item);
       });
 
-      if (validationErrors.length) return { ...INVALID_REQUEST, details, validationErrors };
+      if (RESPONSE_JSON.error.validationErrors.length) return true;
 
       return false;
    }
@@ -43,22 +31,23 @@ export const createUser = (req: Request, res: Response, next: NextFunction) => {
    function checkFormatEmail(emailAddress) {
       if (!emailAddress.includes('@')) {
          errorMess('emailAddress', 'field is not a valid e-mail address');
-         return { ...INVALID_REQUEST, details, validationErrors };
+         return true;
       }
 
       return false;
    }
 
-   function errorMess(field: String, errmess: String = 'field is required') {
+   function errorMess(field: string, errmess: string = 'field is required') {
       let error = {
          message: `The ${upperFirstChar(field)} ${errmess}.`,
          members: [field],
       };
-      // If invalidate. Create error messages and details
-      validationErrors.push(error);
-      details += `- ${error.message} .\r\n `;
 
-      function upperFirstChar(text: String) {
+      // If invalidate. Create error messages and details
+      RESPONSE_JSON.error.validationErrors.push(error);
+      RESPONSE_JSON.error.details += `- ${error.message} .\r\n `;
+
+      function upperFirstChar(text: string) {
          return text.charAt(0).toUpperCase() + text.slice(1);
       }
    }

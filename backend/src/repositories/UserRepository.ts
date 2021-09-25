@@ -6,7 +6,7 @@ import logger from '../config/logger';
 class UserRepository implements IUserRepository {
    private readonly _db = db.User;
 
-   async findByUserNameEmail(userName: String, emailAddress: String) {
+   async findByUserNameEmail(userName: string, emailAddress: string) {
       try {
          let user: IUserModel = await this._db.findOne({ userName });
          if (user) return { userName: user.userName };
@@ -20,7 +20,7 @@ class UserRepository implements IUserRepository {
       }
    }
 
-   async findByUserName(userName: String) {
+   async findByUserName(userName: string) {
       try {
          return await this._db.findOne({ userName });
       } catch (error) {
@@ -57,11 +57,20 @@ class UserRepository implements IUserRepository {
    }
 
    async findByID(id: Number) {
-      console.log(id);
       try {
          return await this._db.findOne({ id });
       } catch (error) {
          logger.error('findByID UserRepository error: ', error.message);
+      }
+   }
+
+   async findUserNotPagging() {
+      try {
+         return await this._db
+            .find({})
+            .select('name isActive type jobTitle level userCode avatarPath branch id -_id');
+      } catch (error) {
+         logger.error('findUserNotPagging UserRepository error: ', error.message);
       }
    }
 }

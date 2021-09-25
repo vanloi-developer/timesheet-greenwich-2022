@@ -2,9 +2,9 @@
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
+const LoginValidate_1 = require("./../middlewares/validate/LoginValidate");
 const AppRouter_1 = __importDefault(require("./AppRouter"));
 const BaseRouter_1 = require("./BaseRouter");
-const TestRouter_1 = __importDefault(require("./TestRouter"));
 const AuthenService_1 = __importDefault(require("../services/AuthenService"));
 class ApiRouter extends BaseRouter_1.BaseRouter {
     constructor() {
@@ -15,9 +15,9 @@ class ApiRouter extends BaseRouter_1.BaseRouter {
      * Connect routes to their matching routers.
      */
     init() {
-        this.router.use("/test", TestRouter_1.default);
-        this.router.use("/services/app", AppRouter_1.default);
-        this.router.post("/TokenAuth/Authenticate", AuthenService_1.default);
+        // this.router.use("/test", testRouter);
+        this.router.use('/services/app', AppRouter_1.default);
+        this.router.post('/TokenAuth/Authenticate', LoginValidate_1.validLogin, AuthenService_1.default.authen);
     }
 }
 module.exports = new ApiRouter().router;

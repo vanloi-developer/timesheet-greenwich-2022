@@ -33,6 +33,16 @@ class UserRepository {
             }
         });
     }
+    findByUserName(userName) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                return yield this._db.findOne({ userName });
+            }
+            catch (error) {
+                logger_1.default.error('findByID UserRepository error: ', error.message);
+            }
+        });
+    }
     create(data) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
@@ -40,6 +50,38 @@ class UserRepository {
             }
             catch (error) {
                 logger_1.default.error('findByUserNameEmail UserRepository error: ', error.message);
+            }
+        });
+    }
+    generateToken(userName) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const user = yield this._db.findOne({ userName });
+                return yield user.generateAuthToken();
+            }
+            catch (error) {
+                logger_1.default.error('generateToken UserRepository error: ', error.message);
+            }
+        });
+    }
+    comparePassword(userName, plainPass) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const user = yield this._db.findOne({ userName });
+                return yield user.comparePassHash(plainPass);
+            }
+            catch (error) {
+                logger_1.default.error('generateToken UserRepository error: ', error.message);
+            }
+        });
+    }
+    findByID(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                return yield this._db.findOne({ id });
+            }
+            catch (error) {
+                logger_1.default.error('findByID UserRepository error: ', error.message);
             }
         });
     }
