@@ -43,3 +43,8 @@ export const WORKING_TIME = {
       id: 0,
    },
 };
+
+export const ADMIN_PASSWORD = '123qwe';
+
+export const REQUIRED_FIELD_LOGIN = ['password', 'userNameOrEmailAddress'];
+export const REQUIRED_FIELD_RESET_PASS = ['adminPassword', 'newPassword', 'userId'];

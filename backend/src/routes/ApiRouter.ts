@@ -1,7 +1,7 @@
-import { validLogin } from './../middlewares/validate/LoginValidate';
+import { validLogin } from '../middlewares/validate/FieldValidate';
 import appRouter from './AppRouter';
 import { BaseRouter } from './BaseRouter';
-import testRouter from './TestRouter';
+// import testRouter from './TestRouter';
 import authenService from '../services/AuthenService';
 
 class ApiRouter extends BaseRouter {

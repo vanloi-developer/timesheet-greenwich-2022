@@ -17,13 +17,6 @@ class RoleRepository implements IRoleRepository {
                   id: 1,
                },
                {
-                  name: 'ProjectAdmin',
-                  displayName: 'ProjectAdmin',
-                  normalizedName: 'PROJECTADMIN',
-                  description: null,
-                  id: 2,
-               },
-               {
                   name: 'BasicUser',
                   displayName: 'BasicUser',
                   normalizedName: 'BASICUSER',
@@ -45,32 +38,11 @@ class RoleRepository implements IRoleRepository {
                   id: 6,
                },
                {
-                  name: 'admindev',
-                  displayName: 'admindev',
-                  normalizedName: 'ADMINDEV',
-                  description: null,
-                  id: 9,
-               },
-               {
                   name: 'User',
                   displayName: 'user',
                   normalizedName: 'USER',
                   description: '123',
                   id: 11,
-               },
-               {
-                  name: 'Over',
-                  displayName: 'over',
-                  normalizedName: 'OVER',
-                  description: null,
-                  id: 14,
-               },
-               {
-                  name: 'test11',
-                  displayName: 'tetttt',
-                  normalizedName: 'TEST11',
-                  description: 'no',
-                  id: 15,
                },
                { name: 'HR', displayName: 'HR', normalizedName: 'HR', description: 'HR', id: 16 },
                {
@@ -81,25 +53,11 @@ class RoleRepository implements IRoleRepository {
                   id: 17,
                },
                {
-                  name: 'lap',
-                  displayName: 'staff',
-                  normalizedName: 'LAP',
-                  description: '123',
-                  id: 19,
-               },
-               {
                   name: 'Project management ',
                   displayName: 'Project management ',
-                  normalizedName: 'PROJECT MANAGEMENT ',
+                  normalizedName: 'PROJECTMANAGEMENT ',
                   description: null,
                   id: 21,
-               },
-               {
-                  name: 'eeee',
-                  displayName: 'eeee',
-                  normalizedName: 'EEEE',
-                  description: 'eeee',
-                  id: 22,
                },
                {
                   name: 'CEO',

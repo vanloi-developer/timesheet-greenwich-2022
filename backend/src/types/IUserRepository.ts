@@ -4,7 +4,12 @@ export interface IUserRepository {
    create(data: IUserModel);
    generateToken(userName: string);
    comparePassword(userName: string, plainPass: string);
-   findByID(id: Number);
+   findByID(id: number);
    findByUserName(userName: string);
    findUserNotPagging();
+   findUserPagging();
+   getAllMangagers();
+   DeleteUserById(id: number);
+   update(user: IUserModel);
+   edit(id: number, editFeild);
 }

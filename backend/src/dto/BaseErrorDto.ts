@@ -15,7 +15,7 @@ const BaseErrorDto = (message: string | null = null, details: string | null = nu
    };
 };
 
-export const BaseError = BaseErrorDto();
+export const baseError = BaseErrorDto;
 export const INVALID_TOKEN = BaseErrorDto('Your request is not valid!', 'Invalid token');
 export const EXISTED_USER = BaseErrorDto('is already taken.');
 export const AUTH_ERR = BaseErrorDto('Current user did not login to the application!');
@@ -25,3 +25,8 @@ export const INVALID_REQUEST = BaseErrorDto(
    'The following errors were detected during validation.\r\n ',
 );
 export const LOGIN_FAILED = BaseErrorDto('Login failed!', 'Invalid user name or password');
+export const WRONG_ADMIN_PASS = BaseErrorDto(
+   `Your 'Admin Password' did not match the one on record.  Please try again.`,
+);
+
+export const NOT_EXIST_USER = BaseErrorDto('User not exist');

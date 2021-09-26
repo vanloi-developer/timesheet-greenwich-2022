@@ -3,17 +3,16 @@ import { INVALID_REQUEST } from '../../dto/BaseErrorDto';
 
 const REQUIRED_FIELD = ['name', 'surname', 'userName', 'emailAddress'];
 
-export const createUser = (req: Request, res: Response, next: NextFunction) => {
+export const validCreate = (req: Request, res: Response, next: NextFunction) => {
    const data = { ...req.body };
    const { emailAddress } = data;
-
    let RESPONSE_JSON = { ...INVALID_REQUEST };
    RESPONSE_JSON.error.validationErrors = [];
    // Check missing required field
    const invalidField = checkField(REQUIRED_FIELD);
-   const invalidEmail = checkFormatEmail(emailAddress);
-
    if (invalidField) return res.status(400).json(RESPONSE_JSON);
+
+   const invalidEmail = checkFormatEmail(emailAddress);
    if (invalidEmail) return res.status(400).json(RESPONSE_JSON);
 
    next();
@@ -51,4 +50,10 @@ export const createUser = (req: Request, res: Response, next: NextFunction) => {
          return text.charAt(0).toUpperCase() + text.slice(1);
       }
    }
+};
+
+export const validQueryID = (req: Request, res: Response, next: NextFunction) => {
+   if (!req.query.Id) return res.status(400).json(INVALID_REQUEST);
+
+   next();
 };

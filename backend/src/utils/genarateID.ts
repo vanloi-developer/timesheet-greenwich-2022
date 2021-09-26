@@ -5,6 +5,7 @@ const generate = (model: string) => {
    const ID_STORE = JSON.parse(fs.readFileSync(path.join(__dirname, 'ID.json'), 'utf-8'));
 
    if (!ID_STORE[model]) {
+      ID_STORE[model] = {};
       ID_STORE[model].id = 0;
    }
 
