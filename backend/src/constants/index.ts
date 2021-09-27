@@ -51,3 +51,4 @@ export const REQUIRED_FIELD_RESET_PASS = ['adminPassword', 'newPassword', 'userI
 export const SEARCH_TEXT_FIELD_USER = ['userName', 'name', 'surname', 'emailAddress'];
 export const SEARCH_TEXT_FIELD_CUSTOMER = ['name'];
 export const REQUIRED_FIELD_SAVE_CUSTOMER = ['name', 'address'];
+export const REQUIRED_FIELD_SAVE_TYPE = ['name', 'type'];

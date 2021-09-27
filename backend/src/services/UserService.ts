@@ -174,7 +174,7 @@ class UserService {
       }
    };
 
-   public UpdateBase = (updatefield: Object) => {
+   public UpdateBase = (updatefield?: Object) => {
       return async (req: Request, res: Response, next: NextFunction) => {
          try {
             const data = await this._repository.findById(req.body.id as number);
@@ -196,27 +196,7 @@ class UserService {
       };
    };
 
-   public Update = (updatefield: Object) => {
-      return async (req: Request, res: Response, next: NextFunction) => {
-         try {
-            const data = await this._repository.findById(req.body.id as number);
-            if (!data) return res.status(500);
-
-            const result = await this._repository.update(
-               req.body.id,
-               updatefield ? updatefield : req.body,
-            );
-
-            return res.status(200).json({
-               ...BaseResDto,
-               result,
-            });
-         } catch (error) {
-            logger.error('createUser UserService error: ', error.message);
-            next(error);
-         }
-      };
-   };
+   public Update = this.UpdateBase();
 
    public DeactiveUser = this.UpdateBase({ isActive: false });
 

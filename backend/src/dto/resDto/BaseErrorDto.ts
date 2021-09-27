@@ -30,3 +30,4 @@ export const WRONG_ADMIN_PASS = BaseErrorDto(
 
 export const NOT_EXIST_USER = BaseErrorDto('User not exist');
 export const NOT_EXIST_CUSTOMERS = BaseErrorDto('Cutomers not exist');
+export const NOT_EXIST_TASK = BaseErrorDto('Task not exist');

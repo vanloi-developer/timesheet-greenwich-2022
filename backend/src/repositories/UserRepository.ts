@@ -98,7 +98,6 @@ class UserRepository implements IUserRepository {
          const findOpt = filterOpt.length ? { $and: filterOpt } : {};
 
          const items = await this._db.find(findOpt).skip(skipCount).limit(maxResultCount);
-         console.log(items);
          return {
             totalCount: items.length,
             items,

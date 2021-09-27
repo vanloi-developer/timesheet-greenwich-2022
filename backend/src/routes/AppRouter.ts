@@ -1,9 +1,9 @@
-import { authen } from './../middlewares/authen';
 import UserRouter = require('./UserRouter');
 import { BaseRouter } from './BaseRouter';
 import UserService = require('../services/UserService');
 import WorkTimeService = require('../services/WorkTimeService');
 import CustomerRouter = require('./CustomerRouter');
+import TaskRouter = require('./TaskRouter');
 
 class AppRouter extends BaseRouter {
    private _userService = UserService;
@@ -21,8 +21,9 @@ class AppRouter extends BaseRouter {
          this._worktimeService.worktime,
       );
 
-      this.router.use('/User', authen, UserRouter);
-      this.router.use('/Customer', authen, CustomerRouter);
+      this.router.use('/User', UserRouter);
+      this.router.use('/Customer', CustomerRouter);
+      this.router.use('/Task', TaskRouter);
    }
 }
 

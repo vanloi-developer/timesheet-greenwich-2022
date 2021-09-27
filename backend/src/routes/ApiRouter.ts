@@ -1,3 +1,4 @@
+import { authen } from './../middlewares/authen';
 import { validLogin } from '../middlewares/validate/FieldValidate';
 import appRouter from './AppRouter';
 import { BaseRouter } from './BaseRouter';
@@ -15,7 +16,7 @@ class ApiRouter extends BaseRouter {
     */
    protected init() {
       // this.router.use("/test", testRouter);
-      this.router.use('/services/app', appRouter);
+      this.router.use('/services/app', authen, appRouter);
 
       this.router.post('/TokenAuth/Authenticate', validLogin, authenService.authen);
    }
