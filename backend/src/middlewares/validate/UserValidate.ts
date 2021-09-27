@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { INVALID_REQUEST } from '../../dto/BaseErrorDto';
+import { INVALID_REQUEST } from '../../dto/resDto/BaseErrorDto';
 
 const REQUIRED_FIELD = ['name', 'surname', 'userName', 'emailAddress'];
 

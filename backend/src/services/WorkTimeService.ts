@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { WORKING_TIME } from '../constants';
-import { UserResDTO } from '../dto/UserResDto';
+import { UserResDTO } from '../dto/resDto/UserResDto';
 
 class WorkTimeService {
    public worktime = async (req: Request, res: Response, next: NextFunction) => {

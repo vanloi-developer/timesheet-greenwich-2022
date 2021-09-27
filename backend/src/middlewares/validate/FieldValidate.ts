@@ -1,6 +1,6 @@
-import { REQUIRED_FIELD_RESET_PASS } from './../../constants/index';
+import { INVALID_REQUEST } from './../../dto/resDto/BaseErrorDto';
+import { REQUIRED_FIELD_RESET_PASS, REQUIRED_FIELD_SAVE_CUSTOMER } from './../../constants/index';
 import { Request, Response, NextFunction } from 'express';
-import { INVALID_REQUEST } from '../../dto/BaseErrorDto';
 import { REQUIRED_FIELD_LOGIN } from '../../constants';
 
 const validate = (requestFeild) => {
@@ -47,3 +47,4 @@ const validate = (requestFeild) => {
 
 export const validLogin = validate(REQUIRED_FIELD_LOGIN);
 export const validResetPass = validate(REQUIRED_FIELD_RESET_PASS);
+export const validCreateCustomer = validate(REQUIRED_FIELD_SAVE_CUSTOMER);

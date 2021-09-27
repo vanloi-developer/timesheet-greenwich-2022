@@ -1,31 +1,11 @@
-import { AuthResultDto } from './../dto/AuthResultDto';
-import { LOGIN_FAILED } from './../dto/BaseErrorDto';
-import { BaseResDto } from './../dto/BaseResDto';
+import { BaseResDto } from './../dto/resDto/BaseResDto';
+import { AuthResultDto } from '../dto/resDto/AuthResultDto';
+import { LOGIN_FAILED } from './../dto/resDto/BaseErrorDto';
 import { Request, Response, NextFunction } from 'express';
 import { IUserRepository } from '../types/IUserRepository';
 import UserRepository from '../repositories/UserRepository';
 import logger from '../config/logger';
 
-const l = {
-   result: [
-      {
-         name: 'Tien Pham',
-         isActive: false,
-         type: 0,
-         jobTitle: null,
-         level: 15,
-         userCode: null,
-         avatarPath: '/avatars/1632474098451_1_tien.pham.jpg',
-         branch: null,
-         id: 1,
-      },
-   ],
-   targetUrl: null,
-   success: true,
-   error: null,
-   unAuthorizedRequest: false,
-   __abp: true,
-};
 class AuthenService {
    private _repository: IUserRepository = UserRepository;
 

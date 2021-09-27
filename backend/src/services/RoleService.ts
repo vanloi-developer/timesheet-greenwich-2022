@@ -4,7 +4,7 @@ import RoleRepository from '../repositories/RoleRepository';
 import logger from '../config/logger';
 
 import dotenv from 'dotenv';
-import { UserResDTO } from '../dto/UserResDto';
+import { UserResDTO } from '../dto/resDto/UserResDto';
 dotenv.config();
 
 class RoleService {

@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 import { Request, Response, NextFunction } from 'express';
 import logger from '../config/logger';
 import dotenv from 'dotenv';
-import { AUTH_ERR, INVALID_TOKEN } from '../dto/BaseErrorDto';
+import { AUTH_ERR, INVALID_TOKEN } from '../dto/resDto/BaseErrorDto';
 
 dotenv.config();
 

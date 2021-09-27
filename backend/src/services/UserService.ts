@@ -1,13 +1,12 @@
+import { BaseResDto } from './../dto/resDto/BaseResDto';
+import { UserResDTO } from './../dto/resDto/UserResDto';
 import { ADMIN_PASSWORD } from './../constants/index';
-import { IResetPassword } from './../dto/IResetPassword';
-import { UserResDTO } from './../dto/UserResDto';
 import { NextFunction, Request, Response } from 'express';
-import { BaseResDto } from '../dto/BaseResDto';
 import bcrypt from 'bcrypt';
 import { IUserRepository } from '../types/IUserRepository';
 import UserRepository from '../repositories/UserRepository';
 import logger from '../config/logger';
-import { baseError, NOT_EXIST_USER, WRONG_ADMIN_PASS } from '../dto/BaseErrorDto';
+import { baseError, NOT_EXIST_USER, WRONG_ADMIN_PASS } from '../dto/resDto/BaseErrorDto';
 import genarateID from '../utils/genarateID';
 import { IUserDecodeToken } from '../types/IUserDecodeToken';
 import jwt from 'jsonwebtoken';
@@ -74,7 +73,7 @@ class UserService {
       const id: number = parseInt(req.query.Id as string);
 
       try {
-         const result = await this._repository.findByID(id);
+         const result = await this._repository.findById(id);
 
          if (!result) return res.status(500).json(NOT_EXIST_USER);
 
@@ -97,7 +96,7 @@ class UserService {
       try {
          const { id }: IUserDecodeToken = await jwt.verify(token, JWT_KEY);
 
-         const user = await this._repository.findByID(id);
+         const user = await this._repository.findById(id);
 
          return res.status(200).json({
             ...UserResDTO,
@@ -115,19 +114,26 @@ class UserService {
    public getUserNotPagging = async (req: Request, res: Response, next: NextFunction) => {
       try {
          const result = await this._repository.findUserNotPagging();
-         // return res.status(200).json({
-         //    ...UserResDTO,
-         //    result,
-         // });
-         return res.status(200).json(result);
+         return res.status(200).json({
+            ...BaseResDto,
+            result,
+         });
       } catch (error) {
          logger.error('getUserNotPagging UserService error: ', error.message);
          next(error);
       }
    };
    public getAllPagging = async (req: Request, res: Response, next: NextFunction) => {
+      const { filterItems, maxResultCount, skipCount, searchText } = req.body;
+
       try {
-         const result = await this._repository.findUserPagging();
+         const result = await this._repository.filterUserPagging(
+            filterItems,
+            maxResultCount,
+            skipCount,
+            searchText,
+         );
+
          return res.status(200).json({
             ...UserResDTO,
             result,
@@ -142,7 +148,7 @@ class UserService {
       try {
          const result = await this._repository.getAllMangagers();
          return res.status(200).json({
-            ...UserResDTO,
+            ...BaseResDto,
             result,
          });
       } catch (error) {
@@ -154,7 +160,10 @@ class UserService {
    public Delete = async (req: Request, res: Response, next: NextFunction) => {
       const id: number = parseInt(req.query.Id as string);
       try {
-         await this._repository.DeleteUserById(id);
+         const data = await this._repository.findById(id);
+         if (!data) return res.status(500).json(NOT_EXIST_USER);
+
+         await this._repository.deleteUserById(id);
          return res.status(200).json({
             ...UserResDTO,
             result: { message: 'Delete user successfully!' },
@@ -165,57 +174,53 @@ class UserService {
       }
    };
 
-   public Update = async (req: Request, res: Response, next: NextFunction) => {
-      try {
-         const user = await this._repository.findByID(req.body.id as number);
-         if (!user) return res.status(500);
+   public UpdateBase = (updatefield: Object) => {
+      return async (req: Request, res: Response, next: NextFunction) => {
+         try {
+            const data = await this._repository.findById(req.body.id as number);
+            if (!data) return res.status(500).json(NOT_EXIST_USER);
 
-         const result = await this._repository.update(req.body);
+            const result = await this._repository.update(
+               req.body.id,
+               updatefield ? updatefield : req.body,
+            );
 
-         return res.status(200).json({
-            ...BaseResDto,
-            result,
-         });
-      } catch (error) {
-         logger.error('createUser UserService error: ', error.message);
-         next(error);
-      }
+            return res.status(200).json({
+               ...BaseResDto,
+               result,
+            });
+         } catch (error) {
+            logger.error('createUser UserService error: ', error.message);
+            next(error);
+         }
+      };
    };
 
-   public DeactiveUser = async (req: Request, res: Response, next: NextFunction) => {
-      const id: number = parseInt(req.body.id as string);
+   public Update = (updatefield: Object) => {
+      return async (req: Request, res: Response, next: NextFunction) => {
+         try {
+            const data = await this._repository.findById(req.body.id as number);
+            if (!data) return res.status(500);
 
-      try {
-         const user = await this._repository.findByID(id);
-         if (!user) return res.status(500).json(NOT_EXIST_USER);
+            const result = await this._repository.update(
+               req.body.id,
+               updatefield ? updatefield : req.body,
+            );
 
-         await this._repository.edit(id, { isActive: false });
-
-         return res.status(200).json({
-            ...UserResDTO,
-         });
-      } catch (error) {
-         logger.error('getUserLoginInfo UserService error: ', error.message);
-         next(error);
-      }
+            return res.status(200).json({
+               ...BaseResDto,
+               result,
+            });
+         } catch (error) {
+            logger.error('createUser UserService error: ', error.message);
+            next(error);
+         }
+      };
    };
 
-   public ActiveUser = async (req: Request, res: Response, next: NextFunction) => {
-      const id: number = parseInt(req.body.id as string);
+   public DeactiveUser = this.UpdateBase({ isActive: false });
 
-      try {
-         const user = await this._repository.findByID(id);
-         if (!user) return res.status(500).json(NOT_EXIST_USER);
-         await this._repository.edit(id, { isActive: true });
-
-         return res.status(200).json({
-            ...UserResDTO,
-         });
-      } catch (error) {
-         logger.error('getUserLoginInfo UserService error: ', error.message);
-         next(error);
-      }
-   };
+   public ActiveUser = this.UpdateBase({ isActive: true });
 
    public ResetPasword = async (req: Request, res: Response, next: NextFunction) => {
       const { adminPassword, newPassword, userId } = req.body;
@@ -223,10 +228,10 @@ class UserService {
       try {
          if (adminPassword !== ADMIN_PASSWORD) return res.status(400).json(WRONG_ADMIN_PASS);
 
-         const user = await this._repository.findByID(userId);
+         const user = await this._repository.findById(userId);
          if (!user) return res.status(500).json(NOT_EXIST_USER);
 
-         await this._repository.edit(userId, { password: newPassword });
+         await this._repository.resetPassword(userId, { password: newPassword });
 
          return res.status(200).json({
             ...UserResDTO,

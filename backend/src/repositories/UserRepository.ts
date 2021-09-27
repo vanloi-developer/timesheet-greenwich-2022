@@ -1,8 +1,10 @@
+import { searchTextFieldOpt } from './../utils/index';
+import { SEARCH_TEXT_FIELD_CUSTOMER, SEARCH_TEXT_FIELD_USER } from './../constants/index';
+import { IFilterItems, IFilterOpt } from './../dto/reqDto/AllPaggingDto';
 import { IUserRepository } from './../types/IUserRepository';
 import db from '../models';
 import { IUserModel } from '../types/IUserModel';
 import logger from '../config/logger';
-
 class UserRepository implements IUserRepository {
    private readonly _db = db.User;
 
@@ -56,9 +58,9 @@ class UserRepository implements IUserRepository {
       }
    }
 
-   async findByID(id: Number) {
+   async findById(id: Number) {
       try {
-         return await (await this._db.findOne({ id })).isSelected('-_id');
+         return await await this._db.findOne({ id }).select('-_id');
       } catch (error) {
          logger.error('findByID UserRepository error: ', error.message);
       }
@@ -74,10 +76,29 @@ class UserRepository implements IUserRepository {
       }
    }
 
-   async findUserPagging() {
-      try {
-         const items = await this._db.find({});
+   async filterUserPagging(
+      filterItems: IFilterItems[],
+      maxResultCount: number,
+      skipCount: number,
+      searchText: string,
+   ) {
+      // If have filterItems. Create Option must have array in search
+      let filterOpt: IFilterOpt[] = filterItems.length
+         ? filterItems.map((item) => ({
+              [item.propertyName]: item.value,
+           }))
+         : [];
 
+      //Search with name | username ... text
+      if (searchText && searchText !== '') {
+         let orOpt = searchTextFieldOpt(searchText, SEARCH_TEXT_FIELD_USER);
+         if (orOpt.length) filterOpt.push({ $or: orOpt });
+      }
+      try {
+         const findOpt = filterOpt.length ? { $and: filterOpt } : {};
+
+         const items = await this._db.find(findOpt).skip(skipCount).limit(maxResultCount);
+         console.log(items);
          return {
             totalCount: items.length,
             items,
@@ -246,24 +267,24 @@ class UserRepository implements IUserRepository {
       }
    }
 
-   async DeleteUserById(id: number) {
+   async deleteUserById(id: number) {
       try {
          await this._db.deleteOne({ id });
       } catch (error) {
          logger.error('DeleteUserById UserRepository error: ', error.message);
       }
    }
-   async update(user: IUserModel) {
+   async update(id: number, updateFeild) {
       try {
-         return await this._db.findOneAndUpdate({ id: user.id }, { ...user });
+         await this._db.findOneAndUpdate({ id }, updateFeild);
       } catch (error) {
          logger.error('findByID UserRepository error: ', error.message);
       }
    }
 
-   async edit(id: number, editFeild) {
+   async resetPassword(id: number, password: Object) {
       try {
-         await this._db.findOneAndUpdate({ id }, editFeild);
+         await this._db.findOneAndUpdate({ id }, password);
       } catch (error) {
          logger.error('findByID UserRepository error: ', error.message);
       }

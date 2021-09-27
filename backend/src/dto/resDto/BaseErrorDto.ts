@@ -1,5 +1,4 @@
-import { error } from './../middlewares/error';
-import { IBaseError } from '../types/IBaseError';
+import { IBaseError } from '../../types/IBaseError';
 import { BaseResDto } from './BaseResDto';
 
 const BaseErrorDto = (message: string | null = null, details: string | null = null): IBaseError => {
@@ -30,3 +29,4 @@ export const WRONG_ADMIN_PASS = BaseErrorDto(
 );
 
 export const NOT_EXIST_USER = BaseErrorDto('User not exist');
+export const NOT_EXIST_CUSTOMERS = BaseErrorDto('Cutomers not exist');

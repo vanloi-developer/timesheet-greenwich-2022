@@ -1,5 +1,5 @@
-import { IUserResDTO } from '../types/IUserResDTO';
-import { APP } from './../constants/index';
+import { IUserResDTO } from '../../types/IUserResDTO';
+import { APP } from '../../constants/index';
 import { BaseResDto } from './BaseResDto';
 
 const VERSION = APP.VERSION;

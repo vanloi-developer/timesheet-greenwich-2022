@@ -1,3 +1,4 @@
-import User from "./UserModel";
+import User from './UserModel';
+import Customer from './CustomerModel';
 
-export default { User };
+export default { User, Customer };
