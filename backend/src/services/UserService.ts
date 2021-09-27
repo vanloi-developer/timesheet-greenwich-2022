@@ -7,7 +7,7 @@ import { IUserRepository } from '../types/IUserRepository';
 import UserRepository from '../repositories/UserRepository';
 import logger from '../config/logger';
 import { baseError, NOT_EXIST_USER, WRONG_ADMIN_PASS } from '../dto/resDto/BaseErrorDto';
-import genarateID from '../utils/genarateID';
+import genarateID from '../utils/generateID';
 import { IUserDecodeToken } from '../types/IUserDecodeToken';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
@@ -28,7 +28,7 @@ class UserService {
    // targetUrl: null
    // unAuthorizedRequest: false
 
-   public createUser = async (req: Request, res: Response, next: NextFunction) => {
+   public create = async (req: Request, res: Response, next: NextFunction) => {
       const userInput = { ...req.body };
 
       try {
@@ -69,7 +69,7 @@ class UserService {
       }
    };
 
-   public Get = async (req: Request, res: Response, next: NextFunction) => {
+   public get = async (req: Request, res: Response, next: NextFunction) => {
       const id: number = parseInt(req.query.Id as string);
 
       try {
@@ -135,7 +135,7 @@ class UserService {
          );
 
          return res.status(200).json({
-            ...UserResDTO,
+            ...BaseResDto,
             result,
          });
       } catch (error) {

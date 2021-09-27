@@ -4,6 +4,7 @@ import UserService = require('../services/UserService');
 import WorkTimeService = require('../services/WorkTimeService');
 import CustomerRouter = require('./CustomerRouter');
 import TaskRouter = require('./TaskRouter');
+import RoleRouter = require('./RoleRouter');
 
 class AppRouter extends BaseRouter {
    private _userService = UserService;
@@ -24,6 +25,7 @@ class AppRouter extends BaseRouter {
       this.router.use('/User', UserRouter);
       this.router.use('/Customer', CustomerRouter);
       this.router.use('/Task', TaskRouter);
+      this.router.use('/Role', RoleRouter);
    }
 }
 

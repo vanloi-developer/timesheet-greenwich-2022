@@ -1,13 +1,13 @@
 import { INVALID_REQUEST } from './../../dto/resDto/BaseErrorDto';
-import {
-   REQUIRED_FIELD_RESET_PASS,
-   REQUIRED_FIELD_SAVE_CUSTOMER,
-   REQUIRED_FIELD_SAVE_TYPE,
-} from './../../constants/index';
+// import {
+//    REQUIRED_FIELD_RESET_PASS,
+//    REQUIRED_FIELD_SAVE_CUSTOMER,
+//    REQUIRED_FIELD_SAVE_TYPE,
+// } from './../../constants/index';
 import { Request, Response, NextFunction } from 'express';
-import { REQUIRED_FIELD_LOGIN } from '../../constants';
+// import { REQUIRED_FIELD_LOGIN } from '../../constants';
 
-const validate = (requestFeild) => {
+export const validate = (requestFeild) => {
    return (req: Request, res: Response, next: NextFunction) => {
       const data = { ...req.body };
       const REQUIRED_FIELD = requestFeild;
@@ -49,8 +49,8 @@ const validate = (requestFeild) => {
    };
 };
 
-export const validLogin = validate(REQUIRED_FIELD_LOGIN);
-export const validResetPass = validate(REQUIRED_FIELD_RESET_PASS);
-export const validCreateCustomer = validate(REQUIRED_FIELD_SAVE_CUSTOMER);
-
-export const validCreateTask = validate(REQUIRED_FIELD_SAVE_TYPE);
+// export const validLogin = validate(REQUIRED_FIELD_LOGIN);
+// export const validResetPass = validate(REQUIRED_FIELD_RESET_PASS);
+// export const validCreateCustomer = validate(REQUIRED_FIELD_SAVE_CUSTOMER);
+// export const validCreateTask = validate(REQUIRED_FIELD_SAVE_TYPE);
+// export const validCreate = validate(REQUIRED_FIELD_SAVE_TYPE);

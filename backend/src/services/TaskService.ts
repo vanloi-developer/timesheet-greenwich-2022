@@ -4,7 +4,7 @@ import { BaseResDto } from '../dto/resDto/BaseResDto';
 import { NextFunction, Request, Response } from 'express';
 import logger from '../config/logger';
 import { baseError, NOT_EXIST_CUSTOMERS, NOT_EXIST_TASK } from '../dto/resDto/BaseErrorDto';
-import genarateID from '../utils/genarateID';
+import genarateID from '../utils/generateID';
 import TaskRepository from '../repositories/TaskRepository';
 
 class TaskService {
@@ -85,44 +85,6 @@ class TaskService {
          next(error);
       }
    };
-
-   // public getAllPagging = async (req: Request, res: Response, next: NextFunction) => {
-   //    const { filterItems, maxResultCount, skipCount, searchText } = req.body;
-
-   //    try {
-   //       const result = await this._repository.filterUserPagging(
-   //          filterItems,
-   //          maxResultCount,
-   //          skipCount,
-   //          searchText,
-   //       );
-
-   //       return res.status(200).json({
-   //          ...BaseResDto,
-   //          result,
-   //       });
-   //    } catch (error) {
-   //       logger.error('getAllPagging UserService error: ', error.message);
-   //       next(error);
-   //    }
-   // };
-
-   // public Update = async (req: Request, res: Response, next: NextFunction) => {
-   //    try {
-   //       const user = await this._repository.findById(req.body.id as number);
-   //       if (!user) return res.status(500);
-
-   //       const result = await this._repository.update(req.body.id, req.body);
-
-   //       return res.status(200).json({
-   //          ...BaseResDto,
-   //          result,
-   //       });
-   //    } catch (error) {
-   //       logger.error('createUser UserService error: ', error.message);
-   //       next(error);
-   //    }
-   // };
 
    public Delete = async (req: Request, res: Response, next: NextFunction) => {
       const id: number = parseInt(req.query.Id as string);

@@ -1,5 +1,6 @@
+import { REQUIRED_FIELD_SAVE_CUSTOMER } from './../constants/index';
+import { validate } from './../middlewares/validate/FieldValidate';
 import { validQueryID } from './../middlewares/validate/UserValidate';
-import { validCreateCustomer } from './../middlewares/validate/FieldValidate';
 import { BaseRouter } from './BaseRouter';
 import CustomerService from '../services/CustomerService';
 
@@ -11,7 +12,7 @@ class CustomerRouter extends BaseRouter {
    }
 
    protected init() {
-      this.router.post('/Save', validCreateCustomer, this._service.create);
+      this.router.post('/Save', validate(REQUIRED_FIELD_SAVE_CUSTOMER), this._service.create);
       this.router.post('/GetAllPagging', this._service.getAllPagging);
 
       this.router.delete('/Delete', validQueryID, this._service.Delete);

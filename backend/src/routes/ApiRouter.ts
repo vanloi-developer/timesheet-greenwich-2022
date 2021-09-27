@@ -1,5 +1,6 @@
+import { REQUIRED_FIELD_LOGIN } from './../constants/index';
+import { validate } from './../middlewares/validate/FieldValidate';
 import { authen } from './../middlewares/authen';
-import { validLogin } from '../middlewares/validate/FieldValidate';
 import appRouter from './AppRouter';
 import { BaseRouter } from './BaseRouter';
 // import testRouter from './TestRouter';
@@ -18,7 +19,11 @@ class ApiRouter extends BaseRouter {
       // this.router.use("/test", testRouter);
       this.router.use('/services/app', authen, appRouter);
 
-      this.router.post('/TokenAuth/Authenticate', validLogin, authenService.authen);
+      this.router.post(
+         '/TokenAuth/Authenticate',
+         validate(REQUIRED_FIELD_LOGIN),
+         authenService.authen,
+      );
    }
 }
 

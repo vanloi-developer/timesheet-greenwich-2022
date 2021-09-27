@@ -4,7 +4,7 @@ import { BaseResDto } from '../dto/resDto/BaseResDto';
 import { NextFunction, Request, Response } from 'express';
 import logger from '../config/logger';
 import { baseError, NOT_EXIST_CUSTOMERS } from '../dto/resDto/BaseErrorDto';
-import genarateID from '../utils/genarateID';
+import genarateID from '../utils/generateID';
 import CustomerRepository from '../repositories/CustomerRepository';
 
 class CustomerService {

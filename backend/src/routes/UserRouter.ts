@@ -1,10 +1,10 @@
+import { REQUIRED_FIELD_RESET_PASS } from './../constants/index';
+import { validate } from './../middlewares/validate/FieldValidate';
 import UserService from '../services/UserService';
 import { BaseRouter } from './BaseRouter';
 import { validCreate } from '../middlewares/validate/UserValidate';
 import RoleService from '../services/RoleService';
 import { validQueryID } from '../middlewares/validate/UserValidate';
-import { validResetPass } from '../middlewares/validate/FieldValidate';
-
 class UserRouter extends BaseRouter {
    private _userService = UserService;
    private _roleService = RoleService;
@@ -170,11 +170,15 @@ class UserRouter extends BaseRouter {
             __abp: true,
          });
       });
-      this.router.get('/Get', validQueryID, this._userService.Get);
+      this.router.get('/Get', validQueryID, this._userService.get);
 
-      this.router.post('/Create', validCreate, this._userService.createUser);
+      this.router.post('/Create', validCreate, this._userService.create);
       this.router.post('/GetAllPagging', this._userService.getAllPagging);
-      this.router.post('/ResetPassword', validResetPass, this._userService.ResetPasword);
+      this.router.post(
+         '/ResetPassword',
+         validate(REQUIRED_FIELD_RESET_PASS),
+         this._userService.ResetPasword,
+      );
 
       this.router.post('/DeactiveUser', this._userService.DeactiveUser);
       this.router.post('/ActiveUser', this._userService.ActiveUser);
