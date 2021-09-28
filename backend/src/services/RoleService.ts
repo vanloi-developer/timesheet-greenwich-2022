@@ -1,6 +1,6 @@
 import { BaseResDto } from './../dto/resDto/BaseResDto';
 import { baseError } from './../dto/resDto/BaseErrorDto';
-import { IRoleModel } from './../types/IRoleModel';
+import { IRoleModel } from '../types/Models/IRoleModel';
 import { NextFunction, Request, Response } from 'express';
 import { IRoleRepository } from '../types/IRoleRepository';
 import RoleRepository from '../repositories/RoleRepository';
@@ -30,6 +30,7 @@ class RoleService {
          if (exitstedTask)
             return res.status(500).json(baseError(`Role ${exitstedTask.name} already existed`));
 
+         //Auto generate id and normalizedName
          const id = generateID('role');
          roleInput.id = id;
          roleInput.normalizedName = roleInput.name.toUpperCase();

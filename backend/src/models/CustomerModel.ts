@@ -1,5 +1,5 @@
+import { ICustomerModel } from '../types/Models/ICustomerModel';
 import mongoose, { Schema } from 'mongoose';
-import { ICustomerModel } from '../types/ICustomerModel';
 
 const CustomerSchema: Schema = new Schema({
    id: { type: Number, required: true },

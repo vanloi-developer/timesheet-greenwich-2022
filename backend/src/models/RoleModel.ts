@@ -1,4 +1,4 @@
-import { IRoleModel } from './../types/IRoleModel';
+import { IRoleModel } from './../types/Models/IRoleModel';
 import dotenv from 'dotenv';
 import mongoose, { Schema } from 'mongoose';
 

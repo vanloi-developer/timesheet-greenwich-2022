@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 import mongoose, { Schema } from 'mongoose';
 import jwt from 'jsonwebtoken';
-import { IUserModel } from '../types/IUserModel';
+import { IUserModel } from '../types/Models/IUserModel';
 import bcrypt from 'bcrypt';
 
 dotenv.config();
@@ -20,10 +20,12 @@ const UserSchema: Schema = new Schema({
    address: { type: String, default: '' },
    isActive: { type: Boolean, default: null },
    roleNames: { type: Array },
-   projectUsers: { type: Array },
+
+   // projectUsers: { type: Array },
+
    type: { type: Number, default: null },
    salary: { type: Number, default: null },
-   salaryAt: { type: String, default: '' },
+   salaryAt: { type: Date, default: null },
    startDateAt: { type: Date, default: null },
    allowedLeaveDay: { type: Number, default: null },
    userCode: { type: String, default: '' },
@@ -31,9 +33,11 @@ const UserSchema: Schema = new Schema({
    level: { type: Number, default: null },
    registerWorkDay: { type: Number, default: null },
    avatarPath: { type: String, default: '' },
-   managerId: { type: Number, default: 1 },
-   managerAvatarPath: { type: String, default: '' },
-   managerName: { type: String, default: '' },
+
+   // managerId: { type: Number, default: 1 },
+
+   // managerAvatarPath: { type: String, default: '' },
+   // managerName: { type: String, default: '' },
    branch: { type: Number, default: 0 },
    sex: { type: Number, default: null },
    creationTime: { type: Date, default: new Date() },

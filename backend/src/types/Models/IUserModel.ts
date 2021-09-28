@@ -13,7 +13,7 @@ export interface IUserModel {
    projectUsers: Array<Object>;
    type: Number;
    salary: Number;
-   salaryAt: String;
+   salaryAt: Date;
    startDateAt: Date;
    allowedLeaveDay: Number;
    userCode: String;

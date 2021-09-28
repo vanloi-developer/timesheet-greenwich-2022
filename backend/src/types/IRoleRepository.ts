@@ -1,4 +1,4 @@
-import { IRoleModel } from './IRoleModel';
+import { IRoleModel } from './Models/IRoleModel';
 export interface IRoleRepository {
    getRoles();
    findByName(name: string);

@@ -57,3 +57,9 @@ export const validQueryID = (req: Request, res: Response, next: NextFunction) =>
 
    next();
 };
+
+export const validQueryInput = (req: Request, res: Response, next: NextFunction) => {
+   if (!req.query.input) return res.status(400).json(INVALID_REQUEST);
+
+   next();
+};

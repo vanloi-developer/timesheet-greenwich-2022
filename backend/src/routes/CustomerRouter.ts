@@ -12,6 +12,8 @@ class CustomerRouter extends BaseRouter {
    }
 
    protected init() {
+      this.router.get('/GetAll', this._service.getAll);
+
       this.router.post('/Save', validate(REQUIRED_FIELD_SAVE_CUSTOMER), this._service.create);
       this.router.post('/GetAllPagging', this._service.getAllPagging);
 

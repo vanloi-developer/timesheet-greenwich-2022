@@ -1,6 +1,7 @@
 import { IFilterItems } from './../dto/reqDto/AllPaggingDto';
-import { ICustomerModel } from './ICustomerModel';
+import { ICustomerModel } from './Models/ICustomerModel';
 export interface ICustomerRepository {
+   findAll();
    findByName(name: string);
    findById(id: number);
    create(customer: ICustomerModel);

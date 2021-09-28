@@ -1,6 +1,6 @@
+import { IRoleModel } from './../types/Models/IRoleModel';
 import { searchTextFieldOpt } from './../utils/index';
-import { SEARCH_TEXT_FIELD_USER, REQUIRED_FIELD_CREATE_ROLE } from './../constants/index';
-import { IRoleModel } from './../types/IRoleModel';
+import { REQUIRED_FIELD_CREATE_ROLE } from './../constants/index';
 import { IRoleRepository } from './../types/IRoleRepository';
 import db from '../models';
 import logger from '../config/logger';
@@ -27,22 +27,7 @@ class RoleRepository implements IRoleRepository {
    async getRoles() {
       try {
          return {
-            items: [
-               {
-                  name: 'Admin',
-                  displayName: 'Admin',
-                  normalizedName: 'ADMIN',
-                  description: null,
-                  id: 1,
-               },
-               {
-                  name: 'BasicUser',
-                  displayName: 'BasicUser',
-                  normalizedName: 'BASICUSER',
-                  description: null,
-                  id: 2,
-               },
-            ],
+            items: await this._db.find({}).select('-_id'),
          };
       } catch (error) {
          logger.error('getRoles RoleRepository error: ', error.message);

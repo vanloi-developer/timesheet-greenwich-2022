@@ -3,7 +3,7 @@ import { SEARCH_TEXT_FIELD_CUSTOMER, SEARCH_TEXT_FIELD_USER } from './../constan
 import { IFilterItems, IFilterOpt } from './../dto/reqDto/AllPaggingDto';
 import { IUserRepository } from './../types/IUserRepository';
 import db from '../models';
-import { IUserModel } from '../types/IUserModel';
+import { IUserModel } from '../types/Models/IUserModel';
 import logger from '../config/logger';
 class UserRepository implements IUserRepository {
    private readonly _db = db.User;

@@ -1,5 +1,5 @@
 import { IFilterItems } from './../dto/reqDto/AllPaggingDto';
-import { ITaskModel } from './ITaskModel';
+import { ITaskModel } from './Models/ITaskModel';
 export interface ITaskRepository {
    findByName(name: string);
    findAll();

@@ -1,5 +1,5 @@
 import { IFilterItems } from './../dto/reqDto/AllPaggingDto';
-import { IUserModel } from './IUserModel';
+import { IUserModel } from './Models/IUserModel';
 export interface IUserRepository {
    findByUserNameEmail(userName: string, emailAddress: string);
    create(data: IUserModel);

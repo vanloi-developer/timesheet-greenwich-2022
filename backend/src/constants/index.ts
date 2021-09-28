@@ -53,3 +53,4 @@ export const SEARCH_TEXT_FIELD_CUSTOMER = ['name'];
 export const REQUIRED_FIELD_SAVE_CUSTOMER = ['name', 'address'];
 export const REQUIRED_FIELD_SAVE_TASK = ['name', 'type'];
 export const REQUIRED_FIELD_CREATE_ROLE = ['description', 'displayName', 'name'];
+export const SEARCH_TEXT_FIELD_PROJECTS = ['customerName', 'name'];

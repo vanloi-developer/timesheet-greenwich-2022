@@ -4,10 +4,18 @@ import { SEARCH_TEXT_FIELD_CUSTOMER } from './../constants/index';
 import { IFilterItems, IFilterOpt } from './../dto/reqDto/AllPaggingDto';
 import { ICustomerRepository } from './../types/ICustomerRepository';
 import db from '../models';
-import { ICustomerModel } from '../types/ICustomerModel';
+import { ICustomerModel } from '../types/Models/ICustomerModel';
 import logger from '../config/logger';
 class CustomerRepository implements ICustomerRepository {
    private readonly _db = db.Customer;
+
+   async findAll() {
+      try {
+         return await this._db.find({}).select('-_id');
+      } catch (error) {
+         logger.error('findAll CustomerRepository error: ', error.message);
+      }
+   }
 
    async findByName(name: string) {
       try {

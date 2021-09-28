@@ -1,5 +1,5 @@
+import { ITaskModel } from './../types/Models/ITaskModel';
 import mongoose, { Schema } from 'mongoose';
-import { ITaskModel } from '../types/ITaskModel';
 
 const TaskSchema: Schema = new Schema({
    id: { type: Number, required: true },

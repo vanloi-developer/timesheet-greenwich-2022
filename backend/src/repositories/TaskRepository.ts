@@ -4,7 +4,7 @@ import { SEARCH_TEXT_FIELD_CUSTOMER } from './../constants/index';
 import { IFilterItems, IFilterOpt } from './../dto/reqDto/AllPaggingDto';
 import { ITaskRepository } from './../types/ITaskRepository';
 import db from '../models';
-import { ITaskModel } from '../types/ITaskModel';
+import { ITaskModel } from '../types/Models/ITaskModel';
 import logger from '../config/logger';
 class TaskRepository implements ITaskRepository {
    private readonly _db = db.Task;

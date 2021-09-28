@@ -10,6 +10,20 @@ import CustomerRepository from '../repositories/CustomerRepository';
 class CustomerService {
    private _repository: ICustomerRepository = CustomerRepository;
 
+   public getAll = async (req: Request, res: Response, next: NextFunction) => {
+      const customerInfo: CustomerDto = req.body;
+      // Customer name quang already existed
+      try {
+         //Check if customer existed
+         const result = await this._repository.findAll();
+
+         return res.status(200).json({ ...BaseResDto, result });
+      } catch (error) {
+         logger.error('createCustomer CustomerService error: ', error.message);
+         next(error);
+      }
+   };
+
    public create = async (req: Request, res: Response, next: NextFunction) => {
       const customerInfo: CustomerDto = req.body;
       // Customer name quang already existed
