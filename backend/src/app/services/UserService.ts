@@ -1,12 +1,12 @@
-
 import { UserModel } from "../../models";
 import { UserRepository } from "../../dataAccess/repositories";
 import { CreateUserDTO } from "../dto/requests";
 import { BaseService } from "./base";
 import { ApiError } from "../core";
 import { HttpStatusCode } from "../enums";
-import { UserDTO } from "../dto/requests/user/UserDto";
-import { IUser } from "src/interfaces";
+import { UserDTO } from "../dto/common/UserDto";
+import { IUser } from "../../interfaces";
+import { GridParam } from "../dto/requests/GridParam";
 
 class UserService extends BaseService<UserRepository> {
   constructor() {
@@ -24,7 +24,7 @@ class UserService extends BaseService<UserRepository> {
         );
       }
 
-      const result: IUser = await this._repos.save(new UserModel(user));
+      const result: UserDTO = await this._repos.save(user);
 
       return result;
     } catch (error) {
@@ -34,7 +34,23 @@ class UserService extends BaseService<UserRepository> {
 
   public getUserNotPagging = async () => {
     try {
-      return await this._repos.retrieve();
+      return await this._repos.getUserNotPagging();
+    } catch (error) {
+      throw new ApiError(HttpStatusCode.NOT_FOUND, `Having error in business`);
+    }
+  };
+
+  public getAllManager = async () => {
+    try {
+      return await this._repos.getAllManager();
+    } catch (error) {
+      throw new ApiError(HttpStatusCode.NOT_FOUND, `Having error in business`);
+    }
+  };
+
+  public getAllPagging = async (filter: GridParam) => {
+    try {
+      return await this._repos.getAllPagging(filter);
     } catch (error) {
       throw new ApiError(HttpStatusCode.NOT_FOUND, `Having error in business`);
     }

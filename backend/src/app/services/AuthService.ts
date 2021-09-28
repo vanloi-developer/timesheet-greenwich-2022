@@ -1,4 +1,4 @@
-import { AuthenticateRequest } from "../dto/requests";
+import { AuthenticateModel } from "../dto/requests";
 import { IUser } from "../../interfaces";
 import { BaseService } from "./base";
 
@@ -7,13 +7,14 @@ import { jwtTool, PasswordManager } from "../tools";
 import { TOKEN as _ } from "../../configs";
 import { UserRepository } from "../../dataAccess/repositories";
 import { ApiError } from "../core";
+import { AuthenticateResultModel } from "../dto/responses";
 
 class AuthService extends BaseService<UserRepository> {
   constructor() {
     super(new UserRepository());
   }
 
-  public authenticate = async (request: AuthenticateRequest) => {
+  public authenticate = async (request: AuthenticateModel) => {
     try {
       const { userNameOrEmailAddress, password } = request;
 
@@ -46,7 +47,7 @@ class AuthService extends BaseService<UserRepository> {
 
       const accessToken = await jwtTool.createToken(payload);
 
-      const response = {
+      const response: AuthenticateResultModel = {
         accessToken,
         encryptedAccessToken: "string",
         expireInSeconds: options.expiresIn,

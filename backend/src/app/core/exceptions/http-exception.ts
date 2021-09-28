@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from "express";
 import { HttpStatusCode } from "../../enums";
-import { DataResponse } from "../responses";
 import { IResponse } from "../responses/interfaces";
 import { ApiError } from "./ApiError";
 

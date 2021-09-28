@@ -1,7 +1,8 @@
-import { Document } from "mongoose";
+import { IBase } from "./IBase";
 import { TypeUser, Level, Branch, Sex } from "../app/enums";
+import { Type } from "typescript";
 
-export interface IUser extends Document {
+export interface IUser extends IBase {
   id: number;
 
   userName: string;

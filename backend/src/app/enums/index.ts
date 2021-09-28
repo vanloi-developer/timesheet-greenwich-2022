@@ -1,11 +1,41 @@
-export { HttpStatusCode } from "./HttpStatusCode";
+/**
+ * http enum
+ */
+export { HttpStatusCode } from "./http/HttpStatusCode";
+/*--------------------------------------*/
 
-export { Task } from "./Task";
+/**
+ * task enum
+ */
+export { Task } from "./task/Task";
+/*--------------------------------------*/
 
-export { TypeUser } from "./typeuser";
+/**
+ * user enum
+ */
+export { TypeUser } from "./user/TypeUser";
 
-export { Branch } from "./branch";
+export { Branch } from "./user/Branch";
 
-export { Level } from "./level";
+export { Level } from "./user/Level";
 
-export { Sex } from "./sex";
+export { Sex } from "./user/Sex";
+/*--------------------------------------*/
+
+/**
+ * project enum
+ */
+export { ProjectStatus } from "./project/ProjectStatus";
+
+export { ProjectType } from "./project/ProjectType";
+
+export { ProjectUserType } from "./project/ProjectUserType";
+/*--------------------------------------*/
+
+/**
+ * timesheet enum
+ */
+export { TimesheetType } from "./timesheet/TimesheetType";
+
+export { TimesheetStatus } from "./timesheet/TimesheetStatus";
+/*--------------------------------------*/

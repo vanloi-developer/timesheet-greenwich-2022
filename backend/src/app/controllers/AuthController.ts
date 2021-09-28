@@ -3,7 +3,10 @@ import { BaseController } from "./base";
 import { AuthService } from "../services";
 
 import * as express from "express";
-import { AuthenticateRequest } from "../dto/requests";
+
+import { AuthenticateModel } from "../dto/requests";
+
+import { AuthenticateResultModel } from "../dto/responses";
 
 class AuthController extends BaseController<AuthService> {
   constructor() {
@@ -16,9 +19,10 @@ class AuthController extends BaseController<AuthService> {
     next: express.NextFunction
   ) => {
     try {
-      const request: AuthenticateRequest = req.body;
+      const request: AuthenticateModel = req.body;
 
-      const response = await this._business.authenticate(request);
+      const response: AuthenticateResultModel =
+        await this._business.authenticate(request);
 
       return res.status(200).json(response);
     } catch (error) {

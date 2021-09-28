@@ -1,5 +1,11 @@
-export { TaskDto } from "./task/TaskDto";
+export { TaskDto } from "../common/TaskDto";
 
 export { CreateUserDTO } from "./user/CreateUserDto";
 
-export { AuthenticateRequest } from "./auth/AuthenticateRequest";
+/**
+ * authenticate request dto
+ */
+
+export { AuthenticateModel } from "./auth/AuthenticateModel";
+
+/**----------------------------------- */

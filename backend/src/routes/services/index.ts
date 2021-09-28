@@ -1,6 +1,14 @@
 import { BaseRouter } from "../base";
+
+import { CustomerRouter } from "./Customer";
+import { ProjectRouter } from "./Project";
+
+import { RoleRouter } from "./Role";
+
 import { SessionRouter } from "./Session";
+
 import { TaskRouter } from "./Task";
+
 import { UserRouter } from "./User";
 
 class ServiceRouter extends BaseRouter {
@@ -11,8 +19,16 @@ class ServiceRouter extends BaseRouter {
 
   public init() {
     this._router.use("/task", new TaskRouter()._router);
+
     this._router.use("/user", new UserRouter()._router);
+
     this._router.use("/session", new SessionRouter()._router);
+
+    this._router.use("/customer", new CustomerRouter()._router);
+
+    this._router.use("/role", new RoleRouter()._router);
+
+    this._router.use("/project", new ProjectRouter()._router);
   }
 }
 

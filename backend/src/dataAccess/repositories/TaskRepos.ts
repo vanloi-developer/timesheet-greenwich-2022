@@ -9,9 +9,13 @@ class TaskRepository extends BaseRepository<ITask> {
     super("tasks", TaskSchema);
   }
 
+  public getAll = async () => {
+    return await this._model.find({}, "name id");
+  };
+
   public archive = async (id: number) => {
     const isActived = await this._model.updateOne(
-      { id },
+      { id: id },
       { $set: { isDeleted: true } }
     );
 
@@ -20,7 +24,7 @@ class TaskRepository extends BaseRepository<ITask> {
 
   public deArchive = async (id: number) => {
     const isActived = await this._model.updateOne(
-      { id },
+      { id: id },
       { $set: { isDeleted: false } }
     );
 

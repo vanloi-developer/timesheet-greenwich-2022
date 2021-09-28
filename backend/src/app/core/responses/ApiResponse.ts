@@ -1,6 +1,16 @@
 import { ApiError } from "../exceptions/ApiError";
 import { IResponse } from "./interfaces";
 
-class DataResponse {}
+export const ApiResponse: IResponse = {
+  error: null,
 
-export { DataResponse };
+  result: null,
+
+  success: true,
+
+  targetUrl: null,
+
+  unAuthorizedRequest: false,
+
+  __abp: true,
+};

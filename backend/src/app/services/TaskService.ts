@@ -12,15 +12,14 @@ class TaskService extends BaseService<TaskRepository> {
 
   public save = async (item: TaskDto) => {
     try {
-      return await this._repos.save(new TaskModel(item));
+      return await this._repos.save(item);
     } catch (error) {
-      throw new ApiError(HttpStatusCode.NOT_FOUND, `Having error in business`);
+      throw error;
     }
   };
 
   public delete = async (id: number) => {
     try {
-      console.log(id);
       return await this._repos.delete(id);
     } catch (error) {
       throw new ApiError(HttpStatusCode.NOT_FOUND, `Having error in business`);
@@ -29,7 +28,7 @@ class TaskService extends BaseService<TaskRepository> {
 
   public getAll = async () => {
     try {
-      return await this._repos.retrieve();
+      return await this._repos.getAll();
     } catch (error) {
       throw error;
     }

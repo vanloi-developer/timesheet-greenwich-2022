@@ -17,15 +17,14 @@ class UserRouter extends BaseRouter {
   public init() {
     this._router.post(
       "/create",
-      Authenticator.authenticate,
       this.controller.create
     );
     this._router.put("/update");
     this._router.delete("/delete");
     this._router.get("/getUserNotPagging", this.controller.getUserNotPagging);
     this._router.get("/GetRoles");
-    this._router.post("/GetAllPagging");
-    this._router.get("/GetAllManager");
+    this._router.post("/GetAllPagging", this.controller.getAllPagging);
+    this._router.get("/GetAllManager", this.controller.getAllManager);
     this._router.post("/ActiveUser");
     this._router.post("/DeactiveUser");
     this._router.post("/UpdateAvatar");

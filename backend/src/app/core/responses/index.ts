@@ -1,1 +1,1 @@
-export { DataResponse } from "./ApiResponse";
+export { ApiResponse } from "./ApiResponse";

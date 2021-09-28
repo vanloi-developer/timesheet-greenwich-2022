@@ -1,6 +1,5 @@
 export { ApiError } from "./exceptions/ApiError";
 
-export { handlingError, catch404} from "./exceptions";
+export { handlingError, catch404 } from "./exceptions";
 
-export { DataResponse } from "./responses";
-
+export { ApiResponse } from "./responses";

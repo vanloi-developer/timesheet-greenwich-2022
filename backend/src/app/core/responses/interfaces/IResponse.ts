@@ -1,9 +1,9 @@
 import { ApiError } from "../../exceptions/ApiError";
 
 export interface IResponse  {
-  error: ApiError | null;
+  error?: ApiError | null;
 
-  result: any;
+  result?: any;
 
   success: boolean;
 

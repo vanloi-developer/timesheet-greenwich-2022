@@ -1,8 +1,8 @@
 import { Task } from "src/app/enums";
 
-import { Document } from "mongoose";
+import { IBase } from "./IBase";
 
-export interface ITask extends Document {
+export interface ITask extends IBase {
   name: string;
   type?: Task;
   isDeleted?: boolean;

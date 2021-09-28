@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { DataResponse } from "../core";
+
 import { IResponse } from "../core/responses/interfaces";
 import { TaskDto } from "../dto/requests";
 import { HttpStatusCode } from "../enums";
@@ -15,7 +15,7 @@ class TaskController extends BaseController<TaskService> {
     try {
       const task: TaskDto = req.body;
 
-      const result: TaskDto = await this._business.save(task);
+      const result = await this._business.save(task);
 
       const response: IResponse = {
         error: null,
@@ -39,7 +39,7 @@ class TaskController extends BaseController<TaskService> {
 
   public delete = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const id: number = Number(req.query.id);
+      const id: number = +req.query.Id;
 
       const result = await this._business.delete(id);
 
@@ -48,7 +48,7 @@ class TaskController extends BaseController<TaskService> {
 
         result,
 
-        success: false,
+        success: true,
 
         targetUrl: null,
 
@@ -72,7 +72,7 @@ class TaskController extends BaseController<TaskService> {
 
         result,
 
-        success: false,
+        success: true,
 
         targetUrl: null,
 
@@ -89,7 +89,7 @@ class TaskController extends BaseController<TaskService> {
 
   public archive = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const id: number = Number(req.query.id);
+      const id: number = +req.query.Id;
       const result = await this._business.archive(id);
 
       const response: IResponse = {
@@ -97,7 +97,7 @@ class TaskController extends BaseController<TaskService> {
 
         result,
 
-        success: false,
+        success: true,
 
         targetUrl: null,
 
@@ -118,7 +118,7 @@ class TaskController extends BaseController<TaskService> {
     next: NextFunction
   ) => {
     try {
-      const id: number = Number(req.query.id);
+      const id: number = +req.body.id;
       const result = await this._business.deArchive(id);
 
       const response: IResponse = {
@@ -126,7 +126,7 @@ class TaskController extends BaseController<TaskService> {
 
         result,
 
-        success: false,
+        success: true,
 
         targetUrl: null,
 
