@@ -35,5 +35,5 @@ export { ProjectUsersRepository } from "./ProjectUsersRepos";
 /**
  * timesheet repository
  */
-
+export { MyTimesheetRepository } from "./MyTimesheetRepos";
 /*--------------------------------------*/

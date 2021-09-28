@@ -12,6 +12,6 @@ export interface IMyTimesheet extends IBase {
   dateAt: string;
   status: TimesheetStatus;
 
-  projectTargetUserId: number;
+  projectTargetUserId?: number;
   id: number;
 }

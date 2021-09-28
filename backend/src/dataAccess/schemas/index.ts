@@ -36,3 +36,9 @@ export { ProjectTaskSchema } from "./ProjectTaskSchema";
 
 export { ProjectUsersSchema } from "./ProjectUsersSchema";
 /*--------------------------------------*/
+
+/**
+ * myTimesheet schema
+ */
+export { MyTimesheetSchema } from "./MyTimesheetSchema";
+/*--------------------------------------*/
