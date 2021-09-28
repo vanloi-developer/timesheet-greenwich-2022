@@ -140,8 +140,7 @@ class ProjectService extends BaseService<ProjectRepository> {
     }
   };
 
-  public inActive = async (id: number) => {
-    //return success;
+  public inActive = async (id: number): Promise<boolean> => {
     try {
       return await this._repos.inActive(id);
     } catch (error) {
@@ -149,7 +148,7 @@ class ProjectService extends BaseService<ProjectRepository> {
     }
   };
 
-  public active = async (id: number) => {
+  public active = async (id: number): Promise<boolean> => {
     try {
       return await this._repos.active(id);
     } catch (error) {
@@ -157,10 +156,15 @@ class ProjectService extends BaseService<ProjectRepository> {
     }
   };
 
-  public delete = async (id: number) => {
-    await this._repos.delete(id);
-    await this._projectTasksRepos.deleteMany(id);
-    await this._projectUsersRepos.deleteMany(id);
+  public delete = async (id: number): Promise<boolean> => {
+    try {
+      await this._repos.delete(id);
+      await this._projectTasksRepos.deleteMany(id);
+      await this._projectUsersRepos.deleteMany(id);
+      return true;
+    } catch (error) {
+      throw new ApiError(400, `Error in business logic: ${error}`);
+    }
   };
 
   public get = async (id: number) => {

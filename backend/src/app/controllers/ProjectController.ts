@@ -5,7 +5,11 @@ import { Request, Response, NextFunction } from "express";
 
 import { ApiResponse } from "../core/responses";
 import { IResponse } from "../core/responses/interfaces";
-import { GetProjectDto, ProjectDto } from "../dto/responses";
+import {
+  GetProjectDto,
+  ProjectDto,
+  ProjectIncludingTaskDto,
+} from "../dto/responses";
 
 class ProjectController extends BaseController<ProjectService> {
   constructor() {
@@ -53,7 +57,7 @@ class ProjectController extends BaseController<ProjectService> {
     try {
       const id: number = +req.body.id;
 
-      const result = await this._business.inActive(id);
+      const result: boolean = await this._business.inActive(id);
       const response: IResponse = {
         ...ApiResponse,
         result,
@@ -68,7 +72,7 @@ class ProjectController extends BaseController<ProjectService> {
   public active = async (req: Request, res: Response, next: NextFunction) => {
     const id: number = +req.body.id;
 
-    const result = await this._business.active(id);
+    const result: boolean = await this._business.active(id);
 
     const response: IResponse = {
       ...ApiResponse,
@@ -81,7 +85,7 @@ class ProjectController extends BaseController<ProjectService> {
   public delete = async (req: Request, res: Response, next: NextFunction) => {
     const id: number = +req.query.Id;
 
-    const result = await this._business.delete(id);
+    const result: boolean = await this._business.delete(id);
     const response: IResponse = {
       ...ApiResponse,
       result,
@@ -93,7 +97,7 @@ class ProjectController extends BaseController<ProjectService> {
   public get = async (req: Request, res: Response, next: NextFunction) => {
     const id: number = +req.query.id;
 
-    const result = await this._business.get(id);
+    const result: ProjectDto = await this._business.get(id);
 
     const response: IResponse = {
       ...ApiResponse,
@@ -110,8 +114,9 @@ class ProjectController extends BaseController<ProjectService> {
   ) => {
     const userId: number = req.app.locals.currentUser.id;
 
-    const result = await this._business.getProjectIncludingTasks(userId);
-    
+    const result: ProjectIncludingTaskDto[] =
+      await this._business.getProjectIncludingTasks(userId);
+
     const response: IResponse = {
       ...ApiResponse,
       result,
