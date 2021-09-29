@@ -1,8 +1,14 @@
-import { ProjectTasksDto } from "src/app/dto/responses";
-import { ApiError } from "../../app/core";
-import { IProjectTask } from "../../interfaces";
-import { ProjectTaskSchema } from "../schemas";
 import { BaseRepository } from "./base";
+
+import { ApiError } from "../../app/core";
+
+import { ProjectTaskSchema } from "../schemas";
+
+import { IProjectTask } from "../../interfaces";
+
+import { HttpStatusCode } from "../../app/enums";
+
+import { ProjectTasksDto } from "src/app/dto/responses";
 
 class ProjectTaskRepository extends BaseRepository<IProjectTask> {
   constructor() {
@@ -15,7 +21,7 @@ class ProjectTaskRepository extends BaseRepository<IProjectTask> {
     try {
       return await this._model.find({ projectId });
     } catch (error) {
-      throw new ApiError(400, `Error in repository`);
+      throw new ApiError(HttpStatusCode.BAD_REQUEST, `Error in repository`);
     }
   };
 
@@ -23,7 +29,10 @@ class ProjectTaskRepository extends BaseRepository<IProjectTask> {
     try {
       return await this._model.deleteMany({ projectId });
     } catch (error) {
-      throw new ApiError(400, `Error in repository, ${error}`);
+      throw new ApiError(
+        HttpStatusCode.BAD_REQUEST,
+        `Error in repository, ${error}`
+      );
     }
   };
 }

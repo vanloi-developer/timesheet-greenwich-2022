@@ -1,8 +1,8 @@
-import { UserRepository } from "../../dataAccess/repositories";
+import { jwtTool } from "../tools";
 
 import { BaseService } from "./base";
 
-import { jwtTool } from "../tools";
+import { UserRepository } from "../../dataAccess/repositories";
 
 class SessionService extends BaseService<UserRepository> {
   constructor() {

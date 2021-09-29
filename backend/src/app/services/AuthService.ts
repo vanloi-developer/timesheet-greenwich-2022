@@ -1,13 +1,18 @@
-import { AuthenticateModel } from "../dto/requests";
-import { IUser } from "../../interfaces";
+import { ApiError } from "../core";
+
 import { BaseService } from "./base";
+
+import { HttpStatusCode } from "../enums";
+
+import { TOKEN as _ } from "../../configs";
 
 import { jwtTool, PasswordManager } from "../tools";
 
-import { TOKEN as _ } from "../../configs";
-import { UserRepository } from "../../dataAccess/repositories";
-import { ApiError } from "../core";
+import { AuthenticateModel } from "../dto/requests";
+
 import { AuthenticateResultModel } from "../dto/responses";
+
+import { UserRepository } from "../../dataAccess/repositories";
 
 class AuthService extends BaseService<UserRepository> {
   constructor() {
@@ -22,7 +27,7 @@ class AuthService extends BaseService<UserRepository> {
 
       if (!user) {
         throw new ApiError(
-          400,
+          HttpStatusCode.BAD_REQUEST,
           "username is not already exist, please register"
         );
       }
@@ -34,7 +39,10 @@ class AuthService extends BaseService<UserRepository> {
 
       if (!isValidPassword) {
         console.log(isValidPassword);
-        throw new ApiError(400, "Password is not match, try again.");
+        throw new ApiError(
+          HttpStatusCode.BAD_REQUEST,
+          "Password is not match, try again."
+        );
       }
 
       const userId = user.id;

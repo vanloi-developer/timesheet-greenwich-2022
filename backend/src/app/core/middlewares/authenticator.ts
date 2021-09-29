@@ -1,6 +1,11 @@
-import { jwtTool } from "../../tools";
 import * as express from "express";
+
+import { jwtTool } from "../../tools";
+
 import { UserRepository } from "../../../dataAccess/repositories";
+
+import { HttpStatusCode } from "../../enums";
+
 import { ApiError } from "../exceptions";
 
 class Authenticator {
@@ -17,7 +22,10 @@ class Authenticator {
   ) => {
     try {
       if (!req.headers.authorization) {
-        throw new ApiError(401, `Required token before you can access`);
+        throw new ApiError(
+          HttpStatusCode.UNAUTHORIZED,
+          `Required token before you can access`
+        );
       }
 
       const token = req.headers.authorization.split(" ")[1];
@@ -25,7 +33,7 @@ class Authenticator {
       const decoded = await jwtTool.verifyToken(token);
 
       if (!decoded) {
-        throw new ApiError(400, `Invalid Token`);
+        throw new ApiError(HttpStatusCode.BAD_REQUEST, `Invalid Token`);
       }
 
       //@ts-ignore

@@ -1,10 +1,14 @@
-import { ApiError } from "../../app/core";
 import { ProjectUsersDto } from "../../app/dto/responses";
-import { IProjectUsers } from "../../interfaces";
 
 import { BaseRepository } from "../repositories/base";
 
+import { IProjectUsers } from "../../interfaces";
+
+import { HttpStatusCode } from "../../app/enums";
+
 import { ProjectUsersSchema } from "../schemas";
+
+import { ApiError } from "../../app/core";
 
 class ProjectUsersRepository extends BaseRepository<IProjectUsers> {
   constructor() {
@@ -19,7 +23,10 @@ class ProjectUsersRepository extends BaseRepository<IProjectUsers> {
     try {
       return await this._model.deleteMany({ projectId });
     } catch (error) {
-      throw new ApiError(400, `Error in repository: ${error}`);
+      throw new ApiError(
+        HttpStatusCode.BAD_REQUEST,
+        `Error in repository: ${error}`
+      );
     }
   };
 

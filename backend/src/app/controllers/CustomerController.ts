@@ -1,12 +1,20 @@
-import { NextFunction, Request, Response } from "express";
+import { GridParam } from "../dto/requests/GridParam";
+
+import { CustomerDto } from "../dto/common/CustomerDto";
 
 import { IResponse } from "../core/responses/interfaces";
-import { CustomerDto } from "../dto/common/CustomerDto";
-import { GridParam } from "../dto/requests/GridParam";
+
+import { NextFunction, Request, Response } from "express";
+
+import { SelectCustomerDto, GridResultCustomer } from "../dto/responses";
 
 import { CustomerService } from "../services";
 
+import { HttpStatusCode } from "../enums";
+
 import { BaseController } from "./base";
+
+import { ApiResponse } from "../core";
 
 class CustomerController extends BaseController<CustomerService> {
   constructor() {
@@ -17,23 +25,14 @@ class CustomerController extends BaseController<CustomerService> {
     try {
       const customer: CustomerDto = req.body;
 
-      const result = await this._business.save(customer);
+      const result: CustomerDto = await this._business.save(customer);
 
       const response: IResponse = {
-        error: null,
-
+        ...ApiResponse,
         result,
-
-        success: true,
-
-        targetUrl: null,
-
-        unAuthorizedRequest: false,
-
-        __abp: true,
       };
 
-      return res.status(200).json(response);
+      return res.status(HttpStatusCode.OK).json(response);
     } catch (error) {
       next(error);
     }
@@ -41,22 +40,14 @@ class CustomerController extends BaseController<CustomerService> {
 
   public getAll = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const result = await this._business.getAll();
+      const result: SelectCustomerDto[] = await this._business.getAll();
+
       const response: IResponse = {
-        error: null,
-
+        ...ApiResponse,
         result,
-
-        success: true,
-
-        targetUrl: null,
-
-        unAuthorizedRequest: false,
-
-        __abp: true,
       };
 
-      return res.status(200).json(response);
+      return res.status(HttpStatusCode.OK).json(response);
     } catch (error) {
       next(error);
     }
@@ -66,23 +57,14 @@ class CustomerController extends BaseController<CustomerService> {
     try {
       const id: number = +req.query.Id;
 
-      const result = await this._business.delete(id);
+      const result: boolean = await this._business.delete(id);
 
       const response: IResponse = {
-        error: null,
-
+        ...ApiResponse,
         result,
-
-        success: true,
-
-        targetUrl: null,
-
-        unAuthorizedRequest: false,
-
-        __abp: true,
       };
 
-      return res.status(200).json(response);
+      return res.status(HttpStatusCode.OK).json(response);
     } catch (error) {
       next(error);
     }
@@ -96,23 +78,16 @@ class CustomerController extends BaseController<CustomerService> {
     try {
       const filter: GridParam = req.body;
 
-      const result = await this._business.getAllPagging(filter);
+      const result: GridResultCustomer = await this._business.getAllPagging(
+        filter
+      );
 
       const response: IResponse = {
-        error: null,
-
+        ...ApiResponse,
         result,
-
-        success: true,
-
-        targetUrl: null,
-
-        unAuthorizedRequest: false,
-
-        __abp: true,
       };
 
-      return res.status(200).json(response);
+      return res.status(HttpStatusCode.OK).json(response);
     } catch (error) {
       next(error);
     }

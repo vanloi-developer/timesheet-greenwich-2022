@@ -1,19 +1,25 @@
-import { UserModel } from "../../models";
-import { UserRepository } from "../../dataAccess/repositories";
-import { CreateUserDTO } from "../dto/requests";
-import { BaseService } from "./base";
 import { ApiError } from "../core";
+
+import { BaseService } from "./base";
+
 import { HttpStatusCode } from "../enums";
+
+import { CreateUserDTO } from "../dto/requests";
+
 import { UserDTO } from "../dto/common/UserDto";
-import { IUser } from "../../interfaces";
+
 import { GridParam } from "../dto/requests/GridParam";
+
+import { GetAllUserDto, GetUserDto } from "../dto/responses";
+
+import { UserRepository } from "../../dataAccess/repositories";
 
 class UserService extends BaseService<UserRepository> {
   constructor() {
     super(new UserRepository());
   }
 
-  public create = async (user: CreateUserDTO) => {
+  public create = async (user: CreateUserDTO): Promise<UserDTO> => {
     try {
       const isExist = await this._repos.findByUsername(user.userName);
 
@@ -24,7 +30,7 @@ class UserService extends BaseService<UserRepository> {
         );
       }
 
-      const result = await this._repos.save(user);
+      const result: UserDTO = await this._repos.save(user);
 
       return result;
     } catch (error) {
@@ -32,7 +38,7 @@ class UserService extends BaseService<UserRepository> {
     }
   };
 
-  public getUserNotPagging = async () => {
+  public getUserNotPagging = async (): Promise<GetUserDto[]> => {
     try {
       return await this._repos.getUserNotPagging();
     } catch (error) {
@@ -40,7 +46,7 @@ class UserService extends BaseService<UserRepository> {
     }
   };
 
-  public getAllManager = async () => {
+  public getAllManager = async (): Promise<GetUserDto[]> => {
     try {
       return await this._repos.getAllManager();
     } catch (error) {
@@ -48,7 +54,7 @@ class UserService extends BaseService<UserRepository> {
     }
   };
 
-  public getAllPagging = async (filter: GridParam) => {
+  public getAllPagging = async (filter: GridParam): Promise<GetAllUserDto> => {
     try {
       return await this._repos.getAllPagging(filter);
     } catch (error) {

@@ -1,7 +1,7 @@
 import { BaseRepository } from "./base";
 
 import { ITask } from "../../interfaces";
-import { TaskDto } from "src/app/dto/requests";
+
 import { TaskSchema } from "../schemas";
 
 class TaskRepository extends BaseRepository<ITask> {

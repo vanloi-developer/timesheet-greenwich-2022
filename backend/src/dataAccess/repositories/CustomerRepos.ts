@@ -1,11 +1,16 @@
 import { BaseRepository } from "./base";
 
-import { ICustomer } from "../../interfaces";
+import { ApiError } from "../../app/core";
 
 import { CustomerSchema } from "../schemas";
-import { GridParam } from "../../app/dto/requests/GridParam";
-import { ApiError } from "../../app/core";
+
+import { ICustomer } from "../../interfaces";
+
+import { HttpStatusCode } from "../../app/enums";
+
 import { CustomerDto } from "src/app/dto/common/CustomerDto";
+
+import { GridParam } from "../../app/dto/requests/GridParam";
 
 class CustomerRepository extends BaseRepository<ICustomer> {
   constructor() {
@@ -22,7 +27,10 @@ class CustomerRepository extends BaseRepository<ICustomer> {
     try {
       return await this._model.find({}, "id name");
     } catch (error) {
-      throw new ApiError(400, `Error in layer dataAccess: ${error}`);
+      throw new ApiError(
+        HttpStatusCode.BAD_REQUEST,
+        `Error in layer dataAccess: ${error}`
+      );
     }
   };
 
@@ -43,7 +51,10 @@ class CustomerRepository extends BaseRepository<ICustomer> {
         items,
       };
     } catch (error) {
-      throw new ApiError(400, `Error in layer dataAccess: ${error}`);
+      throw new ApiError(
+        HttpStatusCode.BAD_REQUEST,
+        `Error in layer dataAccess: ${error}`
+      );
     }
   };
 }

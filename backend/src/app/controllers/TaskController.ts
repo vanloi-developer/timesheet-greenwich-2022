@@ -1,10 +1,16 @@
 import { NextFunction, Request, Response } from "express";
 
 import { IResponse } from "../core/responses/interfaces";
+
 import { TaskDto } from "../dto/requests";
+
 import { HttpStatusCode } from "../enums";
+
 import { TaskService } from "../services";
+
 import { BaseController } from "./base";
+
+import { ApiResponse } from "../core";
 
 class TaskController extends BaseController<TaskService> {
   constructor() {
@@ -18,20 +24,11 @@ class TaskController extends BaseController<TaskService> {
       const result = await this._business.save(task);
 
       const response: IResponse = {
-        error: null,
-
+        ...ApiResponse,
         result,
-
-        success: false,
-
-        targetUrl: null,
-
-        unAuthorizedRequest: false,
-
-        __abp: true,
       };
 
-      return res.status(200).json(response);
+      return res.status(HttpStatusCode.OK).json(response);
     } catch (error) {
       next(error);
     }
@@ -41,23 +38,14 @@ class TaskController extends BaseController<TaskService> {
     try {
       const id: number = +req.query.Id;
 
-      const result = await this._business.delete(id);
+      const result: boolean = await this._business.delete(id);
 
       const response: IResponse = {
-        error: null,
-
+        ...ApiResponse,
         result,
-
-        success: true,
-
-        targetUrl: null,
-
-        unAuthorizedRequest: false,
-
-        __abp: true,
       };
 
-      return res.status(200).json(response);
+      return res.status(HttpStatusCode.OK).json(response);
     } catch (error) {
       next(error);
     }
@@ -68,17 +56,8 @@ class TaskController extends BaseController<TaskService> {
       const result: TaskDto[] = await this._business.getAll();
 
       const response: IResponse = {
-        error: null,
-
+        ...ApiResponse,
         result,
-
-        success: true,
-
-        targetUrl: null,
-
-        unAuthorizedRequest: false,
-
-        __abp: true,
       };
 
       return res.status(HttpStatusCode.OK).json(response);
@@ -90,20 +69,12 @@ class TaskController extends BaseController<TaskService> {
   public archive = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const id: number = +req.query.Id;
-      const result = await this._business.archive(id);
+      
+      const result: boolean = await this._business.archive(id);
 
       const response: IResponse = {
-        error: null,
-
+        ...ApiResponse,
         result,
-
-        success: true,
-
-        targetUrl: null,
-
-        unAuthorizedRequest: false,
-
-        __abp: true,
       };
 
       return res.status(HttpStatusCode.OK).json(response);
@@ -119,20 +90,12 @@ class TaskController extends BaseController<TaskService> {
   ) => {
     try {
       const id: number = +req.body.id;
-      const result = await this._business.deArchive(id);
+
+      const result: boolean = await this._business.deArchive(id);
 
       const response: IResponse = {
-        error: null,
-
+        ...ApiResponse,
         result,
-
-        success: true,
-
-        targetUrl: null,
-
-        unAuthorizedRequest: false,
-
-        __abp: true,
       };
 
       return res.status(HttpStatusCode.OK).json(response);

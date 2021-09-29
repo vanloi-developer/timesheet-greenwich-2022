@@ -1,16 +1,19 @@
-import { TaskModel } from "../../models";
-import { TaskRepository } from "../../dataAccess/repositories";
 import { ApiError } from "../core";
-import { TaskDto } from "../dto/requests";
-import { HttpStatusCode } from "../enums";
+
 import { BaseService } from "./base";
+
+import { TaskRepository } from "../../dataAccess/repositories";
+
+import { TaskDto } from "../dto/requests";
+
+import { HttpStatusCode } from "../enums";
 
 class TaskService extends BaseService<TaskRepository> {
   constructor() {
     super(new TaskRepository());
   }
 
-  public save = async (item: TaskDto) => {
+  public save = async (item: TaskDto): Promise<TaskDto> => {
     try {
       return await this._repos.save(item);
     } catch (error) {
@@ -18,7 +21,7 @@ class TaskService extends BaseService<TaskRepository> {
     }
   };
 
-  public delete = async (id: number) => {
+  public delete = async (id: number): Promise<boolean> => {
     try {
       return await this._repos.delete(id);
     } catch (error) {
@@ -26,7 +29,7 @@ class TaskService extends BaseService<TaskRepository> {
     }
   };
 
-  public getAll = async () => {
+  public getAll = async (): Promise<TaskDto[]> => {
     try {
       return await this._repos.getAll();
     } catch (error) {
@@ -34,7 +37,7 @@ class TaskService extends BaseService<TaskRepository> {
     }
   };
 
-  public archive = async (id: number) => {
+  public archive = async (id: number): Promise<boolean> => {
     try {
       return await this._repos.archive(id);
     } catch (error) {
@@ -42,7 +45,7 @@ class TaskService extends BaseService<TaskRepository> {
     }
   };
 
-  public deArchive = async (id: number) => {
+  public deArchive = async (id: number): Promise<boolean> => {
     try {
       return await this._repos.deArchive(id);
     } catch (error) {

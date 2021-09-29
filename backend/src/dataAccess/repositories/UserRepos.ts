@@ -1,9 +1,16 @@
 import { GridParam } from "../../app/dto/requests/GridParam";
-import { ApiError } from "../../app/core";
+
 import { IProjectUsers, IUser } from "../../interfaces";
-import { UserSchema } from "../schemas";
-import { BaseRepository } from "./base";
+
+import { HttpStatusCode } from "../../app/enums";
+
 import { ProjectUsersRepository } from ".";
+
+import { ApiError } from "../../app/core";
+
+import { UserSchema } from "../schemas";
+
+import { BaseRepository } from "./base";
 
 class UserRepository extends BaseRepository<IUser> {
   private _projectUsersRepos = new ProjectUsersRepository();
@@ -12,7 +19,6 @@ class UserRepository extends BaseRepository<IUser> {
   }
 
   public findProjectManagers = async (id: number): Promise<string[]> => {
-    
     let pms: string[] = [];
 
     let members: IProjectUsers[] =
@@ -37,7 +43,10 @@ class UserRepository extends BaseRepository<IUser> {
         "id name isActive type jobTitle level userCode branch"
       );
     } catch (error) {
-      throw new ApiError(400, `Error in layer dataAccess: ${error}`);
+      throw new ApiError(
+        HttpStatusCode.BAD_REQUEST,
+        `Error in layer dataAccess: ${error}`
+      );
     }
   };
 

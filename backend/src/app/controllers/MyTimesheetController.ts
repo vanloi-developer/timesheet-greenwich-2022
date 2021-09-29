@@ -1,18 +1,18 @@
+import { MyTimesheetService } from "../services";
+
 import { Response, Request, NextFunction } from "express";
 
 import { GetTimesheetDto, MyTimesheetDto } from "../dto/responses";
 
 import { StartEndDateDto } from "../dto/common/StartEndDateDto";
 
-import { MyTimesheetService } from "../services";
-
-import { BaseController } from "./base";
+import { IResponse } from "../core/responses/interfaces";
 
 import { ApiResponse } from "../core/responses";
 
-import { IResponse } from "../core/responses/interfaces";
-
 import { HttpStatusCode } from "../enums";
+
+import { BaseController } from "./base";
 
 class MyTimesheetController extends BaseController<MyTimesheetService> {
   constructor() {
@@ -25,7 +25,10 @@ class MyTimesheetController extends BaseController<MyTimesheetService> {
 
       const userId = +req.app.locals.currentUser.id;
 
-      const result: MyTimesheetDto[] = await this._business.saveList(items, userId);
+      const result: MyTimesheetDto[] = await this._business.saveList(
+        items,
+        userId
+      );
 
       const response: IResponse = {
         ...ApiResponse,

@@ -1,8 +1,16 @@
-import { BaseController } from "./base";
-
 import * as express from "express";
 
+import { ApiResponse } from "../core";
+
+import { BaseController } from "./base";
+
+import { IResponse } from "../core/responses/interfaces";
+
 import { SessionService } from "../services";
+
+import { APP_VERSION } from "../../configs";
+
+import { HttpStatusCode } from "../enums";
 
 class SessionController extends BaseController<SessionService> {
   constructor() {
@@ -15,25 +23,23 @@ class SessionController extends BaseController<SessionService> {
     next: express.NextFunction
   ) => {
     try {
-      let response = {
-        result: {
-          application: {
-            version: "4.3.0.0",
-            releaseDate: new Date().toString(),
-            features: {},
-          },
-          user: null,
-          tenant: null,
+      const result = {
+        application: {
+          version: APP_VERSION,
+          releaseDate: new Date().toString(),
+          features: {},
         },
-        targetUrl: null,
-        success: true,
-        error: null,
-        unAuthorizedRequest: false,
-        __abp: true,
+        user: null,
+        tenant: null,
+      };
+
+      let response: IResponse = {
+        ...ApiResponse,
+        result,
       };
 
       if (!req.headers.authorization) {
-        return res.status(200).json(response);
+        return res.status(HttpStatusCode.OK).json(response);
       }
 
       const token = req.headers.authorization.split(" ")[1];
@@ -42,7 +48,7 @@ class SessionController extends BaseController<SessionService> {
         token
       );
 
-      return res.status(200).json(response);
+      return res.status(HttpStatusCode.OK).json(response);
     } catch (error) {
       next(error);
     }

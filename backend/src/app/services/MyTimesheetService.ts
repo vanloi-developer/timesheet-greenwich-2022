@@ -15,14 +15,15 @@ import {
 
 import { ApiError } from "../core";
 
-import { CustomerDto } from "../dto/common/CustomerDto";
+import { BaseService } from "./base";
 
 import { HttpStatusCode } from "../enums";
 
-import { BaseService } from "./base";
 import { TaskDto } from "../dto/requests";
+
+import { CustomerDto } from "../dto/common/CustomerDto";
+
 import { StartEndDateDto } from "../dto/common/StartEndDateDto";
-import { IMyTimesheet } from "src/interfaces";
 
 class MyTimesheetService extends BaseService<MyTimesheetRepository> {
   private _projectTaskRepos = new ProjectTaskRepository();

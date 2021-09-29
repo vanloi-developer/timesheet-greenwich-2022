@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from "express";
 import { HttpStatusCode } from "../../enums";
-import { IResponse } from "../responses/interfaces";
 import { ApiError } from "./ApiError";
 
 function handlingError(
@@ -9,7 +8,7 @@ function handlingError(
   res: Response,
   next: NextFunction
 ) {
-  const code: HttpStatusCode = _error._code;
+  const code: HttpStatusCode = _error.code;
 
   const message: string = _error.message;
 

@@ -1,4 +1,14 @@
 import {
+  GetProjectDto,
+  ProjectIncludingTaskDto,
+  PTaskDto,
+} from "../dto/responses";
+
+import { ApiError } from "../core";
+
+import { BaseService } from "./base";
+
+import {
   ProjectTaskRepository,
   ProjectUsersRepository,
   ProjectRepository,
@@ -7,22 +17,15 @@ import {
   TaskRepository,
 } from "../../dataAccess/repositories";
 
-//import {ProjectUsersRepository} from '../../dataAccess/repositories';
+import { TaskDto } from "../dto/requests";
 
-import { ApiError } from "../core";
-import { CustomerDto } from "../dto/common/CustomerDto";
+import { HttpStatusCode } from "../enums";
 
 import { ProjectDto } from "../dto/common/ProjectDto";
-import {
-  GetProjectDto,
-  ProjectIncludingTaskDto,
-  PTaskDto,
-} from "../dto/responses";
-import { ProjectUsersDto, ProjectTasksDto } from "../../app/dto/responses";
 
-import { BaseService } from "./base";
-import { IProjectTask } from "src/interfaces";
-import { TaskDto } from "../dto/requests";
+import { CustomerDto } from "../dto/common/CustomerDto";
+
+import { ProjectUsersDto, ProjectTasksDto } from "../../app/dto/responses";
 
 class ProjectService extends BaseService<ProjectRepository> {
   private _taskRepos = new TaskRepository();
@@ -107,7 +110,10 @@ class ProjectService extends BaseService<ProjectRepository> {
 
       return result;
     } catch (error) {
-      throw new ApiError(400, `Error in business logic: ${error}`);
+      throw new ApiError(
+        HttpStatusCode.BAD_REQUEST,
+        `Error in business logic: ${error}`
+      );
     }
   };
 
@@ -144,7 +150,10 @@ class ProjectService extends BaseService<ProjectRepository> {
 
       return project;
     } catch (error) {
-      throw new ApiError(400, `Error in business logic: ${error}`);
+      throw new ApiError(
+        HttpStatusCode.BAD_REQUEST,
+        `Error in business logic: ${error}`
+      );
     }
   };
 
@@ -152,7 +161,10 @@ class ProjectService extends BaseService<ProjectRepository> {
     try {
       return await this._repos.inActive(id);
     } catch (error) {
-      throw new ApiError(400, `Error in business logic: ${error}`);
+      throw new ApiError(
+        HttpStatusCode.BAD_REQUEST,
+        `Error in business logic: ${error}`
+      );
     }
   };
 
@@ -160,7 +172,10 @@ class ProjectService extends BaseService<ProjectRepository> {
     try {
       return await this._repos.active(id);
     } catch (error) {
-      throw new ApiError(400, `Error in business logic: ${error}`);
+      throw new ApiError(
+        HttpStatusCode.BAD_REQUEST,
+        `Error in business logic: ${error}`
+      );
     }
   };
 
@@ -171,7 +186,10 @@ class ProjectService extends BaseService<ProjectRepository> {
       await this._projectUsersRepos.deleteMany(id);
       return true;
     } catch (error) {
-      throw new ApiError(400, `Error in business logic: ${error}`);
+      throw new ApiError(
+        HttpStatusCode.BAD_REQUEST,
+        `Error in business logic: ${error}`
+      );
     }
   };
 
@@ -180,7 +198,10 @@ class ProjectService extends BaseService<ProjectRepository> {
     try {
       return await this._repos.get(id);
     } catch (error) {
-      throw new ApiError(400, `Error in business logic: ${error}`);
+      throw new ApiError(
+        HttpStatusCode.BAD_REQUEST,
+        `Error in business logic: ${error}`
+      );
     }
   };
 

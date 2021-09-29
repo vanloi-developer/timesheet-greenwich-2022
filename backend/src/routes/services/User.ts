@@ -15,10 +15,7 @@ class UserRouter extends BaseRouter {
   }
 
   public init() {
-    this._router.post(
-      "/create",
-      this.controller.create
-    );
+    this._router.post("/create", this.controller.create);
     this._router.put("/update");
     this._router.delete("/delete");
     this._router.get("/getUserNotPagging", this.controller.getUserNotPagging);
@@ -30,16 +27,7 @@ class UserRouter extends BaseRouter {
     this._router.post("/UpdateAvatar");
     this._router.post("/UpdateOwnAvatar");
     this._router.post("/ResetPassword");
-    this._router.get(
-      "/get",
-      (
-        req: express.Request,
-        res: express.Response,
-        next: express.NextFunction
-      ) => {
-        return res.status(200).json(`Test API`);
-      }
-    );
+    this._router.get("/get");
   }
 }
 export { UserRouter };

@@ -1,18 +1,28 @@
+import { ApiError } from "../core";
+
 import { BaseService } from "./base";
 
+import { HttpStatusCode } from "../enums";
+
+import { PagedResultRoleDto } from "../dto/responses";
+
 import { RoleRepository } from "../../dataAccess/repositories";
+
 import { CreateRoleDto } from "../dto/requests/role/CreateRoleDto";
-import { ApiError } from "../core";
+
 class RoleService extends BaseService<RoleRepository> {
   constructor() {
     super(new RoleRepository());
   }
 
-  public create = async (item: CreateRoleDto) => {
+  public create = async (item: CreateRoleDto): Promise<CreateRoleDto> => {
     try {
       return await this._repos.save(item);
     } catch (error) {
-      throw new ApiError(400, `Error in business logic: ${error}`);
+      throw new ApiError(
+        HttpStatusCode.BAD_REQUEST,
+        `Error in business logic: ${error}`
+      );
     }
   };
 
@@ -20,19 +30,25 @@ class RoleService extends BaseService<RoleRepository> {
     keyword: string;
     skipCount: number;
     maxResultCount: number;
-  }) => {
+  }): Promise<PagedResultRoleDto> => {
     try {
       return await this._repos.getAll(query);
     } catch (error) {
-      throw new ApiError(400, `Error in business logic: ${error}`);
+      throw new ApiError(
+        HttpStatusCode.BAD_REQUEST,
+        `Error in business logic: ${error}`
+      );
     }
   };
 
-  public delete = async (id: number) => {
+  public delete = async (id: number): Promise<boolean> => {
     try {
       return await this._repos.delete(id);
     } catch (error) {
-      throw new ApiError(400, `Error in business logic: ${error}`);
+      throw new ApiError(
+        HttpStatusCode.BAD_REQUEST,
+        `Error in business logic: ${error}`
+      );
     }
   };
 }

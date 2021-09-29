@@ -1,14 +1,14 @@
-import { GetProjectDto } from "../../app/dto/responses";
-import { CustomerRepository } from ".";
-import { ApiError } from "../../app/core";
-import { IProject } from "../../interfaces";
-import { ProjectSchema } from "../schemas";
 import { BaseRepository } from "./base";
-import { ProjectDto } from "src/app/dto/common/ProjectDto";
+
+import { ApiError } from "../../app/core";
+
+import { ProjectSchema } from "../schemas";
+
+import { IProject } from "../../interfaces";
+
+import { HttpStatusCode } from "../../app/enums";
 
 class ProjectRepository extends BaseRepository<IProject> {
-  private _customerRepos = new CustomerRepository();
-
   constructor() {
     super("projects", ProjectSchema);
   }
@@ -16,7 +16,7 @@ class ProjectRepository extends BaseRepository<IProject> {
   public findProjectByFilter = async (
     status: number,
     searchKey: string
-  ): Promise<ProjectDto[]> => {
+  ): Promise<IProject[]> => {
     const name = new RegExp(searchKey, "i");
 
     if (status == 1) {
@@ -30,35 +30,47 @@ class ProjectRepository extends BaseRepository<IProject> {
     return await this.retrieve();
   };
 
-  public create = async (item: IProject) => {
+  public create = async (item: IProject): Promise<IProject> => {
     try {
-      const project = await this.save(item);
+      return await this.save(item);
     } catch (error) {
-      throw new ApiError(400, `Error in layer dataAccess, ${error}`);
+      throw new ApiError(
+        HttpStatusCode.BAD_REQUEST,
+        `Error in layer dataAccess, ${error}`
+      );
     }
   };
 
-  public get = async (id: number) => {
+  public get = async (id: number): Promise<IProject> => {
     try {
       return await this._model.findOne({ id });
     } catch (error) {
-      throw new ApiError(400, `Error in layer dataAccess, ${error}`);
+      throw new ApiError(
+        HttpStatusCode.BAD_REQUEST,
+        `Error in layer dataAccess, ${error}`
+      );
     }
   };
 
-  public inActive = async (id: number) => {
+  public inActive = async (id: number): Promise<boolean> => {
     try {
       return await this._model.updateOne({ id }, { status: 1 });
     } catch (error) {
-      throw new ApiError(400, `Error in layer dataAccess, ${error}`);
+      throw new ApiError(
+        HttpStatusCode.BAD_REQUEST,
+        `Error in layer dataAccess, ${error}`
+      );
     }
   };
 
-  public active = async (id: number) => {
+  public active = async (id: number): Promise<boolean> => {
     try {
       return await this._model.updateOne({ id }, { status: 0 });
     } catch (error) {
-      throw new ApiError(400, `Error in layer dataAccess, ${error}`);
+      throw new ApiError(
+        HttpStatusCode.BAD_REQUEST,
+        `Error in layer dataAccess, ${error}`
+      );
     }
   };
 

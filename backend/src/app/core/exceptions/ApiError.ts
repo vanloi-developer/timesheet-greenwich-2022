@@ -1,11 +1,11 @@
 import { HttpStatusCode } from "../../enums";
 
 export class ApiError extends Error {
-  public _code: HttpStatusCode;
+  public code: HttpStatusCode;
   public message: string;
 
-  constructor(code: HttpStatusCode, message: string) {
+  constructor(_code: HttpStatusCode, message: string) {
     super(message);
-    this._code = code;
+    this.code = _code;
   }
 }

@@ -1,15 +1,20 @@
-import { ProjectService } from "../services";
-import { BaseController } from "./base";
-
-import { Request, Response, NextFunction } from "express";
-
-import { ApiResponse } from "../core/responses";
-import { IResponse } from "../core/responses/interfaces";
 import {
   GetProjectDto,
   ProjectDto,
   ProjectIncludingTaskDto,
 } from "../dto/responses";
+
+import { BaseController } from "./base";
+
+import { ApiResponse } from "../core/responses";
+
+import { Request, Response, NextFunction } from "express";
+
+import { IResponse } from "../core/responses/interfaces";
+
+import { ProjectService } from "../services";
+
+import { HttpStatusCode } from "../enums";
 
 class ProjectController extends BaseController<ProjectService> {
   constructor() {
@@ -25,7 +30,7 @@ class ProjectController extends BaseController<ProjectService> {
         result,
       };
 
-      return res.status(200).json(response);
+      return res.status(HttpStatusCode.OK).json(response);
     } catch (error) {
       next(error);
     }
@@ -47,7 +52,7 @@ class ProjectController extends BaseController<ProjectService> {
         result,
       };
 
-      return res.status(200).json(response);
+      return res.status(HttpStatusCode.OK).json(response);
     } catch (error) {
       next(error);
     }
@@ -58,12 +63,13 @@ class ProjectController extends BaseController<ProjectService> {
       const id: number = +req.body.id;
 
       const result: boolean = await this._business.inActive(id);
+
       const response: IResponse = {
         ...ApiResponse,
         result,
       };
 
-      return res.status(200).json(response);
+      return res.status(HttpStatusCode.OK).json(response);
     } catch (error) {
       next(error);
     }
@@ -79,19 +85,20 @@ class ProjectController extends BaseController<ProjectService> {
       result,
     };
 
-    return res.status(200).json(response);
+    return res.status(HttpStatusCode.OK).json(response);
   };
 
   public delete = async (req: Request, res: Response, next: NextFunction) => {
     const id: number = +req.query.Id;
 
     const result: boolean = await this._business.delete(id);
+
     const response: IResponse = {
       ...ApiResponse,
       result,
     };
 
-    return res.status(200).json(response);
+    return res.status(HttpStatusCode.OK).json(response);
   };
 
   public get = async (req: Request, res: Response, next: NextFunction) => {
@@ -104,7 +111,7 @@ class ProjectController extends BaseController<ProjectService> {
       result,
     };
 
-    return res.status(200).json(response);
+    return res.status(HttpStatusCode.OK).json(response);
   };
 
   public getProjectsIncludingTasks = async (
@@ -122,7 +129,7 @@ class ProjectController extends BaseController<ProjectService> {
       result,
     };
 
-    return res.status(200).json(response);
+    return res.status(HttpStatusCode.OK).json(response);
   };
 
   public getFilter = async (
@@ -137,7 +144,7 @@ class ProjectController extends BaseController<ProjectService> {
       result,
     };
 
-    return res.status(200).json(response);
+    return res.status(HttpStatusCode.OK).json(response);
   };
 
   public getProjectPM = async (
@@ -152,7 +159,7 @@ class ProjectController extends BaseController<ProjectService> {
       result,
     };
 
-    return res.status(200).json(response);
+    return res.status(HttpStatusCode.OK).json(response);
   };
 
   public getProjectUser = async (
@@ -166,7 +173,7 @@ class ProjectController extends BaseController<ProjectService> {
       result,
     };
 
-    return res.status(200).json(response);
+    return res.status(HttpStatusCode.OK).json(response);
   };
 }
 
