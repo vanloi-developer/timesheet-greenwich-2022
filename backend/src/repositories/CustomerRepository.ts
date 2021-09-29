@@ -1,7 +1,7 @@
 import { searchTextFieldOpt } from './../utils/index';
 import { REQUIRED_FIELD_SAVE_CUSTOMER } from './../constants/index';
 import { IFilterItems, IFilterOpt } from './../dto/reqDto/AllPaggingDto';
-import { ICustomerRepository } from './../types/ICustomerRepository';
+import { ICustomerRepository } from '../types/Repositories/ICustomerRepository';
 import db from '../models';
 import { ICustomerModel } from '../types/Models/ICustomerModel';
 import logger from '../config/logger';
@@ -74,7 +74,7 @@ class CustomerRepository implements ICustomerRepository {
       try {
          await this._db.findOneAndUpdate({ id }, updateFeild);
       } catch (error) {
-         logger.error('findByID UserRepository error: ', error.message);
+         logger.error('update UserRepository error: ', error.message);
       }
    }
 

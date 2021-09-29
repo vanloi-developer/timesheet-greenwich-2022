@@ -1,18 +1,36 @@
+import { IRoleRepository } from './../types/Repositories/IRoleRepository';
 import { IRoleModel } from './../types/Models/IRoleModel';
 import { searchTextFieldOpt } from './../utils/index';
 import { REQUIRED_FIELD_CREATE_ROLE } from './../constants/index';
-import { IRoleRepository } from './../types/IRoleRepository';
 import db from '../models';
 import logger from '../config/logger';
 
 class RoleRepository implements IRoleRepository {
    private readonly _db = db.Role;
 
+   async findAll() {
+      try {
+         return {
+            items: await this._db.find({}).select('-_id'),
+         };
+      } catch (error) {
+         logger.error('getRoles RoleRepository error: ', error.message);
+      }
+   }
+
    async findByName(name: string) {
       try {
-         return await (await this._db.findOne({ name })).isSelected('-_id');
+         return await this._db.findOne({ name }).select('-_id');
       } catch (err) {
          logger.error('findByName RoleRepository error: ', err.message);
+      }
+   }
+
+   async findById(id: number) {
+      try {
+         return await this._db.findOne({ id }).select('-_id');
+      } catch (error) {
+         logger.error('findById RoleRepository error: ', error.message);
       }
    }
 
@@ -24,13 +42,11 @@ class RoleRepository implements IRoleRepository {
       }
    }
 
-   async getRoles() {
+   async delete(id: number) {
       try {
-         return {
-            items: await this._db.find({}).select('-_id'),
-         };
+         return await this._db.deleteOne({ id });
       } catch (error) {
-         logger.error('getRoles RoleRepository error: ', error.message);
+         logger.error('delete RoleRepository error: ', error.message);
       }
    }
 
@@ -52,7 +68,7 @@ class RoleRepository implements IRoleRepository {
             items,
          };
       } catch (error) {
-         logger.error('findUserPagging UserRepository error: ', error.message);
+         logger.error('filterAll UserRepository error: ', error.message);
       }
    }
 }

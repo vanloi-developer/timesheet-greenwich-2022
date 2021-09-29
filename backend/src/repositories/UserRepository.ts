@@ -1,7 +1,7 @@
 import { searchTextFieldOpt } from './../utils/index';
 import { SEARCH_TEXT_FIELD_USER } from './../constants/index';
 import { IFilterItems, IFilterOpt } from './../dto/reqDto/AllPaggingDto';
-import { IUserRepository } from './../types/IUserRepository';
+import { IUserRepository } from '../types/Repositories/IUserRepository';
 import db from '../models';
 import { IUserModel } from '../types/Models/IUserModel';
 import logger from '../config/logger';
@@ -27,34 +27,6 @@ class UserRepository implements IUserRepository {
          return await this._db.findOne({ userName });
       } catch (error) {
          logger.error('findByID UserRepository error: ', error.message);
-      }
-   }
-
-   async create(data) {
-      try {
-         return await this._db.create(data);
-      } catch (error) {
-         logger.error('findByUserNameEmail UserRepository error: ', error.message);
-      }
-   }
-
-   async generateToken(userName) {
-      try {
-         const user = await this._db.findOne({ userName });
-
-         return await user.generateAuthToken();
-      } catch (error) {
-         logger.error('generateToken UserRepository error: ', error.message);
-      }
-   }
-
-   async comparePassword(userName, plainPass) {
-      try {
-         const user = await this._db.findOne({ userName });
-
-         return await user.comparePassHash(plainPass);
-      } catch (error) {
-         logger.error('generateToken UserRepository error: ', error.message);
       }
    }
 
@@ -94,9 +66,10 @@ class UserRepository implements IUserRepository {
          let orOpt = searchTextFieldOpt(searchText, SEARCH_TEXT_FIELD_USER);
          if (orOpt.length) filterOpt.push({ $or: orOpt });
       }
-      try {
-         const findOpt = filterOpt.length ? { $and: filterOpt } : {};
 
+      const findOpt = filterOpt.length ? { $and: filterOpt } : {};
+
+      try {
          const items = await this._db.find(findOpt).skip(skipCount).limit(maxResultCount);
          return {
             totalCount: items.length,
@@ -104,6 +77,34 @@ class UserRepository implements IUserRepository {
          };
       } catch (error) {
          logger.error('findUserPagging UserRepository error: ', error.message);
+      }
+   }
+
+   async create(data) {
+      try {
+         return await this._db.create(data);
+      } catch (error) {
+         logger.error('findByUserNameEmail UserRepository error: ', error.message);
+      }
+   }
+
+   async generateToken(userName) {
+      try {
+         const user = await this._db.findOne({ userName });
+
+         return await user.generateAuthToken();
+      } catch (error) {
+         logger.error('generateToken UserRepository error: ', error.message);
+      }
+   }
+
+   async comparePassword(userName, plainPass) {
+      try {
+         const user = await this._db.findOne({ userName });
+
+         return await user.comparePassHash(plainPass);
+      } catch (error) {
+         logger.error('generateToken UserRepository error: ', error.message);
       }
    }
 

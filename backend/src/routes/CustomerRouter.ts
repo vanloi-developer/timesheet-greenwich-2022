@@ -17,7 +17,7 @@ class CustomerRouter extends BaseRouter {
       this.router.post('/Save', validate(REQUIRED_FIELD_SAVE_CUSTOMER), this._service.create);
       this.router.post('/GetAllPagging', this._service.getAllPagging);
 
-      this.router.delete('/Delete', validQueryID, this._service.Delete);
+      this.router.delete('/Delete', validQueryID, this._service.delete);
    }
 }
 

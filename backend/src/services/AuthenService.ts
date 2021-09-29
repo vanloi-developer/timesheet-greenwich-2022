@@ -2,7 +2,7 @@ import { BaseResDto } from './../dto/resDto/BaseResDto';
 import { AuthResultDto } from '../dto/resDto/AuthResultDto';
 import { LOGIN_FAILED } from './../dto/resDto/BaseErrorDto';
 import { Request, Response, NextFunction } from 'express';
-import { IUserRepository } from '../types/IUserRepository';
+import { IUserRepository } from '../types/Repositories/IUserRepository';
 import UserRepository from '../repositories/UserRepository';
 import logger from '../config/logger';
 

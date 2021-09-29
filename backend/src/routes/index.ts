@@ -21,7 +21,6 @@ class IndexRouter extends BaseRouter {
    //Manage all routes
    protected init() {
       this.router.use('/api', ApiRouter);
-
       this.router.use(error);
    }
 }

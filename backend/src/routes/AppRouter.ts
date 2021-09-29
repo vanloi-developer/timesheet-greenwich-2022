@@ -21,16 +21,10 @@ class AppRouter extends BaseRouter {
       );
 
       this.router.use('/User', UserRouter);
+      this.router.use('/Role', RoleRouter);
       this.router.use('/Customer', CustomerRouter);
       this.router.use('/Task', TaskRouter);
-      this.router.use('/Role', RoleRouter);
       this.router.use('/Project', ProjectRouter);
-
-      // this.router.use('/User', authen, UserRouter);
-      // this.router.use('/Customer', CustomerRouter);
-      // this.router.use('/Task', authen, TaskRouter);
-      // this.router.use('/Role', authen, RoleRouter);
-      // this.router.use('/Project', authen, ProjectRouter);
    }
 }
 

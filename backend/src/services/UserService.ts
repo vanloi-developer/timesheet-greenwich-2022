@@ -3,10 +3,15 @@ import { UserResDTO } from './../dto/resDto/UserResDto';
 import { ADMIN_PASSWORD } from './../constants/index';
 import { NextFunction, Request, Response } from 'express';
 import bcrypt from 'bcrypt';
-import { IUserRepository } from '../types/IUserRepository';
+import { IUserRepository } from '../types/Repositories/IUserRepository';
 import UserRepository from '../repositories/UserRepository';
 import logger from '../config/logger';
-import { baseError, NOT_EXIST_USER, WRONG_ADMIN_PASS } from '../dto/resDto/BaseErrorDto';
+import {
+   baseError,
+   INVALID_TOKEN,
+   NOT_EXIST_USER,
+   WRONG_ADMIN_PASS,
+} from '../dto/resDto/BaseErrorDto';
 import genarateID from '../utils/generateID';
 import { IUserDecodeToken } from '../types/IUserDecodeToken';
 import jwt from 'jsonwebtoken';
@@ -14,31 +19,20 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const JWT_KEY = process.env.JWT_KEY;
-
 const saltRounds = 10;
+
 class UserService {
    private _repository: IUserRepository = UserRepository;
-   // error: {code: 0, message: "This User Id 227 is in a project ,You can't delete", details: null,…}
-   // code: 0
-   // details: null
-   // message: "This User Id 227 is in a project ,You can't delete"
-   // validationErrors: null
-   // result: null
-   // success: false
-   // targetUrl: null
-   // unAuthorizedRequest: false
 
    public create = async (req: Request, res: Response, next: NextFunction) => {
       const userInput = { ...req.body };
 
       try {
-         //Check if email or username exist
+         //Check if userName or email existed
          const exitstedUser = await this._repository.findByUserNameEmail(
             userInput.userName,
             userInput.emailAddress,
          );
-
-         //Check if userName or email existed
          if (exitstedUser) {
             let message = 'is already taken.';
             const ERR_RES = baseError();
@@ -51,13 +45,14 @@ class UserService {
             return res.status(500).json(ERR_RES);
          }
 
+         //Hash pass and auto generate id
          const hashPass = await bcrypt.hashSync(userInput.password, saltRounds);
          const id = genarateID('user');
-
          userInput.password = hashPass;
          userInput.id = id;
 
          const result = await this._repository.create(userInput);
+         if (result) throw new Error('Create user failed');
 
          delete result['password'];
          delete result['_id'];
@@ -72,13 +67,12 @@ class UserService {
       }
    };
 
-   public get = async (req: Request, res: Response, next: NextFunction) => {
+   public findById = async (req: Request, res: Response, next: NextFunction) => {
       const id: number = parseInt(req.query.Id as string);
 
       try {
          const result = await this._repository.findById(id);
-
-         if (!result) return res.status(500).json(NOT_EXIST_USER);
+         if (!result) return res.status(400).json(NOT_EXIST_USER);
 
          return res.status(200).json({
             ...UserResDTO,
@@ -91,15 +85,15 @@ class UserService {
    };
 
    public getUserLoginInfo = async (req: Request, res: Response, next: NextFunction) => {
-      if (req.headers['authorization'] === undefined) {
+      if (req.headers['authorization'] === undefined)
          return res.status(200).json({ ...UserResDTO });
-      }
 
       const token = req.headers['authorization'].split(' ')[1];
       try {
          const { id }: IUserDecodeToken = await jwt.verify(token, JWT_KEY);
 
          const user = await this._repository.findById(id);
+         if (!user) return res.status(400).json(INVALID_TOKEN);
 
          return res.status(200).json({
             ...UserResDTO,
@@ -126,6 +120,7 @@ class UserService {
          next(error);
       }
    };
+
    public getAllPagging = async (req: Request, res: Response, next: NextFunction) => {
       const { filterItems, maxResultCount, skipCount, searchText } = req.body;
 
@@ -160,7 +155,7 @@ class UserService {
       }
    };
 
-   public Delete = async (req: Request, res: Response, next: NextFunction) => {
+   public delete = async (req: Request, res: Response, next: NextFunction) => {
       const id: number = parseInt(req.query.Id as string);
       try {
          const data = await this._repository.findById(id);
@@ -177,7 +172,7 @@ class UserService {
       }
    };
 
-   public UpdateBase = (updatefield?: Object) => {
+   public updateBase = (updatefield?: Object) => {
       return async (req: Request, res: Response, next: NextFunction) => {
          try {
             const data = await this._repository.findById(req.body.id as number);
@@ -199,11 +194,11 @@ class UserService {
       };
    };
 
-   public Update = this.UpdateBase();
+   public update = this.updateBase();
 
-   public DeactiveUser = this.UpdateBase({ isActive: false });
+   public deactive = this.updateBase({ isActive: false });
 
-   public ActiveUser = this.UpdateBase({ isActive: true });
+   public active = this.updateBase({ isActive: true });
 
    public ResetPasword = async (req: Request, res: Response, next: NextFunction) => {
       const { adminPassword, newPassword, userId } = req.body;

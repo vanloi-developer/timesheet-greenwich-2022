@@ -12,7 +12,6 @@ import db from '../models';
 import logger from '../config/logger';
 import UsersInProjectRepository from './UsersInProjectRepository';
 import TasksInProjectRepository from './TasksInProjectRepository';
-import _ from 'lodash';
 class ProjectRepository implements IProjectRepository {
    private readonly _db = db.Project;
 

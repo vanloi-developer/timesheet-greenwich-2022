@@ -1,4 +1,4 @@
-import { validate } from './../middlewares/validate/FieldValidate';
+import { validate, validQueryID } from './../middlewares/validate/FieldValidate';
 import { REQUIRED_FIELD_CREATE_ROLE } from './../constants/index';
 import RoleService from '../services/RoleService';
 import { BaseRouter } from './BaseRouter';
@@ -12,7 +12,9 @@ class RoleRouter extends BaseRouter {
 
    protected init() {
       this.router.post('/Create', validate(REQUIRED_FIELD_CREATE_ROLE), this._service.create);
-      this.router.get('/GetAll', this._service.getAll);
+      this.router.get('/GetAll', this._service.filterAll);
+
+      this.router.delete('/Delete', validQueryID, this._service.delete);
    }
 }
 

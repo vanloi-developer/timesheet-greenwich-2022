@@ -1,4 +1,4 @@
-import { ITaskRepository } from './../types/ITaskRepository';
+import { ITaskRepository } from './../types/Repositories/ITaskRepository';
 import { TaskDto } from './../dto/resDto/TaskDto';
 import { BaseResDto } from '../dto/resDto/BaseResDto';
 import { NextFunction, Request, Response } from 'express';
@@ -84,7 +84,7 @@ class TaskService {
       }
    };
 
-   public Delete = async (req: Request, res: Response, next: NextFunction) => {
+   public delete = async (req: Request, res: Response, next: NextFunction) => {
       const id: number = parseInt(req.query.Id as string);
       try {
          const data = await this._repository.findById(id);

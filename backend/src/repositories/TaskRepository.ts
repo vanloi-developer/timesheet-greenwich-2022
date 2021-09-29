@@ -2,7 +2,7 @@
 import { searchTextFieldOpt } from './../utils/index';
 import { REQUIRED_FIELD_SAVE_CUSTOMER } from './../constants/index';
 import { IFilterItems, IFilterOpt } from './../dto/reqDto/AllPaggingDto';
-import { ITaskRepository } from './../types/ITaskRepository';
+import { ITaskRepository } from '../types/Repositories/ITaskRepository';
 import db from '../models';
 import { ITaskModel } from '../types/Models/ITaskModel';
 import logger from '../config/logger';

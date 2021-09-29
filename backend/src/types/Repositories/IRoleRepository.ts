@@ -1,7 +1,10 @@
-import { IRoleModel } from './Models/IRoleModel';
+import { IRoleModel } from './../Models/IRoleModel';
+
 export interface IRoleRepository {
-   getRoles();
+   findAll();
    findByName(name: string);
+   findById(id: number);
    create(roleInput: IRoleModel);
    filterAll(Keyword: string, SkipCount: number, MaxResultCount: number);
+   delete(id: number);
 }

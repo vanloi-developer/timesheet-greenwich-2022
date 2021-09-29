@@ -20,7 +20,7 @@ class TaskRouter extends BaseRouter {
 
       // this.router.post('/GetAllPagging', this._service.getAllPagging);
 
-      this.router.delete('/Delete', validQueryID, this._service.Delete);
+      this.router.delete('/Delete', validQueryID, this._service.delete);
    }
 }
 
