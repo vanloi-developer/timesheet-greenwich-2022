@@ -11,15 +11,17 @@ export const MyTimesheetSchema = new Schema<IMyTimesheet>({
 
   workingTime: { type: Number },
 
-  targetUserWorkingTime: { type: Number },
+  targetUserWorkingTime: { type: Number, default: 0 },
 
   typeOfWork: { type: Number, enum: TimesheetType },
 
-  isCharged: { type: Boolean },
+  isCharged: { type: Boolean, default: false },
 
-  dateAt: { type: String },
+  dateAt: { type: Date },
 
-  status: { type: Number, enum: TimesheetStatus },
+  status: { type: Number, enum: TimesheetStatus, default: 0 },
 
   projectTargetUserId: { type: Number },
+
+  userId: { type: Number },
 });

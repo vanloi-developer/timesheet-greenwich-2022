@@ -6,7 +6,7 @@ export interface GetTimesheetDto {
   projectTaskId: number;
   customerName: string;
   projectCode: string;
-  dateAt: string;
+  dateAt: Date;
   workingTime: number;
   status: TimesheetStatus;
   note: string;

@@ -4,6 +4,7 @@ import {
   ProjectRepository,
   CustomerRepository,
   UserRepository,
+  TaskRepository,
 } from "../../dataAccess/repositories";
 
 //import {ProjectUsersRepository} from '../../dataAccess/repositories';
@@ -12,14 +13,21 @@ import { ApiError } from "../core";
 import { CustomerDto } from "../dto/common/CustomerDto";
 
 import { ProjectDto } from "../dto/common/ProjectDto";
-import { GetProjectDto, ProjectIncludingTaskDto } from "../dto/responses";
+import {
+  GetProjectDto,
+  ProjectIncludingTaskDto,
+  PTaskDto,
+} from "../dto/responses";
 import { ProjectUsersDto, ProjectTasksDto } from "../../app/dto/responses";
 
 import { BaseService } from "./base";
 import { IProjectTask } from "src/interfaces";
+import { TaskDto } from "../dto/requests";
 
 class ProjectService extends BaseService<ProjectRepository> {
-  private _taskRepos = new ProjectTaskRepository();
+  private _taskRepos = new TaskRepository();
+
+  private _taskProjectRepos = new ProjectTaskRepository();
 
   private _projectUsersRepos = new ProjectUsersRepository();
 
@@ -181,11 +189,13 @@ class ProjectService extends BaseService<ProjectRepository> {
   ): Promise<ProjectIncludingTaskDto[]> => {
     const result: ProjectIncludingTaskDto[] = [];
 
+    const pTask: PTaskDto[] = [];
+
     const projectsOfUser: ProjectUsersDto[] =
       await this._projectUsersRepos.findByUserId(userId);
 
     for (let projectOfUser of projectsOfUser) {
-      const tasks: ProjectTasksDto[] = [];
+      let tasks: PTaskDto[] = [];
 
       const projectId = projectOfUser.projectId;
 
@@ -194,10 +204,22 @@ class ProjectService extends BaseService<ProjectRepository> {
       const customer: CustomerDto =
         await this._customerRepos.findCustomerByCustomerId(project.customerId);
 
-      await this._projectTasksRepos
-        .findByProjectId(projectId)
-        .then((task) => tasks.push(task))
-        .catch((err) => console.log(err));
+      const tasksProject: ProjectTasksDto[] =
+        await this._taskProjectRepos.findByProjectId(projectId);
+
+      for (let taskProject of tasksProject) {
+        const task: TaskDto = await this._taskRepos.findById(
+          taskProject.taskId
+        );
+
+        const taskInfo: PTaskDto = {
+          projectTaskId: taskProject.id,
+          billable: taskProject.billable,
+          taskName: task.name,
+        };
+
+        tasks.push(taskInfo);
+      }
 
       const listPM: string[] = await this._userRepos.findProjectManagers(
         projectId

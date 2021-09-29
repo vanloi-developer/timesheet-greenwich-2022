@@ -1,4 +1,4 @@
-import { IProjectTask } from "../../../../interfaces";
+import { PTaskDto } from "..";
 import { ProjectUserType } from "../../../enums";
 
 export interface ProjectIncludingTaskDto {
@@ -12,7 +12,7 @@ export interface ProjectIncludingTaskDto {
 
   listPM: string[];
 
-  tasks: IProjectTask[];
+  tasks: PTaskDto[];
 
   targetUsers: [];
 

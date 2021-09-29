@@ -12,6 +12,7 @@ import { TaskRouter } from "./Task";
 import { UserRouter } from "./User";
 
 import { MyTimesheetRouter } from "./MyTimesheet";
+import { TimeKeepingRouter } from "./Timekeeping";
 
 class ServiceRouter extends BaseRouter {
   constructor() {
@@ -33,6 +34,8 @@ class ServiceRouter extends BaseRouter {
     this._router.use("/project", new ProjectRouter()._router);
 
     this._router.use("/myTimesheets", new MyTimesheetRouter()._router);
+
+    this._router.use("/timekeeping", new TimeKeepingRouter()._router);
   }
 }
 

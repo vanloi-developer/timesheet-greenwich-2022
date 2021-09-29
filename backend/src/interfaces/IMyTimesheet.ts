@@ -9,9 +9,10 @@ export interface IMyTimesheet extends IBase {
   typeOfWork: TimesheetType;
 
   isCharged: boolean;
-  dateAt: string;
+  dateAt: Date;
   status: TimesheetStatus;
 
   projectTargetUserId?: number;
   id: number;
+  userId: number;
 }

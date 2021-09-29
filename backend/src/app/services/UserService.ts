@@ -24,7 +24,7 @@ class UserService extends BaseService<UserRepository> {
         );
       }
 
-      const result: UserDTO = await this._repos.save(user);
+      const result = await this._repos.save(user);
 
       return result;
     } catch (error) {

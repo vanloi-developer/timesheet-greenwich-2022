@@ -18,6 +18,8 @@ export { ProjectDto } from "../common/ProjectDto";
 export { ProjectUsersDto } from "./project/ProjectUsersDto";
 
 export { ProjectTasksDto } from "./project/ProjectTasksDto";
+
+export { PTaskDto } from "./project/PTaskDto";
 /**------------------------------------------------------------------------- */
 
 /**

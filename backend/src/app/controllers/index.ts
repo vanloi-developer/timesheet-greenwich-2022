@@ -1,4 +1,10 @@
 /**
+ * configuration controller
+ */
+export { ConfigurationController } from "./ConfigurationController";
+/**------------------------------------------------------ */
+
+/**
  * task controller
  */
 export { TaskController } from "./TaskController";
@@ -44,4 +50,6 @@ export { ProjectController } from "./ProjectController";
  * mytimesheet controller
  */
 export { MyTimesheetController } from "./MyTimesheetController";
+
+export { TimekeepingController } from "./TimekeepingController";
 /**------------------------------------------------------ */

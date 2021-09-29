@@ -1,3 +1,4 @@
+import { ProjectTasksDto } from "src/app/dto/responses";
 import { ApiError } from "../../app/core";
 import { IProjectTask } from "../../interfaces";
 import { ProjectTaskSchema } from "../schemas";
@@ -8,7 +9,9 @@ class ProjectTaskRepository extends BaseRepository<IProjectTask> {
     super("projectTasks", ProjectTaskSchema);
   }
 
-  public findByProjectId = async (projectId: number) => {
+  public findByProjectId = async (
+    projectId: number
+  ): Promise<ProjectTasksDto[]> => {
     try {
       return await this._model.find({ projectId });
     } catch (error) {

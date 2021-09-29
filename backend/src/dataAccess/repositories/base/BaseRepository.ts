@@ -23,7 +23,7 @@ abstract class BaseRepository<T extends Document> {
     }
   };
 
-  public save = async (item: T) => {
+  public save = async (item: T): Promise<T> => {
     try {
       if (item.id && (await this._model.updateOne({ id: item.id }, item))) {
         return await this.findById(item.id);
@@ -68,7 +68,7 @@ abstract class BaseRepository<T extends Document> {
     }
   };
 
-  public findById = async (id: number) => {
+  public findById = async (id: number): Promise<T> => {
     try {
       return await this._model.findOne({ id: id });
     } catch (error) {

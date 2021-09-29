@@ -43,7 +43,7 @@ class UserController extends BaseController<UserService> {
     try {
       const user: CreateUserDTO = req.body;
 
-      const result: UserDTO = await this._business.create(user);
+      const result = await this._business.create(user);
 
       const response: IResponse = {
         error: null,
