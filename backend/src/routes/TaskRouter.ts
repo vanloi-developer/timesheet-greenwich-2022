@@ -1,6 +1,6 @@
 import { REQUIRED_FIELD_SAVE_TASK } from './../constants/index';
 import { validate } from './../middlewares/validate/FieldValidate';
-import { validQueryID } from './../middlewares/validate/UserValidate';
+import { validQueryID } from './../middlewares/validate/FieldValidate';
 import { BaseRouter } from './BaseRouter';
 import TaskService from '../services/TaskService';
 

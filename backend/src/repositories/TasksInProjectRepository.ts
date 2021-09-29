@@ -1,7 +1,4 @@
 import { ITasks_in_projectModel } from './../types/Models/ITasks_in_projectModel';
-import { IProjectModel } from './../types/Models/IProjectModel';
-import { searchTextFieldOpt } from './../utils/index';
-// import { REQUIRED_FIELD_CREATE_Project } from './../constants/index';
 import { ITasksInProjectRepository } from '../types/Repositories/ITasksInProjectRepository';
 import db from '../models';
 import logger from '../config/logger';
@@ -11,7 +8,7 @@ class TasksInProjectRepository implements ITasksInProjectRepository {
 
    async findByName(name: string) {
       try {
-         return await await this._db.findOne({ name }).select('-_id');
+         return await this._db.findOne({ name }).select('-_id');
       } catch (err) {
          logger.error('findByName TasksInProjectRepository error: ', err.message);
       }
@@ -25,37 +22,32 @@ class TasksInProjectRepository implements ITasksInProjectRepository {
       }
    }
 
-   // async getProjects() {
-   //    try {
-   //       return {
-   //          items: await this._db.find({}).select('-_id'),
-   //       };
-   //    } catch (error) {
-   //       logger.error('getProjects TasksInProjectRepository error: ', error.message);
-   //    }
-   // }
+   async findTasksInProject(projectId: number) {
+      try {
+         return await this._db.find({ projectId }).select('-_id');
+      } catch (err) {
+         logger.error('findTaskInProject TasksInProjectRepository error: ', err.message);
+      }
+   }
 
-   // async filterAll(Keyword: string, SkipCount: number, MaxResultCount: number) {
-   //    //Search with name | username ... text
-   //    let filterOpt: any = {};
-   //    if (Keyword && Keyword !== '') {
-   //       let orOpt = searchTextFieldOpt(Keyword, REQUIRED_FIELD_CREATE_Project);
-   //       if (orOpt.length) filterOpt.$or = orOpt;
-   //    }
-   //    try {
-   //       const items = await this._db
-   //          .find(filterOpt)
-   //          .skip(SkipCount)
-   //          .limit(MaxResultCount)
-   //          .select('-_id');
-   //       return {
-   //          totalCount: items.length,
-   //          items,
-   //       };
-   //    } catch (error) {
-   //       logger.error('findUserPagging UserRepository error: ', error.message);
-   //    }
-   // }
+   async deleteMany(projectId: number) {
+      try {
+         return await this._db.deleteMany({ projectId });
+      } catch (err) {
+         logger.error('findTaskInProject TasksInProjectRepository error: ', err.message);
+      }
+   }
+
+   async updateMany(tasksInput, projectId) {
+      try {
+         return await this._db.updateMany({ projectId }, tasksInput, {
+            upsert: true,
+            setDefaultsOnInsert: true,
+         });
+      } catch (error) {
+         logger.error('create TasksInProjectRepository error: ', error.message);
+      }
+   }
 }
 
 export = new TasksInProjectRepository();

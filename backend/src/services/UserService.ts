@@ -59,6 +59,9 @@ class UserService {
 
          const result = await this._repository.create(userInput);
 
+         delete result['password'];
+         delete result['_id'];
+
          return res.status(200).json({
             ...BaseResDto,
             result,

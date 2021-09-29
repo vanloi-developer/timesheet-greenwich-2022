@@ -21,12 +21,12 @@ const UserSchema: Schema = new Schema({
    isActive: { type: Boolean, default: null },
    roleNames: { type: Array },
 
-   // projectUsers: { type: Array },
+   projectUsers: { type: Array, default: [] },
 
    type: { type: Number, default: null },
    salary: { type: Number, default: null },
-   salaryAt: { type: Date, default: null },
-   startDateAt: { type: Date, default: null },
+   salaryAt: { type: String, default: null },
+   startDateAt: { type: String, default: null },
    allowedLeaveDay: { type: Number, default: null },
    userCode: { type: String, default: '' },
    jobTitle: { type: String, default: '' },
@@ -34,13 +34,13 @@ const UserSchema: Schema = new Schema({
    registerWorkDay: { type: Number, default: null },
    avatarPath: { type: String, default: '' },
 
-   // managerId: { type: Number, default: 1 },
+   managerId: { type: Number, default: 1 },
 
-   // managerAvatarPath: { type: String, default: '' },
-   // managerName: { type: String, default: '' },
+   managerAvatarPath: { type: String, default: '' },
+   managerName: { type: String, default: '' },
    branch: { type: Number, default: 0 },
    sex: { type: Number, default: null },
-   creationTime: { type: Date, default: new Date() },
+   creationTime: { type: String, default: new Date() },
    morningWorking: { type: Number, default: null },
    morningStartAt: { type: String, default: '' },
    morningEndAt: { type: String, default: '' },

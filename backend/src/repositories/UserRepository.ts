@@ -1,5 +1,5 @@
 import { searchTextFieldOpt } from './../utils/index';
-import { SEARCH_TEXT_FIELD_CUSTOMER, SEARCH_TEXT_FIELD_USER } from './../constants/index';
+import { SEARCH_TEXT_FIELD_USER } from './../constants/index';
 import { IFilterItems, IFilterOpt } from './../dto/reqDto/AllPaggingDto';
 import { IUserRepository } from './../types/IUserRepository';
 import db from '../models';

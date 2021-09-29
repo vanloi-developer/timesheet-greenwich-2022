@@ -4,7 +4,7 @@ import UserService from '../services/UserService';
 import { BaseRouter } from './BaseRouter';
 import { validCreate } from '../middlewares/validate/UserValidate';
 import RoleService from '../services/RoleService';
-import { validQueryID } from '../middlewares/validate/UserValidate';
+import { validQueryID } from './../middlewares/validate/FieldValidate';
 class UserRouter extends BaseRouter {
    private _userService = UserService;
    private _roleService = RoleService;

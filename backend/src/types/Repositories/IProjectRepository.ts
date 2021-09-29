@@ -3,6 +3,9 @@ import { IProjectModel } from '../Models/IProjectModel';
 export interface IProjectRepository {
    findByName(name: string);
    findById(id: number);
-   create(ProjectInput: IProjectReqDto);
+   createOrUpdate(ProjectInput: IProjectReqDto);
    filterAll(status: number | null, search: string);
+   update(id: number, updateFeild: Object);
+   deleteById(id: number);
+   updateWithUserAndTask(ProjectInput: IProjectReqDto);
 }

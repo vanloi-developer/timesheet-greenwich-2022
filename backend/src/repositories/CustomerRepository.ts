@@ -1,6 +1,5 @@
-import { ICustomerFilterOpt } from './../types/ICustomFilterOpt';
 import { searchTextFieldOpt } from './../utils/index';
-import { SEARCH_TEXT_FIELD_CUSTOMER } from './../constants/index';
+import { REQUIRED_FIELD_SAVE_CUSTOMER } from './../constants/index';
 import { IFilterItems, IFilterOpt } from './../dto/reqDto/AllPaggingDto';
 import { ICustomerRepository } from './../types/ICustomerRepository';
 import db from '../models';
@@ -55,7 +54,7 @@ class CustomerRepository implements ICustomerRepository {
 
       //Search with name | username ... text
       if (searchText && searchText !== '') {
-         let orOpt = searchTextFieldOpt(searchText, SEARCH_TEXT_FIELD_CUSTOMER);
+         let orOpt = searchTextFieldOpt(searchText, REQUIRED_FIELD_SAVE_CUSTOMER);
          if (orOpt.length) filterOpt.push({ $or: orOpt });
       }
       try {

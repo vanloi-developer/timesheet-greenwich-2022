@@ -1,4 +1,4 @@
-import { validQueryInput } from './../middlewares/validate/UserValidate';
+import { validQueryID, validQueryInput } from '../middlewares/validate/FieldValidate';
 import { validate } from '../middlewares/validate/FieldValidate';
 import ProjectService from '../services/ProjectService';
 import { BaseRouter } from './BaseRouter';
@@ -11,10 +11,14 @@ class ProjectRouter extends BaseRouter {
    }
 
    protected init() {
-      this.router.post('/Save', this._service.create);
+      this.router.post('/Save', this._service.createOrEdit);
+      this.router.post('/Inactive', validate(['id']), this._service.inactive);
+      this.router.post('/Active', validate(['id']), this._service.active);
 
       this.router.get('/getAll', this._service.getAll);
       this.router.get('/Get', validQueryInput, this._service.getById);
+
+      this.router.delete('/Delete', validQueryID, this._service.deleteById);
    }
 }
 

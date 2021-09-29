@@ -1,6 +1,6 @@
 import { REQUIRED_FIELD_SAVE_CUSTOMER } from './../constants/index';
 import { validate } from './../middlewares/validate/FieldValidate';
-import { validQueryID } from './../middlewares/validate/UserValidate';
+import { validQueryID } from './../middlewares/validate/FieldValidate';
 import { BaseRouter } from './BaseRouter';
 import CustomerService from '../services/CustomerService';
 

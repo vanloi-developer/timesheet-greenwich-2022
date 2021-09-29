@@ -1,7 +1,5 @@
-import { authen } from './../middlewares/authen';
 import UserRouter = require('./UserRouter');
 import { BaseRouter } from './BaseRouter';
-import UserService = require('../services/UserService');
 import WorkTimeService = require('../services/WorkTimeService');
 import CustomerRouter = require('./CustomerRouter');
 import TaskRouter = require('./TaskRouter');
@@ -9,7 +7,6 @@ import RoleRouter = require('./RoleRouter');
 import ProjectRouter = require('./ProjectRouter');
 
 class AppRouter extends BaseRouter {
-   private _userService = UserService;
    private _worktimeService = WorkTimeService;
 
    constructor() {
@@ -18,7 +15,6 @@ class AppRouter extends BaseRouter {
    }
 
    protected init() {
-      this.router.get('/Session/GetCurrentLoginInformations', this._userService.getUserLoginInfo);
       this.router.get(
          '/Configuration/GetWorkingTimeConfigAllBranch',
          this._worktimeService.worktime,

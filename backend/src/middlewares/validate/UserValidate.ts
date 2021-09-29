@@ -51,15 +51,3 @@ export const validCreate = (req: Request, res: Response, next: NextFunction) => 
       }
    }
 };
-
-export const validQueryID = (req: Request, res: Response, next: NextFunction) => {
-   if (!req.query.Id) return res.status(400).json(INVALID_REQUEST);
-
-   next();
-};
-
-export const validQueryInput = (req: Request, res: Response, next: NextFunction) => {
-   if (!req.query.input) return res.status(400).json(INVALID_REQUEST);
-
-   next();
-};

@@ -1,11 +1,5 @@
 import { INVALID_REQUEST } from './../../dto/resDto/BaseErrorDto';
-// import {
-//    REQUIRED_FIELD_RESET_PASS,
-//    REQUIRED_FIELD_SAVE_CUSTOMER,
-//    REQUIRED_FIELD_SAVE_TYPE,
-// } from './../../constants/index';
 import { Request, Response, NextFunction } from 'express';
-// import { REQUIRED_FIELD_LOGIN } from '../../constants';
 
 export const validate = (requestFeild) => {
    return (req: Request, res: Response, next: NextFunction) => {
@@ -25,7 +19,7 @@ export const validate = (requestFeild) => {
 
       function checkField(arr: Array<string>) {
          arr.forEach((item) => {
-            if (!data[item as string]) errorMess(item);
+            if (data[item as string] === undefined) errorMess(item);
          });
 
          if (INVALID_ERR.error.validationErrors.length) return true;
@@ -49,8 +43,14 @@ export const validate = (requestFeild) => {
    };
 };
 
-// export const validLogin = validate(REQUIRED_FIELD_LOGIN);
-// export const validResetPass = validate(REQUIRED_FIELD_RESET_PASS);
-// export const validCreateCustomer = validate(REQUIRED_FIELD_SAVE_CUSTOMER);
-// export const validCreateTask = validate(REQUIRED_FIELD_SAVE_TYPE);
-// export const validCreate = validate(REQUIRED_FIELD_SAVE_TYPE);
+export const validQueryID = (req: Request, res: Response, next: NextFunction) => {
+   if (!req.query.Id) return res.status(400).json(INVALID_REQUEST);
+
+   next();
+};
+
+export const validQueryInput = (req: Request, res: Response, next: NextFunction) => {
+   if (!req.query.input) return res.status(400).json(INVALID_REQUEST);
+
+   next();
+};

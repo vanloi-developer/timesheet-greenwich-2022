@@ -1,3 +1,5 @@
+import { IUserModel } from './../types/Models/IUserModel';
+import { ITaskModel } from './../types/Models/ITaskModel';
 import { SEARCH_TEXT_FIELD_PROJECTS } from './../constants/index';
 import { IUsers_in_projectModel } from './../types/Models/IUsers_in_projectModel';
 import { ITasks_in_projectModel } from './../types/Models/ITasks_in_projectModel';
@@ -10,7 +12,7 @@ import db from '../models';
 import logger from '../config/logger';
 import UsersInProjectRepository from './UsersInProjectRepository';
 import TasksInProjectRepository from './TasksInProjectRepository';
-
+import _ from 'lodash';
 class ProjectRepository implements IProjectRepository {
    private readonly _db = db.Project;
 
@@ -98,27 +100,27 @@ class ProjectRepository implements IProjectRepository {
       }
    }
 
-   async create(projectInput: IProjectReqDto): Promise<IProjectReqDto> {
+   async createOrUpdate(projectInput: IProjectReqDto) {
       try {
-         let { tasks, users } = projectInput;
+         const { tasks, users } = projectInput;
+         tasks.forEach((item) => {
+            if (item.id === undefined) item.id = generateID('tasks_in_project');
+            if (item.projectId === undefined) item.projectId = projectInput.id;
+         });
 
-         tasks = tasks.map((item) => ({
-            ...item,
-            id: generateID('tasks_in_project'),
-            projectId: projectInput.id,
-         }));
-
-         users = users.map((item) => ({
-            ...item,
-            id: generateID('users_in_project'),
-            projectId: projectInput.id,
-         }));
+         users.forEach((item) => {
+            if (item.id === undefined) item.id = generateID('tasks_in_project');
+            if (item.projectId === undefined) item.projectId = projectInput.id;
+         });
 
          delete projectInput['tasks'];
          delete projectInput['users'];
 
-         let project = await this._db.create(projectInput);
-         if (!project) throw new Error();
+         const project = await this._db.findOneAndUpdate({ id: projectInput.id }, projectInput, {
+            upsert: true,
+            new: true,
+            setDefaultsOnInsert: true,
+         });
 
          const createdTasks: ITasks_in_projectModel[] = await TasksInProjectRepository.createMany(
             tasks,
@@ -128,7 +130,7 @@ class ProjectRepository implements IProjectRepository {
             users,
          );
 
-         let result: IProjectReqDto = {
+         let result = {
             ...project,
             tasks: createdTasks,
             users: createdUsers,
@@ -140,22 +142,12 @@ class ProjectRepository implements IProjectRepository {
       }
    }
 
-   // async getProjects() {
-   //    try {
-   //       return {
-   //          items: await this._db.find({}).select('-_id'),
-   //       };
-   //    } catch (error) {
-   //       logger.error('getProjects ProjectRepository error: ', error.message);
-   //    }
-   // }
-
    async filterAll(status: number | null, search: string) {
       // Search with name | username ... text
       const searchFilter = [];
       let match = [];
 
-      if (status) match.push({ status });
+      if (status !== null) match.push({ status });
       if (search) match.push({ $or: searchTextFieldOpt(search, SEARCH_TEXT_FIELD_PROJECTS) });
       if (match.length) searchFilter.push({ $match: { $and: match } });
 
@@ -213,7 +205,7 @@ class ProjectRepository implements IProjectRepository {
                            {
                               $match: {
                                  $expr: {
-                                    $and: [{ $eq: ['$id', '$$userId'] }, { $eq: ['$$type', 0] }],
+                                    $and: [{ $eq: ['$id', '$$userId'] }, { $eq: ['$$type', 1] }],
                                  },
                               },
                            },
@@ -259,6 +251,38 @@ class ProjectRepository implements IProjectRepository {
          return await this._db.aggregate(filterOpt);
       } catch (error) {
          logger.error('findUserPagging UserRepository error: ', error.message);
+      }
+   }
+
+   async update(id: number, updateFeild: Object) {
+      try {
+         await this._db.findOneAndUpdate({ id }, updateFeild);
+      } catch (error) {
+         logger.error('update UserRepository error: ', error.message);
+      }
+   }
+
+   async updateWithUserAndTask(projectInput: IProjectReqDto) {
+      try {
+         const projectId = projectInput.id;
+
+         await UsersInProjectRepository.deleteMany(projectId);
+         await TasksInProjectRepository.deleteMany(projectId);
+
+         return await this.createOrUpdate(projectInput);
+      } catch (error) {
+         logger.error('create ProjectRepository error: ', error.message);
+      }
+   }
+
+   async deleteById(id: number) {
+      try {
+         await UsersInProjectRepository.deleteMany(id);
+         await TasksInProjectRepository.deleteMany(id);
+
+         await this._db.deleteOne({ id });
+      } catch (error) {
+         logger.error('DeleteUserById UserRepository error: ', error.message);
       }
    }
 }

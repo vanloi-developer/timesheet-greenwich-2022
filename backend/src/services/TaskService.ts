@@ -65,8 +65,6 @@ class TaskService {
       };
    };
 
-   // public Update = this.UpdateBase();
-
    public deArchive = this.UpdateBase({ isDeleted: false });
 
    public archive = async (req: Request, res: Response, next: NextFunction) => {

@@ -1,6 +1,6 @@
 // import { ITaskFilterOpt } from './../types/ICustomFilterOpt';
 import { searchTextFieldOpt } from './../utils/index';
-import { SEARCH_TEXT_FIELD_CUSTOMER } from './../constants/index';
+import { REQUIRED_FIELD_SAVE_CUSTOMER } from './../constants/index';
 import { IFilterItems, IFilterOpt } from './../dto/reqDto/AllPaggingDto';
 import { ITaskRepository } from './../types/ITaskRepository';
 import db from '../models';
@@ -55,7 +55,7 @@ class TaskRepository implements ITaskRepository {
 
       //Search with name | username ... text
       if (searchText && searchText !== '') {
-         let orOpt = searchTextFieldOpt(searchText, SEARCH_TEXT_FIELD_CUSTOMER);
+         let orOpt = searchTextFieldOpt(searchText, REQUIRED_FIELD_SAVE_CUSTOMER);
          if (orOpt.length) filterOpt.push({ $or: orOpt });
       }
       try {

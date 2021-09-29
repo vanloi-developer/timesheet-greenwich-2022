@@ -25,37 +25,32 @@ class UsersInProjectRepository implements IUsersInProjectRepository {
       }
    }
 
-   // async getProjects() {
-   //    try {
-   //       return {
-   //          items: await this._db.find({}).select('-_id'),
-   //       };
-   //    } catch (error) {
-   //       logger.error('getProjects UsersInProjectRepository error: ', error.message);
-   //    }
-   // }
+   async findUsersInProject(projectId: number) {
+      try {
+         return await this._db.find({ projectId }).select('-_id');
+      } catch (err) {
+         logger.error('findTaskInProject TasksInProjectRepository error: ', err.message);
+      }
+   }
 
-   // async filterAll(Keyword: string, SkipCount: number, MaxResultCount: number) {
-   //    //Search with name | username ... text
-   //    let filterOpt: any = {};
-   //    if (Keyword && Keyword !== '') {
-   //       let orOpt = searchTextFieldOpt(Keyword, REQUIRED_FIELD_CREATE_Project);
-   //       if (orOpt.length) filterOpt.$or = orOpt;
-   //    }
-   //    try {
-   //       const items = await this._db
-   //          .find(filterOpt)
-   //          .skip(SkipCount)
-   //          .limit(MaxResultCount)
-   //          .select('-_id');
-   //       return {
-   //          totalCount: items.length,
-   //          items,
-   //       };
-   //    } catch (error) {
-   //       logger.error('findUserPagging UserRepository error: ', error.message);
-   //    }
-   // }
+   async deleteMany(projectId) {
+      try {
+         return await this._db.deleteMany({ projectId });
+      } catch (err) {
+         logger.error('findTaskInProject TasksInProjectRepository error: ', err.message);
+      }
+   }
+
+   async updateMany(usersInput, projectId) {
+      try {
+         return await this._db.updateMany({ projectId }, usersInput, {
+            upsert: true,
+            setDefaultsOnInsert: true,
+         });
+      } catch (error) {
+         logger.error('updateMany TasksInProjectRepository error: ', error.message);
+      }
+   }
 }
 
 export = new UsersInProjectRepository();
