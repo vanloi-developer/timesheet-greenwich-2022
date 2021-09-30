@@ -1,4 +1,4 @@
-import { authen } from './../middlewares/authen';
+import { authen } from '../middlewares/auth';
 import { REQUIRED_FIELD_LOGIN } from './../constants/index';
 import { validate } from './../middlewares/validate/FieldValidate';
 import appRouter from './AppRouter';

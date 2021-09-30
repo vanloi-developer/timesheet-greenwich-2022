@@ -6,6 +6,14 @@ import logger from '../config/logger';
 class TasksInProjectRepository implements ITasksInProjectRepository {
    private readonly _db = db.Tasks_in_project;
 
+   async findById(id: number) {
+      try {
+         return await this._db.findOne({ id }).select('-_id');
+      } catch (err) {
+         logger.error('findByName TasksInProjectRepository error: ', err.message);
+      }
+   }
+
    async findByName(name: string) {
       try {
          return await this._db.findOne({ name }).select('-_id');

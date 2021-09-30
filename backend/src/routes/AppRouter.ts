@@ -1,3 +1,4 @@
+import { authorAdmin } from './../middlewares/auth';
 import UserRouter = require('./UserRouter');
 import { BaseRouter } from './BaseRouter';
 import WorkTimeService = require('../services/WorkTimeService');
@@ -5,6 +6,8 @@ import CustomerRouter = require('./CustomerRouter');
 import TaskRouter = require('./TaskRouter');
 import RoleRouter = require('./RoleRouter');
 import ProjectRouter = require('./ProjectRouter');
+import MyTimesheetsRouter = require('./MyTimesheetsRouter');
+import TimekeepingRouter = require('./TimekeepingRouter');
 
 class AppRouter extends BaseRouter {
    private _worktimeService = WorkTimeService;
@@ -20,11 +23,13 @@ class AppRouter extends BaseRouter {
          this._worktimeService.worktime,
       );
 
-      this.router.use('/User', UserRouter);
-      this.router.use('/Role', RoleRouter);
-      this.router.use('/Customer', CustomerRouter);
-      this.router.use('/Task', TaskRouter);
+      this.router.use('/User', authorAdmin, UserRouter);
+      this.router.use('/Role', authorAdmin, RoleRouter);
+      this.router.use('/Customer', authorAdmin, CustomerRouter);
+      this.router.use('/Task', authorAdmin, TaskRouter);
       this.router.use('/Project', ProjectRouter);
+      this.router.use('/MyTimesheets', MyTimesheetsRouter);
+      this.router.use('/Timekeeping', TimekeepingRouter);
    }
 }
 

@@ -17,7 +17,10 @@ const BaseErrorDto = (message: string | null = null, details: string | null = nu
 export const baseError = BaseErrorDto;
 export const INVALID_TOKEN = BaseErrorDto('Your request is not valid!', 'Invalid token');
 export const EXISTED_USER = BaseErrorDto('is already taken.');
-export const AUTH_ERR = BaseErrorDto('Current user did not login to the application!');
+export const AUTHEN_ERR = BaseErrorDto('Current user did not login to the application!');
+export const AUTHOR_ERR = BaseErrorDto(
+   'Current user did not have permissions to access this feature!',
+);
 export const SERVER_ERROR = BaseErrorDto('An internal error occurred during your request!');
 export const INVALID_REQUEST = BaseErrorDto(
    'Your request is not valid!',

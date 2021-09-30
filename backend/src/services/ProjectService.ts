@@ -1,3 +1,4 @@
+import { IRequest } from './../types/IRequest';
 import { ITasksInProjectRepository } from './../types/Repositories/ITasksInProjectRepository';
 import { IUsers_in_projectModel } from './../types/Models/IUsers_in_projectModel';
 import { ITasks_in_projectModel } from './../types/Models/ITasks_in_projectModel';
@@ -12,9 +13,11 @@ import logger from '../config/logger';
 import generateID from '../utils/generateID';
 import TasksInProjectRepository from '../repositories/TasksInProjectRepository';
 import UsersInProjectRepository from '../repositories/UsersInProjectRepository';
+import { IUsersInProjectRepository } from '../types/Repositories/IUsersInProjectRepository';
 
 class ProjectService {
    private _repository: IProjectRepository = ProjectRepository;
+   private _userInProjectRepository: IUsersInProjectRepository = UsersInProjectRepository;
 
    public getById = async (req: Request, res: Response, next: NextFunction) => {
       const id: number = Number(req.query.input);
@@ -30,6 +33,36 @@ class ProjectService {
          return res.status(200).json({
             ...BaseResDto,
             result: result[0],
+         });
+      } catch (error) {
+         logger.error('getAll ProjectService error: ', error.message);
+         next(error);
+      }
+   };
+
+   public getProjectsIncludingTasks = async (req: IRequest, res: Response, next: NextFunction) => {
+      // const userId: number = req.local.id;/
+      const userId: number = 6;
+
+      let result = [];
+      try {
+         const projectIds: Array<number> = await this._userInProjectRepository.findProjectIds(
+            userId,
+         );
+
+         console.log(projectIds);
+
+         if (!projectIds.length)
+            return res.status(200).json({
+               ...BaseResDto,
+               result,
+            });
+
+         result = await this._repository.findProjectsIncludingTasks(projectIds, userId);
+
+         return res.status(200).json({
+            ...BaseResDto,
+            result,
          });
       } catch (error) {
          logger.error('getAll ProjectService error: ', error.message);

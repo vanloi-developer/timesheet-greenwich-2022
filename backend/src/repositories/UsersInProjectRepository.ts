@@ -1,7 +1,4 @@
 import { IUsers_in_projectModel } from './../types/Models/IUsers_in_projectModel';
-import { IProjectModel } from './../types/Models/IProjectModel';
-import { searchTextFieldOpt } from './../utils/index';
-// import { REQUIRED_FIELD_CREATE_Project } from './../constants/index';
 import { IUsersInProjectRepository } from '../types/Repositories/IUsersInProjectRepository';
 import db from '../models';
 import logger from '../config/logger';
@@ -14,6 +11,16 @@ class UsersInProjectRepository implements IUsersInProjectRepository {
          return await await this._db.findOne({ name }).select('-_id');
       } catch (err) {
          logger.error('findByName UsersInProjectRepository error: ', err.message);
+      }
+   }
+
+   async findProjectIds(userId: number) {
+      try {
+         const usersInProject = await this._db.find({ userId }).select('-_id');
+         const idsArray: Array<number> = usersInProject.map((item) => item.projectId);
+         return idsArray;
+      } catch (err) {
+         logger.error('findByName TasksInProjectRepository error: ', err.message);
       }
    }
 

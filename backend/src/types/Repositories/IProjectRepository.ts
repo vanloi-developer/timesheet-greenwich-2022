@@ -3,6 +3,7 @@ import { IProjectModel } from '../Models/IProjectModel';
 export interface IProjectRepository {
    findByName(name: string);
    findById(id: number);
+   findProjectsIncludingTasks(projectIds: number[], userId: number);
    createOrUpdate(ProjectInput: IProjectReqDto);
    filterAll(status: number | null, search: string);
    update(id: number, updateFeild: Object);
