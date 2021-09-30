@@ -276,7 +276,8 @@ class UserRepository implements IUserRepository {
    }
    async update(id: number, updateFeild) {
       try {
-         await this._db.findOneAndUpdate({ id }, updateFeild);
+         const a = await this._db.updateOne({ id }, updateFeild);
+         return a;
       } catch (error) {
          logger.error('findByID UserRepository error: ', error.message);
       }

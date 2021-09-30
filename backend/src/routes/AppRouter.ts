@@ -23,11 +23,11 @@ class AppRouter extends BaseRouter {
          this._worktimeService.worktime,
       );
 
-      this.router.use('/User', authorAdmin, UserRouter);
+      this.router.use('/User', UserRouter);
       this.router.use('/Role', authorAdmin, RoleRouter);
       this.router.use('/Customer', authorAdmin, CustomerRouter);
       this.router.use('/Task', authorAdmin, TaskRouter);
-      this.router.use('/Project', ProjectRouter);
+      this.router.use('/Project', authorAdmin, ProjectRouter);
       this.router.use('/MyTimesheets', MyTimesheetsRouter);
       this.router.use('/Timekeeping', TimekeepingRouter);
    }

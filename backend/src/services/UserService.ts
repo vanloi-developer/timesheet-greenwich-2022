@@ -150,7 +150,7 @@ class UserService {
             result,
          });
       } catch (error) {
-         logger.error('createUser UserService error: ', error.message);
+         logger.error('findAllMangagers UserService error: ', error.message);
          next(error);
       }
    };
@@ -167,7 +167,7 @@ class UserService {
             result: { message: 'Delete user successfully!' },
          });
       } catch (error) {
-         logger.error('createUser UserService error: ', error.message);
+         logger.error('delete UserService error: ', error.message);
          next(error);
       }
    };
@@ -188,13 +188,36 @@ class UserService {
                result,
             });
          } catch (error) {
-            logger.error('createUser UserService error: ', error.message);
+            logger.error('update UserService error: ', error.message);
             next(error);
          }
       };
    };
 
    public update = this.updateBase();
+
+   public updateImg = async (req, res: Response, next: NextFunction) => {
+      let userId: number = 0;
+      console.log(req.body);
+      if (req.body.userId) {
+         userId = Number(JSON.parse(JSON.stringify(req.body)).userId);
+      } else {
+         userId = req.local.id;
+      }
+      try {
+         const avatarPath = '/avartar/' + req.files[0].filename;
+         const data = await this._repository.findById(userId as number);
+         if (!data) return res.status(500).json(NOT_EXIST_USER);
+         await this._repository.update(userId as number, { avatarPath });
+         return res.status(200).json({
+            ...BaseResDto,
+            result: avatarPath,
+         });
+      } catch (error) {
+         logger.error('updateImg UserService error: ', error.message);
+         next(error);
+      }
+   };
 
    public deactive = this.updateBase({ isActive: false });
 
