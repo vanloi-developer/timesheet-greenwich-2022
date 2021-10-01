@@ -5,7 +5,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 const index_1 = require("./../constants/index");
 const FieldValidate_1 = require("../middlewares/validate/FieldValidate");
 const MyTimesheetsService_1 = __importDefault(require("../services/MyTimesheetsService"));
-// import MyTimesheetsService from '../services/MyTimesheetsService';
 const BaseRouter_1 = require("./BaseRouter");
 class MyTimesheetsRouter extends BaseRouter_1.BaseRouter {
     constructor() {

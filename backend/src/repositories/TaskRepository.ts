@@ -20,7 +20,7 @@ class TaskRepository implements ITaskRepository {
       try {
          return await this._db.find({}).select('-_id');
       } catch (error) {
-         logger.error('findByName TaskRepository error: ', error.message);
+         logger.error('findAll TaskRepository error: ', error.message);
       }
    }
 
@@ -28,7 +28,7 @@ class TaskRepository implements ITaskRepository {
       try {
          return await this._db.findOne({ id }).select('-_id');
       } catch (error) {
-         logger.error('findByName TaskRepository error: ', error.message);
+         logger.error('findById TaskRepository error: ', error.message);
       }
    }
    async create(taskInfo: ITaskModel) {

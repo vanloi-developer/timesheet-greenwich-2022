@@ -27,6 +27,7 @@ class RoleService {
       try {
          //Check if task name exist
          const exitstedTask = await this._repository.findByName(roleInput.name);
+
          if (exitstedTask)
             return res.status(500).json(baseError(`Role ${exitstedTask.name} already existed`));
 

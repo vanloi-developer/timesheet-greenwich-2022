@@ -8,6 +8,7 @@ export const validCreate = (req: Request, res: Response, next: NextFunction) => 
    const { emailAddress } = data;
    let RESPONSE_JSON = { ...INVALID_REQUEST };
    RESPONSE_JSON.error.validationErrors = [];
+
    // Check missing required field
    const invalidField = checkField(REQUIRED_FIELD);
    if (invalidField) return res.status(400).json(RESPONSE_JSON);

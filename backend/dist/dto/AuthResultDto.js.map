@@ -1,1 +1,0 @@
-{"version":3,"file":"AuthResultDto.js","sourceRoot":"","sources":["../../src/dto/AuthResultDto.ts"],"names":[],"mappings":";;;AACA,8CAAkD;AAErC,QAAA,aAAa,GAAmB;IAC1C,WAAW,EAAE,IAAI;IACjB,oBAAoB,EAAE,qBAAqB;IAC3C,eAAe,EAAE,oBAAY;IAC7B,MAAM,EAAE,IAAI;CACd,CAAC"}

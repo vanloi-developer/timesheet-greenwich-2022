@@ -11,7 +11,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-// import { ITaskFilterOpt } from './../types/ICustomFilterOpt';
 const index_1 = require("./../utils/index");
 const index_2 = require("./../constants/index");
 const models_1 = __importDefault(require("../models"));
@@ -36,7 +35,7 @@ class TaskRepository {
                 return yield this._db.find({}).select('-_id');
             }
             catch (error) {
-                logger_1.default.error('findByName TaskRepository error: ', error.message);
+                logger_1.default.error('findAll TaskRepository error: ', error.message);
             }
         });
     }
@@ -46,7 +45,7 @@ class TaskRepository {
                 return yield this._db.findOne({ id }).select('-_id');
             }
             catch (error) {
-                logger_1.default.error('findByName TaskRepository error: ', error.message);
+                logger_1.default.error('findById TaskRepository error: ', error.message);
             }
         });
     }

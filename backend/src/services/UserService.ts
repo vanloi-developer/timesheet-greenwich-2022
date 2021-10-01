@@ -1,3 +1,5 @@
+import { IUserModel } from './../types/Models/IUserModel';
+import { ReqUserNotPagging } from './../dto/resDto/ReqUserNotPagging';
 import { BaseResDto } from './../dto/resDto/BaseResDto';
 import { UserResDTO } from './../dto/resDto/UserResDto';
 import { ADMIN_PASSWORD } from './../constants/index';
@@ -71,7 +73,7 @@ class UserService {
       const id: number = parseInt(req.query.Id as string);
 
       try {
-         const result = await this._repository.findById(id);
+         const result: IUserModel = await this._repository.findById(id);
          if (!result) return res.status(400).json(NOT_EXIST_USER);
 
          return res.status(200).json({
@@ -110,7 +112,7 @@ class UserService {
 
    public getUserNotPagging = async (req: Request, res: Response, next: NextFunction) => {
       try {
-         const result = await this._repository.findUserNotPagging();
+         const result: ReqUserNotPagging[] = await this._repository.findUserNotPagging();
          return res.status(200).json({
             ...BaseResDto,
             result,

@@ -180,7 +180,8 @@ class UserService {
                 const user = yield this._repository.findById(userId);
                 if (!user)
                     return res.status(500).json(BaseErrorDto_1.NOT_EXIST_USER);
-                yield this._repository.resetPassword(userId, { password: newPassword });
+                const hashedPass = yield bcrypt_1.default.hashSync(newPassword, saltRounds);
+                yield this._repository.resetPassword(userId, { password: hashedPass });
                 return res.status(200).json(Object.assign({}, UserResDto_1.UserResDTO));
             }
             catch (error) {

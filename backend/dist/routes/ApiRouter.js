@@ -16,11 +16,7 @@ class ApiRouter extends BaseRouter_1.BaseRouter {
         this._authenService = AuthenService_1.default;
         this.init();
     }
-    /**
-     * Connect routes to their matching routers.
-     */
     init() {
-        // this.router.use("/test", testRouter);
         this.router.get('/services/app/Session/GetCurrentLoginInformations', this._userService.getUserLoginInfo);
         this.router.post('/TokenAuth/Authenticate', (0, FieldValidate_1.validate)(index_1.REQUIRED_FIELD_LOGIN), this._authenService.authen);
         this.router.use('/services/app', auth_1.authen, AppRouter_1.default);

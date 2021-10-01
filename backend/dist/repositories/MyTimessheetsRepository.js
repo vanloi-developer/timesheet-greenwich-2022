@@ -13,8 +13,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 const models_1 = __importDefault(require("../models"));
 const logger_1 = __importDefault(require("../config/logger"));
-// import UsersInMyTimesheetsRepository from './UsersInMyTimesheetsRepository';
-// import TasksInMyTimesheetsRepository from './TasksInMyTimesheetsRepository';
 class MyTimesheetsRepository {
     constructor() {
         this._db = models_1.default.MyTimesheets;
@@ -136,40 +134,7 @@ class MyTimesheetsRepository {
     filterAll(status, startDate, endDate) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const allTimesheets = yield this._db.aggregate([
-                    {
-                        $match: {
-                            dateAt: {
-                                $gte: new Date(startDate),
-                                $lt: new Date(endDate),
-                            },
-                        },
-                    },
-                    {
-                        $lookup: {
-                            from: 'tasks_in_projects',
-                            let: { projectTaskId: '$projectTaskId' },
-                            as: 'tasks_in_project',
-                            pipeline: [
-                                {
-                                    $match: {
-                                        $expr: {
-                                            $eq: ['$id', '$$projectTaskId'],
-                                        },
-                                    },
-                                },
-                                {
-                                    $lookup: {
-                                        from: 'tasks',
-                                        localField: 'taskId',
-                                        foreignField: 'id',
-                                        as: 'task',
-                                    },
-                                },
-                                { $unwind: '$task' },
-                            ],
-                        },
-                    },
+                const connectUserModel = [
                     {
                         $lookup: {
                             from: 'users',
@@ -178,6 +143,9 @@ class MyTimesheetsRepository {
                             as: 'user',
                         },
                     },
+                    { $unwind: '$user' },
+                ];
+                const connectTaskInProject = [
                     {
                         $lookup: {
                             from: 'tasks_in_projects',
@@ -230,7 +198,8 @@ class MyTimesheetsRepository {
                         },
                     },
                     { $unwind: '$tasks_in_project' },
-                    { $unwind: '$user' },
+                ];
+                const reformatField = [
                     {
                         $project: {
                             id: '$id',
@@ -254,6 +223,8 @@ class MyTimesheetsRepository {
                             level: '$user.level',
                         },
                     },
+                ];
+                const checkIfAnyUserInProject = [
                     {
                         $lookup: {
                             from: 'users_in_projects',
@@ -262,6 +233,8 @@ class MyTimesheetsRepository {
                             as: 'isUserInProject',
                         },
                     },
+                ];
+                const createFieldListPM = [
                     {
                         $lookup: {
                             from: 'users_in_projects',
@@ -306,6 +279,28 @@ class MyTimesheetsRepository {
                             isUserInProject: { $size: '$isUserInProject' },
                         },
                     },
+                ];
+                const match = {
+                    dateAt: {
+                        $gte: new Date(startDate),
+                        $lt: new Date(endDate),
+                    },
+                };
+                if (status !== -1) {
+                    match.status = status;
+                }
+                const filterExpression = [
+                    {
+                        $match: match,
+                    },
+                ];
+                const allTimesheets = yield this._db.aggregate([
+                    ...connectUserModel,
+                    ...connectTaskInProject,
+                    ...reformatField,
+                    ...checkIfAnyUserInProject,
+                    ...createFieldListPM,
+                    ...filterExpression,
                 ]);
                 allTimesheets.forEach((item) => {
                     item.isUserInProject > 0
@@ -353,7 +348,7 @@ class MyTimesheetsRepository {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 yield this._db.updateMany({
-                    $in: myTimesheetIds,
+                    id: { $in: myTimesheetIds },
                 }, { status });
             }
             catch (error) {

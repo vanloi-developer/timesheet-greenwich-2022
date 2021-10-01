@@ -26,13 +26,13 @@ class UserRepository implements IUserRepository {
       try {
          return await this._db.findOne({ userName });
       } catch (error) {
-         logger.error('findByID UserRepository error: ', error.message);
+         logger.error('findByUserName UserRepository error: ', error.message);
       }
    }
 
    async findById(id: Number) {
       try {
-         return await await this._db.findOne({ id }).select('-_id');
+         return await await this._db.findOne({ id }).select('-_id -password');
       } catch (error) {
          logger.error('findByID UserRepository error: ', error.message);
       }
@@ -104,7 +104,7 @@ class UserRepository implements IUserRepository {
 
          return await user.comparePassHash(plainPass);
       } catch (error) {
-         logger.error('generateToken UserRepository error: ', error.message);
+         logger.error('comparePassword UserRepository error: ', error.message);
       }
    }
 
@@ -125,8 +125,7 @@ class UserRepository implements IUserRepository {
    }
    async update(id: number, updateFeild) {
       try {
-         const a = await this._db.updateOne({ id }, updateFeild);
-         return a;
+         await this._db.updateOne({ id }, updateFeild);
       } catch (error) {
          logger.error('update UserRepository error: ', error.message);
       }
