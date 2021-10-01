@@ -26,6 +26,7 @@ import { ProjectDto } from "../dto/common/ProjectDto";
 import { CustomerDto } from "../dto/common/CustomerDto";
 
 import { ProjectUsersDto, ProjectTasksDto } from "../../app/dto/responses";
+
 import { UserDTO } from "../dto/common/UserDto";
 
 class ProjectService extends BaseService<ProjectRepository> {

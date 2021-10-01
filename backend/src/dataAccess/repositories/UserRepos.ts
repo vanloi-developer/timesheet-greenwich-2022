@@ -14,7 +14,7 @@ import { BaseRepository } from "./base";
 
 import { GetUserDto } from "../../app/dto/responses";
 
-import { USER_IS_ACTIVE, USER_IS_DEACTIVE } from "../../app/constants";
+import { ACTIVE_USER, DEACTIVE_USER } from "../../app/constants";
 
 class UserRepository extends BaseRepository<IUser> {
   private _projectUsersRepos = new ProjectUsersRepository();
@@ -43,10 +43,7 @@ class UserRepository extends BaseRepository<IUser> {
 
   public deactive = async (id: number) => {
     try {
-      return await this._model.updateOne(
-        { id },
-        { isActive: USER_IS_DEACTIVE }
-      );
+      return await this._model.updateOne({ id }, { isActive: DEACTIVE_USER });
     } catch (error) {
       throw new ApiError(
         HttpStatusCode.NOT_FOUND,
@@ -57,7 +54,7 @@ class UserRepository extends BaseRepository<IUser> {
 
   public active = async (id: number) => {
     try {
-      return await this._model.updateOne({ id }, { isActive: USER_IS_ACTIVE });
+      return await this._model.updateOne({ id }, { isActive: ACTIVE_USER });
     } catch (error) {
       throw new ApiError(
         HttpStatusCode.NOT_FOUND,

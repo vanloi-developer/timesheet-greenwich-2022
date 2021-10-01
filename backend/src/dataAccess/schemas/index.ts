@@ -42,9 +42,3 @@ export { ProjectUsersSchema } from "./ProjectUsersSchema";
  */
 export { MyTimesheetSchema } from "./MyTimesheetSchema";
 /*--------------------------------------*/
-
-/**
- * avatar schema
- */
-export { AvatarSchema } from "./AvatarSchema";
-/*--------------------------------------*/

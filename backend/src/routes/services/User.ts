@@ -1,5 +1,3 @@
-import { Request, Response } from "express";
-
 import { UserController } from "../../app/controllers/UserController";
 
 import { BaseRouter } from "../base";

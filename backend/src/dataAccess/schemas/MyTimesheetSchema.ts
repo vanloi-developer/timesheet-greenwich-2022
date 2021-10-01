@@ -1,6 +1,8 @@
 import { Schema } from "mongoose";
-import { TimesheetStatus, TimesheetType } from "../../app/enums";
+
 import { IMyTimesheet } from "../../interfaces";
+
+import { TimesheetStatus, TimesheetType } from "../../app/enums";
 
 export const MyTimesheetSchema = new Schema<IMyTimesheet>({
   id: { type: Number, required: true },

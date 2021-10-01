@@ -1,7 +1,5 @@
 import { ConfigurationController } from "../../app/controllers";
 
-import { authenticator, Authorization } from "../../app/core";
-
 import { BaseRouter } from "../base";
 
 class ConfigurationRouter extends BaseRouter {

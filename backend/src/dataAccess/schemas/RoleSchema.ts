@@ -1,4 +1,5 @@
 import { Schema } from "mongoose";
+
 import { IRole } from "../../interfaces";
 
 export const RoleSchema = new Schema<IRole>({
@@ -12,13 +13,3 @@ export const RoleSchema = new Schema<IRole>({
 
   id: { type: Number },
 });
-
-/**
- * {
-  "name": "string",
-  "displayName": "string",
-  "normalizedName": "string",
-  "description": "string",
-  "id": 0
-}
- */

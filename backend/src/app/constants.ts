@@ -1,6 +1,14 @@
-export const USER_IS_ACTIVE: boolean = true;
+export const ACTIVE_USER: boolean = true;
 
-export const USER_IS_DEACTIVE: boolean = false;
+export const DEACTIVE_USER: boolean = false;
+
+export const APPROVE_TIMESHEET: number = 2;
+
+export const REJECT_TIMESHEET: number = 3;
+
+export const ACTIVE_PROJECT: number = 0;
+
+export const INACTIVE_PROJECT: number = 1;
 
 export const CONFIGURATION_WORKING_TIME = {
   "0": {

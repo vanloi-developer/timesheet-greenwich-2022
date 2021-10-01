@@ -8,6 +8,7 @@ export interface DataStoredInToken {
 
 class JWT {
   private SECRET_KEY: string;
+
   private OPTIONS: typeof _.OPTIONS = _.OPTIONS;
 
   constructor() {

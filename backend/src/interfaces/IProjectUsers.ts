@@ -1,4 +1,5 @@
 import { ProjectUserType } from "../app/enums";
+
 import { IBase } from "./IBase";
 
 export interface IProjectUsers extends IBase {

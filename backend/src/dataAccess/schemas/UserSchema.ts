@@ -1,4 +1,5 @@
 import * as mongoose from "mongoose";
+
 import { TypeUser, Level, Branch, Sex } from "../../app/enums";
 
 import { IUser } from "../../interfaces";
@@ -6,29 +7,48 @@ import { IUser } from "../../interfaces";
 import { PasswordManager } from "../../app/tools";
 
 const UserSchema: mongoose.Schema = new mongoose.Schema<IUser>({
-  id: { type: Number},
+  id: { type: Number },
+
   userName: { type: String, required: true },
+
   name: { type: String, require: true },
+
   surname: { type: String, require: true },
+
   password: { type: String, require: true },
+
   emailAddress: { type: String, require: true },
 
   phoneNumber: { type: String },
+
   address: { type: String },
+
   isActive: { type: Boolean },
+
   roleNames: [String],
+
   type: { type: Number, enum: TypeUser },
+
   jobTitle: { type: String },
+
   level: { type: Number, enum: Level },
 
   registerWorkDay: { type: String },
+
   allowedLeaveDay: { type: Number },
+
   startDateAt: { type: String },
+
   salary: { type: Number },
+
   salaryAt: { type: String },
+
   userCode: { type: String },
+
   managerId: { type: Number },
+
   branch: { type: Number, enum: Branch },
+
   sex: { type: Number, enum: Sex },
 
   morningWorking: { type: String },
@@ -37,7 +57,9 @@ const UserSchema: mongoose.Schema = new mongoose.Schema<IUser>({
   afternoonWorking: { type: String },
   afternoonStartAt: { type: String },
   afternoonEndAt: { type: String },
+
   isWorkingTimeDefault: { type: Boolean },
+
   avatarPath: { type: String },
 });
 

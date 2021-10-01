@@ -8,6 +8,8 @@ import { IProject } from "../../interfaces";
 
 import { HttpStatusCode } from "../../app/enums";
 
+import { ACTIVE_PROJECT, INACTIVE_PROJECT } from "../../app/constants";
+
 class ProjectRepository extends BaseRepository<IProject> {
   constructor() {
     super("projects", ProjectSchema);
@@ -19,12 +21,12 @@ class ProjectRepository extends BaseRepository<IProject> {
   ): Promise<IProject[]> => {
     const name = new RegExp(searchKey, "i");
 
-    if (status == 1) {
-      return await this._model.find({ status: 1 });
+    if (status == INACTIVE_PROJECT) {
+      return await this._model.find({ status: INACTIVE_PROJECT });
     }
 
-    if (status == 0) {
-      return await this._model.find({ status: 0 });
+    if (status == ACTIVE_PROJECT) {
+      return await this._model.find({ status: ACTIVE_PROJECT });
     }
 
     return await this.retrieve();
@@ -54,7 +56,7 @@ class ProjectRepository extends BaseRepository<IProject> {
 
   public inActive = async (id: number): Promise<boolean> => {
     try {
-      return await this._model.updateOne({ id }, { status: 1 });
+      return await this._model.updateOne({ id }, { status: INACTIVE_PROJECT });
     } catch (error) {
       throw new ApiError(
         HttpStatusCode.BAD_REQUEST,
@@ -65,7 +67,7 @@ class ProjectRepository extends BaseRepository<IProject> {
 
   public active = async (id: number): Promise<boolean> => {
     try {
-      return await this._model.updateOne({ id }, { status: 0 });
+      return await this._model.updateOne({ id }, { status: ACTIVE_PROJECT });
     } catch (error) {
       throw new ApiError(
         HttpStatusCode.BAD_REQUEST,

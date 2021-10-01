@@ -5,6 +5,7 @@ import { IMyTimesheet } from "../../interfaces";
 import { MyTimesheetSchema } from "../schemas";
 import { BaseRepository } from "./base";
 import { MyTimesheetDto } from "../../app/dto/responses";
+import { APPROVE_TIMESHEET, REJECT_TIMESHEET } from "../../app/constants";
 
 class MyTimesheetRepository extends BaseRepository<IMyTimesheet> {
   constructor() {
@@ -13,7 +14,9 @@ class MyTimesheetRepository extends BaseRepository<IMyTimesheet> {
 
   public approveTimesheet = async (id: number) => {
     try {
-      return await this._model.updateOne({ id }, { status: 2 }).lean(true);
+      return await this._model
+        .updateOne({ id }, { status: APPROVE_TIMESHEET })
+        .lean(true);
     } catch (error) {
       throw new ApiError(
         HttpStatusCode.BAD_REQUEST,
@@ -24,7 +27,7 @@ class MyTimesheetRepository extends BaseRepository<IMyTimesheet> {
 
   public rejectTimesheet = async (id: number) => {
     try {
-      return await this._model.updateOne({ id }, { status: 3 });
+      return await this._model.updateOne({ id }, { status: REJECT_TIMESHEET });
     } catch (error) {
       throw new ApiError(
         HttpStatusCode.BAD_REQUEST,

@@ -25,8 +25,6 @@ import { HttpStatusCode } from "../enums";
 
 import { BaseService } from "./base";
 
-import fetch from "node-fetch";
-
 class TimesheetService extends BaseService<MyTimesheetRepository> {
   private _projectUserRepos = new ProjectUsersRepository();
 
@@ -132,29 +130,42 @@ class TimesheetService extends BaseService<MyTimesheetRepository> {
 
         const item: TimesheetDto = await {
           id: myTimesheet.id,
+
           projectId: project.id,
+
           userId: user.id,
+
           user: user.name,
           customerName: customer.name,
 
           projectCode: project.code,
+
           projectName: project.name,
 
           taskId: task.id,
+
           taskName: task.name,
 
           status: myTimesheet.status,
+
           typeOfWork: myTimesheet.typeOfWork,
+
           workingTime: myTimesheet.workingTime,
+
           dateAt: myTimesheet.dateAt,
+
           mytimesheetNote: myTimesheet.note,
+
           isCharged: myTimesheet.isCharged,
 
           isUserInProject,
 
           branch: user.branch,
+
           branchName: user.branch + "",
+
           type: user.type,
+
           level: user.level,
 
           avatarPath: user.avatarPath,

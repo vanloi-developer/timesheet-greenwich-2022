@@ -29,7 +29,9 @@ class SessionController extends BaseController<SessionService> {
           releaseDate: new Date().toString(),
           features: {},
         },
+
         user: null,
+
         tenant: null,
       };
 

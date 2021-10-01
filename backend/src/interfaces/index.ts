@@ -43,9 +43,3 @@ export { IMyTimesheet } from "./IMyTimesheet";
  */
 export { ITimesheet } from "./ITimesheet";
 /*--------------------------------------*/
-
-/**
- * interface avatar
- */
-export { IAvatar } from "./IAvatar";
-/*--------------------------------------*/

@@ -12,7 +12,9 @@ class Authorization {
     async (req: Request, res: Response, next: NextFunction) => {
       const response: IResponse = {
         ...ApiResponse,
+
         success: false,
+
         error: new ApiError(HttpStatusCode.UNAUTHORIZED, `Unauthorized`),
       };
 

@@ -1,4 +1,3 @@
-import { ApiError } from "../exceptions/ApiError";
 import { IResponse } from "./interfaces";
 
 export const ApiResponse: IResponse = {

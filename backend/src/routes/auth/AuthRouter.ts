@@ -1,4 +1,5 @@
 import { AuthController } from "../../app/controllers";
+
 import { BaseRouter } from "../base";
 
 class AuthRouter extends BaseRouter {

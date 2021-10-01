@@ -6,8 +6,6 @@ import path from "path";
 
 import util from "util";
 
-import uuid from "uuid";
-
 import multer from "multer";
 
 const multerConfig = {

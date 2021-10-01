@@ -1,10 +1,16 @@
 import { NextFunction, Request, Response } from "express";
+
 import { ApiResponse } from "../core";
-import { IResponse } from "../core/responses/interfaces";
-import { MyTimesheetDto, TimesheetDto } from "../dto/responses";
-import { HttpStatusCode } from "../enums";
-import { TimesheetService } from "../services";
+
 import { BaseController } from "./base";
+
+import { HttpStatusCode } from "../enums";
+
+import { TimesheetService } from "../services";
+
+import { IResponse } from "../core/responses/interfaces";
+
+import { TimesheetDto } from "../dto/responses";
 
 class TimesheetController extends BaseController<TimesheetService> {
   constructor() {
@@ -14,8 +20,11 @@ class TimesheetController extends BaseController<TimesheetService> {
   public retrieve = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const userId: number = +req.app.locals.currentUser.id;
+
       const startDate = String(req.query.startDate);
+
       const endDate = String(req.query.endDate);
+
       const status = +req.query.status;
 
       const result: TimesheetDto[] = await this._business.getAll(

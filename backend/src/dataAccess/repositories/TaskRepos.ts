@@ -15,7 +15,7 @@ class TaskRepository extends BaseRepository<ITask> {
 
   public archive = async (id: number) => {
     const isActived = await this._model.updateOne(
-      { id: id },
+      { id },
       { $set: { isDeleted: true } }
     );
 
@@ -24,7 +24,7 @@ class TaskRepository extends BaseRepository<ITask> {
 
   public deArchive = async (id: number) => {
     const isActived = await this._model.updateOne(
-      { id: id },
+      { id },
       { $set: { isDeleted: false } }
     );
 

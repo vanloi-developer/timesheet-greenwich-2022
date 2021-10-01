@@ -1,4 +1,5 @@
 import { Schema } from "mongoose";
+
 import { ProjectStatus, ProjectType } from "../../app/enums";
 
 import { IProject } from "../../interfaces";

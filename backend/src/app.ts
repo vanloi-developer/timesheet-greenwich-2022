@@ -46,7 +46,7 @@ class Application {
   }
   public start() {
     this._server.listen(PORT, () => {
-      console.log(`PORT: ${PORT}`);
+      console.log(`: ${PORT}`);
     });
 
     this._server.use("/api", new ApiRouter()._router);
