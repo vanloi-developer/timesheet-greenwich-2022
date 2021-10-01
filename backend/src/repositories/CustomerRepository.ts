@@ -1,3 +1,4 @@
+import { ResAllPageCus } from './../dto/resDto/ResAllPageCus';
 import { searchTextFieldOpt } from './../utils/index';
 import { REQUIRED_FIELD_SAVE_CUSTOMER } from './../constants/index';
 import { IFilterItems, IFilterOpt } from './../dto/reqDto/AllPaggingDto';
@@ -44,7 +45,7 @@ class CustomerRepository implements ICustomerRepository {
       maxResultCount: number,
       skipCount: number,
       searchText: string,
-   ) {
+   ): Promise<ResAllPageCus> {
       // Option must have in search
       let filterOpt: IFilterOpt[] = filterItems.length
          ? filterItems.map((item) => ({
@@ -60,7 +61,7 @@ class CustomerRepository implements ICustomerRepository {
       try {
          const findOpt = filterOpt.length ? { $and: filterOpt } : {};
 
-         const items = await this._db.find(findOpt).skip(skipCount).limit(maxResultCount);
+         const items: any = await this._db.find(findOpt).skip(skipCount).limit(maxResultCount);
          return {
             totalCount: items.length,
             items,

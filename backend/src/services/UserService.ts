@@ -231,7 +231,9 @@ class UserService {
          const user = await this._repository.findById(userId);
          if (!user) return res.status(500).json(NOT_EXIST_USER);
 
-         await this._repository.resetPassword(userId, { password: newPassword });
+         const hashedPass = await bcrypt.hashSync(newPassword, saltRounds);
+
+         await this._repository.resetPassword(userId, { password: hashedPass });
 
          return res.status(200).json({
             ...UserResDTO,

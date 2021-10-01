@@ -1,3 +1,4 @@
+import { ResAllPageCus } from './../dto/resDto/ResAllPageCus';
 import { ICustomerRepository } from '../types/Repositories/ICustomerRepository';
 import { CustomerDto } from './../dto/resDto/CustomerDto';
 import { BaseResDto } from '../dto/resDto/BaseResDto';
@@ -6,6 +7,7 @@ import logger from '../config/logger';
 import { baseError, NOT_EXIST_CUSTOMERS } from '../dto/resDto/BaseErrorDto';
 import genarateID from '../utils/generateID';
 import CustomerRepository from '../repositories/CustomerRepository';
+import { ReqAllPageCus } from '../dto/reqDto/ReqAllPageCus';
 
 class CustomerService {
    private _repository: ICustomerRepository = CustomerRepository;
@@ -63,11 +65,11 @@ class CustomerService {
       }
    };
 
-   public getAllPagging = async (req: Request, res: Response, next: NextFunction) => {
+   public getAllPagging = async (req: ReqAllPageCus, res: Response, next: NextFunction) => {
       const { filterItems, maxResultCount, skipCount, searchText } = req.body;
 
       try {
-         const result = await this._repository.filterUserPagging(
+         const result: ResAllPageCus = await this._repository.filterUserPagging(
             filterItems,
             maxResultCount,
             skipCount,

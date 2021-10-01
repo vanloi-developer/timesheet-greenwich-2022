@@ -16,8 +16,8 @@ class TaskRouter extends BaseRouter {
 
       this.router.post('/Save', validate(REQUIRED_FIELD_SAVE_TASK), this._service.create);
       this.router.post('/DeArchive', this._service.deArchive);
-      this.router.delete('/Archive', validQueryID, this._service.archive);
 
+      this.router.delete('/Archive', validQueryID, this._service.archive);
       this.router.delete('/Delete', validQueryID, this._service.delete);
    }
 }

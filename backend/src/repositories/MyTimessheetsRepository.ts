@@ -124,40 +124,7 @@ class MyTimesheetsRepository implements IMyTimesheetsRepository {
       endDate: string,
    ): Promise<TimesheetsReqDto[]> {
       try {
-         const allTimesheets: TimesheetsReqDto[] | any[] = await this._db.aggregate([
-            {
-               $match: {
-                  dateAt: {
-                     $gte: new Date(startDate),
-                     $lt: new Date(endDate),
-                  },
-               },
-            },
-            {
-               $lookup: {
-                  from: 'tasks_in_projects',
-                  let: { projectTaskId: '$projectTaskId' },
-                  as: 'tasks_in_project',
-                  pipeline: [
-                     {
-                        $match: {
-                           $expr: {
-                              $eq: ['$id', '$$projectTaskId'],
-                           },
-                        },
-                     },
-                     {
-                        $lookup: {
-                           from: 'tasks',
-                           localField: 'taskId',
-                           foreignField: 'id',
-                           as: 'task',
-                        },
-                     },
-                     { $unwind: '$task' },
-                  ],
-               },
-            },
+         const connectUserModel = [
             {
                $lookup: {
                   from: 'users',
@@ -166,6 +133,10 @@ class MyTimesheetsRepository implements IMyTimesheetsRepository {
                   as: 'user',
                },
             },
+            { $unwind: '$user' },
+         ];
+
+         const connectTaskInProject = [
             {
                $lookup: {
                   from: 'tasks_in_projects',
@@ -218,7 +189,9 @@ class MyTimesheetsRepository implements IMyTimesheetsRepository {
                },
             },
             { $unwind: '$tasks_in_project' },
-            { $unwind: '$user' },
+         ];
+
+         const reformatField = [
             {
                $project: {
                   id: '$id',
@@ -242,6 +215,9 @@ class MyTimesheetsRepository implements IMyTimesheetsRepository {
                   level: '$user.level',
                },
             },
+         ];
+
+         const checkIfAnyUserInProject = [
             {
                $lookup: {
                   from: 'users_in_projects',
@@ -250,6 +226,9 @@ class MyTimesheetsRepository implements IMyTimesheetsRepository {
                   as: 'isUserInProject',
                },
             },
+         ];
+
+         const createFieldListPM = [
             {
                $lookup: {
                   from: 'users_in_projects',
@@ -294,6 +273,32 @@ class MyTimesheetsRepository implements IMyTimesheetsRepository {
                   isUserInProject: { $size: '$isUserInProject' },
                },
             },
+         ];
+
+         const match: any = {
+            dateAt: {
+               $gte: new Date(startDate),
+               $lt: new Date(endDate),
+            },
+         };
+
+         if (status !== -1) {
+            match.status = status;
+         }
+
+         const filterExpression = [
+            {
+               $match: match,
+            },
+         ];
+
+         const allTimesheets: TimesheetsReqDto[] | any[] = await this._db.aggregate([
+            ...connectUserModel,
+            ...connectTaskInProject,
+            ...reformatField,
+            ...checkIfAnyUserInProject,
+            ...createFieldListPM,
+            ...filterExpression,
          ]);
 
          allTimesheets.forEach((item) => {
@@ -346,7 +351,7 @@ class MyTimesheetsRepository implements IMyTimesheetsRepository {
       try {
          await this._db.updateMany(
             {
-               $in: myTimesheetIds,
+               id: { $in: myTimesheetIds },
             },
             { status },
          );

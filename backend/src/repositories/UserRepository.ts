@@ -1,5 +1,5 @@
 import { searchTextFieldOpt } from './../utils/index';
-import { SEARCH_TEXT_FIELD_USER } from './../constants/index';
+import { SEARCH_TEXT_FIELD_USER, FAKE_ALL_MANAGERS } from './../constants/index';
 import { IFilterItems, IFilterOpt } from './../dto/reqDto/AllPaggingDto';
 import { IUserRepository } from '../types/Repositories/IUserRepository';
 import db from '../models';
@@ -110,158 +110,7 @@ class UserRepository implements IUserRepository {
 
    async getAllMangagers() {
       try {
-         return {
-            result: [
-               {
-                  name: 'Tien Pham',
-                  isActive: false,
-                  type: 0,
-                  jobTitle: null,
-                  level: 15,
-                  userCode: null,
-                  avatarPath: '/avatars/1632474098451_1_tien.pham.jpg',
-                  branch: null,
-                  id: 1,
-               },
-               {
-                  name: 'Tien Nguyen Huu',
-                  isActive: false,
-                  type: 0,
-                  jobTitle: null,
-                  level: 15,
-                  userCode: null,
-                  avatarPath: '',
-                  branch: null,
-                  id: 5,
-               },
-               {
-                  name: 'Thai Bui Minh',
-                  isActive: false,
-                  type: 0,
-                  jobTitle: null,
-                  level: 14,
-                  userCode: null,
-                  avatarPath: '',
-                  branch: null,
-                  id: 10,
-               },
-               {
-                  name: 'duong nghi viec giua thang 5',
-                  isActive: false,
-                  type: 0,
-                  jobTitle: null,
-                  level: 9,
-                  userCode: null,
-                  avatarPath: '',
-                  branch: null,
-                  id: 21,
-               },
-               {
-                  name: 'duong nghi viec giua thang 5',
-                  isActive: false,
-                  type: 0,
-                  jobTitle: null,
-                  level: 9,
-                  userCode: 'acsdc',
-                  avatarPath: '',
-                  branch: null,
-                  id: 22,
-               },
-               {
-                  name: 'NCCOP Sir',
-                  isActive: true,
-                  type: 0,
-                  jobTitle: null,
-                  level: 10,
-                  userCode: null,
-                  avatarPath: '',
-                  branch: null,
-                  id: 23,
-               },
-               {
-                  name: 'Bui Lam',
-                  isActive: false,
-                  type: 0,
-                  jobTitle: null,
-                  level: 5,
-                  userCode: '',
-                  avatarPath: '',
-                  branch: null,
-                  id: 24,
-               },
-               {
-                  name: 'Uno VATest',
-                  isActive: true,
-                  type: 0,
-                  jobTitle: null,
-                  level: 9,
-                  userCode: null,
-                  avatarPath: '',
-                  branch: null,
-                  id: 48,
-               },
-               {
-                  name: 'duong duong',
-                  isActive: true,
-                  type: 0,
-                  jobTitle: null,
-                  level: 0,
-                  userCode: null,
-                  avatarPath: '',
-                  branch: null,
-                  id: 84,
-               },
-               {
-                  name: 'thao1212 thaoo',
-                  isActive: true,
-                  type: 0,
-                  jobTitle: null,
-                  level: 0,
-                  userCode: null,
-                  avatarPath: '',
-                  branch: null,
-                  id: 93,
-               },
-               {
-                  name: 'thy phan',
-                  isActive: true,
-                  type: 0,
-                  jobTitle: null,
-                  level: 6,
-                  userCode: 'thy11',
-                  avatarPath: '',
-                  branch: null,
-                  id: 118,
-               },
-               {
-                  name: 'Dai Trinh',
-                  isActive: true,
-                  type: 0,
-                  jobTitle: null,
-                  level: null,
-                  userCode: null,
-                  avatarPath: '',
-                  branch: null,
-                  id: 181,
-               },
-               {
-                  name: 'hien pm1',
-                  isActive: true,
-                  type: 0,
-                  jobTitle: null,
-                  level: 7,
-                  userCode: null,
-                  avatarPath: '',
-                  branch: null,
-                  id: 219,
-               },
-            ],
-            targetUrl: null,
-            success: true,
-            error: null,
-            unAuthorizedRequest: false,
-            __abp: true,
-         };
+         return FAKE_ALL_MANAGERS;
       } catch (error) {
          logger.error('getAllMangagers UserRepository error: ', error.message);
       }
@@ -279,7 +128,7 @@ class UserRepository implements IUserRepository {
          const a = await this._db.updateOne({ id }, updateFeild);
          return a;
       } catch (error) {
-         logger.error('findByID UserRepository error: ', error.message);
+         logger.error('update UserRepository error: ', error.message);
       }
    }
 

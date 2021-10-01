@@ -17,7 +17,6 @@ class UserRouter extends BaseRouter {
 
    protected init() {
       this.router.get('/GetRoles', authorAdmin, this._roleService.findAll);
-
       this.router.get('/GetUserNotPagging', authorAdmin, this._userService.getUserNotPagging);
       this.router.get('/Get', authorAdmin, validQueryID, this._userService.findById);
       this.router.get('/GetAllManager', authorAdmin, (req, res) => {
