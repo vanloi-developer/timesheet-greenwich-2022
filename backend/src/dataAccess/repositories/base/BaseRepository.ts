@@ -49,8 +49,6 @@ abstract class BaseRepository<T extends Document> {
     try {
       const id = item.id;
 
-      console.log(item);
-
       return await this._model.updateOne(id, item);
     } catch (error) {
       throw new ApiError(HttpStatusCode.NOT_FOUND, `Error in repository`);

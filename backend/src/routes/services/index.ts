@@ -1,18 +1,24 @@
-import { BaseRouter } from "../base";
-
-import { CustomerRouter } from "./Customer";
-import { ProjectRouter } from "./Project";
-
 import { RoleRouter } from "./Role";
-
-import { SessionRouter } from "./Session";
 
 import { TaskRouter } from "./Task";
 
 import { UserRouter } from "./User";
 
+import { BaseRouter } from "../base";
+
+import { ProjectRouter } from "./Project";
+
+import { SessionRouter } from "./Session";
+
+import { CustomerRouter } from "./Customer";
+
+import { TimesheetRouter } from "./Timesheet";
+
 import { MyTimesheetRouter } from "./MyTimesheet";
+
 import { TimeKeepingRouter } from "./Timekeeping";
+
+import { ConfigurationRouter } from "./Configuration";
 
 class ServiceRouter extends BaseRouter {
   constructor() {
@@ -36,6 +42,10 @@ class ServiceRouter extends BaseRouter {
     this._router.use("/myTimesheets", new MyTimesheetRouter()._router);
 
     this._router.use("/timekeeping", new TimeKeepingRouter()._router);
+
+    this._router.use("/timesheet", new TimesheetRouter()._router);
+
+    this._router.use("/configuration", new ConfigurationRouter()._router);
   }
 }
 

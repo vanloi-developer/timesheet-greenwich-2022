@@ -18,5 +18,5 @@ export interface IProject extends IBase {
 
   tasks?: IProjectTask[];
   users?: IProjectUsers[];
-  projectTargetUsers: [];
+  projectTargetUsers?: [];
 }

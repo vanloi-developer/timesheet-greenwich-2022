@@ -10,14 +10,61 @@ import { UserDTO } from "../dto/common/UserDto";
 
 import { GridParam } from "../dto/requests/GridParam";
 
-import { GetAllUserDto, GetUserDto } from "../dto/responses";
+import pick from "../helpers/pick";
 
-import { UserRepository } from "../../dataAccess/repositories";
+import {
+  GetAllUserDto,
+  GetUserDto,
+  PagedResultRoleDto,
+  ProjectUsersDto,
+  PUDto,
+  RoleDto,
+} from "../dto/responses";
+
+import {
+  ProjectRepository,
+  ProjectUsersRepository,
+  RoleRepository,
+  UserRepository,
+} from "../../dataAccess/repositories";
 
 class UserService extends BaseService<UserRepository> {
+  private _projectRepos = new ProjectRepository();
+
+  private _roleRepos = new RoleRepository();
+
+  private _projectUsersRepos = new ProjectUsersRepository();
+
   constructor() {
     super(new UserRepository());
   }
+
+  public getRoles = async (): Promise<PagedResultRoleDto> => {
+    try {
+      const items = await this._roleRepos.getRoles();
+
+      return { items: items, totalCount: null };
+    } catch (error) {
+      throw new ApiError(
+        HttpStatusCode.NOT_FOUND,
+        `Having error in business: ${error}`
+      );
+    }
+  };
+
+  public updateOwnAvatar = async (
+    id: number,
+    path: string
+  ): Promise<string> => {
+    try {
+      return await this._repos.setAvatar(id, path);
+    } catch (error) {
+      throw new ApiError(
+        HttpStatusCode.NOT_FOUND,
+        `Having error in business: ${error}`
+      );
+    }
+  };
 
   public create = async (user: CreateUserDTO): Promise<UserDTO> => {
     try {
@@ -29,6 +76,7 @@ class UserService extends BaseService<UserRepository> {
           `username is already exist, try again`
         );
       }
+      console.log(user.roleNames);
 
       const result: UserDTO = await this._repos.save(user);
 
@@ -42,7 +90,10 @@ class UserService extends BaseService<UserRepository> {
     try {
       return await this._repos.getUserNotPagging();
     } catch (error) {
-      throw new ApiError(HttpStatusCode.NOT_FOUND, `Having error in business`);
+      throw new ApiError(
+        HttpStatusCode.NOT_FOUND,
+        `Having error in business: ${error}`
+      );
     }
   };
 
@@ -54,9 +105,86 @@ class UserService extends BaseService<UserRepository> {
     }
   };
 
-  public getAllPagging = async (filter: GridParam): Promise<GetAllUserDto> => {
+  public getAllPagging = async (filter: GridParam) => {
     try {
-      return await this._repos.getAllPagging(filter);
+      const items = [];
+
+      let users: UserDTO[] = await this._repos.getAllPagging(filter);
+
+      for (let user of users) {
+        user = pick(user, [
+          "userName",
+          "name",
+          "surname",
+          "emailAddress",
+          "phoneNumber",
+          "address",
+          "isActive",
+          "fullName",
+          "roleNames",
+          "type",
+          "salary",
+          "salaryAt",
+          "startDateAt",
+          "allowedLeaveDay",
+          "userCode",
+          "jobTitle",
+          "level",
+          "registerWorkDay",
+          "managerId",
+          "branch",
+          "sex",
+          "avatarPath",
+          "morningWorking",
+          "morningStartAt",
+          "morningEndAt",
+          "afternoonWorking",
+          "afternoonStartAt",
+          "afternoonEndAt",
+          "isWorkingTimeDefault",
+          "isStopWork",
+          "id",
+        ]);
+
+        console.log(user.managerId);
+
+        const manager: UserDTO = await this._repos.findManager(user.managerId);
+
+        console.log(manager);
+
+        const projectUsers: PUDto[] = [];
+
+        const pus: ProjectUsersDto[] =
+          await this._projectUsersRepos.findByUserId(user.id);
+
+        for (let pu of pus) {
+          const project = await this._projectRepos.findById(pu.projectId);
+
+          const pms = await this._repos.findProjectManagers(project.id);
+
+          await projectUsers.push({
+            projectId: project.id,
+            projectCode: project.code,
+            projectName: project.name,
+            projectUserType: pu.type,
+            pms,
+          });
+        }
+
+        const item = await {
+          ...user,
+          projectUsers,
+          managerAvatarPath: manager.avatarPath,
+          managerName: manager.name,
+        };
+
+        await items.push(item);
+      }
+
+      return {
+        totalCount: users.length,
+        items,
+      };
     } catch (error) {
       throw new ApiError(HttpStatusCode.NOT_FOUND, `Having error in business`);
     }

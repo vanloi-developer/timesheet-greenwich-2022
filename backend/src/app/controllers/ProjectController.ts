@@ -102,7 +102,7 @@ class ProjectController extends BaseController<ProjectService> {
   };
 
   public get = async (req: Request, res: Response, next: NextFunction) => {
-    const id: number = +req.query.id;
+    const id: number = +req.query.input;
 
     const result: ProjectDto = await this._business.get(id);
 

@@ -11,6 +11,8 @@ import { ApiError } from "../../app/core";
 import { UserSchema } from "../schemas";
 
 import { BaseRepository } from "./base";
+import { GetUserDto } from "src/app/dto/responses";
+import { UserDTO } from "src/app/dto/common/UserDto";
 
 class UserRepository extends BaseRepository<IUser> {
   private _projectUsersRepos = new ProjectUsersRepository();
@@ -18,8 +20,37 @@ class UserRepository extends BaseRepository<IUser> {
     super("users", UserSchema);
   }
 
+  public findManager = async (managerId: number) => {
+    try {
+      return await this._model.findOne({ managerId });
+    } catch (error) {
+      throw new ApiError(
+        HttpStatusCode.BAD_REQUEST,
+        `Error in layer dataAccess: ${error}`
+      );
+    }
+  };
+
+  public setAvatar = async (
+    id: number,
+    avatarPath: string
+  ): Promise<string> => {
+    try {
+      const result = await this._model.updateOne({ id }, { avatarPath });
+
+      if (result) {
+        return avatarPath;
+      }
+    } catch (error) {
+      throw new ApiError(
+        HttpStatusCode.BAD_REQUEST,
+        `Error in layer dataAccess: ${error}`
+      );
+    }
+  };
+
   public findProjectManagers = async (id: number): Promise<string[]> => {
-    let pms: string[] = [];
+    const pms: string[] = [];
 
     let members: IProjectUsers[] =
       await this._projectUsersRepos.findByMembersByProjectId(id);
@@ -30,6 +61,7 @@ class UserRepository extends BaseRepository<IUser> {
 
     for (let member of members) {
       let user: IUser = await this.findById(member.userId);
+
       pms.push(user.name);
     }
 
@@ -40,7 +72,7 @@ class UserRepository extends BaseRepository<IUser> {
     try {
       return await this._model.find(
         {},
-        "id name isActive type jobTitle level userCode branch"
+        "id name isActive type jobTitle level userCode branch avatarPath"
       );
     } catch (error) {
       throw new ApiError(
@@ -50,13 +82,11 @@ class UserRepository extends BaseRepository<IUser> {
     }
   };
 
-  public getAllManager = async () => {
-    const listManagersById = await this._model
-      .find({}, "id name type isActive jobTitle level userCode branch")
-      .where("managerId")
-      .ne(0);
-
-    return listManagersById;
+  public getAllManager = async (): Promise<GetUserDto[]> => {
+    return await this._model.find(
+      { managerId: { $ne: 0 } },
+      "id name type isActive jobTitle level userCode branch avatarPath"
+    );
   };
 
   public getAllPagging = async (filter: GridParam) => {
@@ -66,37 +96,18 @@ class UserRepository extends BaseRepository<IUser> {
       filterSearch[item.propertyName] = item.value;
     }
 
-    const totalCount = await this._model.countDocuments({});
-
     const keyword = new RegExp(filter.searchText, "i");
 
     let items = await this._model
       .find(
         {},
-        "id userName name surname emailAddress phoneNumber address isActive fullName roleNames type salary salaryAt startDateAt managerId branch sex creationTime morningWorking allowedLeaveDay userCode jobTitle level registerWorkDay morningStartAt morningEndAt afternoonWorking afternoonEndAt"
+        "id userName name surname emailAddress phoneNumber address isActive fullName roleNames type salary salaryAt startDateAt managerId branch sex creationTime morningWorking allowedLeaveDay userCode jobTitle level registerWorkDay morningStartAt morningEndAt afternoonWorking afternoonEndAt avatarPath"
       )
       .skip(filter.skipCount)
       .limit(filter.maxResultCount)
       .lean();
 
-    items.projectUsers = [
-      {
-        projectId: 0,
-        projectCode: "string",
-        projectName: "string",
-        projectUserType: 0,
-        pms: ["string"],
-      },
-    ];
-
-    items.managerName = "string";
-
-    items.managerAvatarPath = "string";
-
-    return {
-      totalCount,
-      items,
-    };
+    return items;
   };
 }
 

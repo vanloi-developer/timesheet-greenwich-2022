@@ -1,5 +1,8 @@
 import { RoleController } from "../../app/controllers";
+
 import { BaseRouter } from "../base";
+
+import { authenticator, Authorization } from "../../app/core";
 
 class RoleRouter extends BaseRouter {
   public _controller: RoleController = new RoleController();
@@ -10,11 +13,26 @@ class RoleRouter extends BaseRouter {
   }
 
   public init() {
-    this._router.post("/create", this._controller.create);
+    this._router.post(
+      "/create",
+      authenticator.authenticate,
+      Authorization.confirm("ADMIN"),
+      this._controller.create
+    );
 
-    this._router.delete("/delete", this._controller.delete);
+    this._router.delete(
+      "/delete",
+      authenticator.authenticate,
+      Authorization.confirm("ADMIN"),
+      this._controller.delete
+    );
 
-    this._router.get("/getAll", this._controller.getAll);
+    this._router.get(
+      "/getAll",
+      authenticator.authenticate,
+      Authorization.confirm("ADMIN"),
+      this._controller.getAll
+    );
 
     this._router.get("/getRoleForEdit");
   }

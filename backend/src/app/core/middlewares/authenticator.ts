@@ -48,4 +48,4 @@ class Authenticator {
   };
 }
 
-export = new Authenticator();
+export const authenticator = new Authenticator();

@@ -1,5 +1,7 @@
-import authenticator from "../../app/core/middlewares/authenticator";
+import { authenticator, Authorization } from "../../app/core";
+
 import { ProjectController } from "../../app/controllers";
+
 import { BaseRouter } from "../base";
 
 export class ProjectRouter extends BaseRouter {
@@ -11,21 +13,52 @@ export class ProjectRouter extends BaseRouter {
   }
 
   public init() {
-    this._router.get("/GetAll", this.controller.getAll);
+    this._router.get(
+      "/GetAll",
+      authenticator.authenticate,
+      Authorization.confirm("ADMIN"),
+      this.controller.getAll
+    );
 
-    this._router.post("/Save", this.controller.save);
+    this._router.post(
+      "/Save",
+      authenticator.authenticate,
+      Authorization.confirm("ADMIN"),
+      this.controller.save
+    );
 
-    this._router.post("/InActive", this.controller.inActive);
+    this._router.post(
+      "/InActive",
+      authenticator.authenticate,
+      Authorization.confirm("ADMIN"),
+      this.controller.inActive
+    );
 
-    this._router.post("/Active", this.controller.active);
+    this._router.post(
+      "/Active",
+      authenticator.authenticate,
+      Authorization.confirm("ADMIN"),
+      this.controller.active
+    );
 
-    this._router.delete("/Delete", this.controller.delete);
+    this._router.delete(
+      "/Delete",
+      authenticator.authenticate,
+      Authorization.confirm("ADMIN"),
+      this.controller.delete
+    );
 
-    this._router.get("/Get", this.controller.get);
+    this._router.get(
+      "/Get",
+      authenticator.authenticate,
+      Authorization.confirm("ADMIN"),
+      this.controller.get
+    );
 
     this._router.get(
       "/GetProjectsIncludingTasks",
       authenticator.authenticate,
+      Authorization.confirm("BASICUSER"),
       this.controller.getProjectsIncludingTasks
     );
 

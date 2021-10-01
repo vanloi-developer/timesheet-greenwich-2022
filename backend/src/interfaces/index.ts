@@ -37,3 +37,15 @@ export { ICustomer } from "./ICustomer";
  */
 export { IMyTimesheet } from "./IMyTimesheet";
 /*--------------------------------------*/
+
+/**
+ * interface myTimesheet
+ */
+export { ITimesheet } from "./ITimesheet";
+/*--------------------------------------*/
+
+/**
+ * interface avatar
+ */
+export { IAvatar } from "./IAvatar";
+/*--------------------------------------*/

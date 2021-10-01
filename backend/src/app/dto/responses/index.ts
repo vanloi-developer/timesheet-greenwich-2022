@@ -23,6 +23,16 @@ export { PTaskDto } from "./project/PTaskDto";
 /**------------------------------------------------------------------------- */
 
 /**
+ * timesheet dto response
+ */
+export { TimesheetDto } from "./timesheet/TimesheetDto";
+
+export { UnlockTimesheetDto } from "./timesheet/UnlockTimesheetDto";
+
+export { LockTimesheetDto } from "./timesheet/LockTimesheetDto";
+/**------------------------------------------------------------------------- */
+
+/**
  * mytimesheet dto response
  */
 export { GetTimesheetDto } from "./mytimesheet/GetTimesheetDto";
@@ -58,4 +68,7 @@ export { ListResultRoleDto } from "./user/ListResultRoleDto";
 export { GetAllUserDto } from "./user/GetAllUserDto";
 
 export { GetUserDto } from "./user/GetUserDto";
+
+export { PUDto } from "./user/PUDto";
+
 /**------------------------------------------------------------------------- */

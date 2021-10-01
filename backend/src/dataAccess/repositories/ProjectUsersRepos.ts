@@ -15,6 +15,10 @@ class ProjectUsersRepository extends BaseRepository<IProjectUsers> {
     super("projectUsers", ProjectUsersSchema);
   }
 
+  public findByProjectId = async (projectId: number) => {
+    return await this._model.find({ projectId });
+  };
+
   public findByUserId = async (userId: number) => {
     return await this._model.find({ userId });
   };

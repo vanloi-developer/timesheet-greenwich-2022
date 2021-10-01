@@ -1,5 +1,5 @@
 export interface GridResult {
   totalCount: number;
 
-  items: [object];
+  items: object[];
 }

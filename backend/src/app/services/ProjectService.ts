@@ -19,18 +19,17 @@ import {
 
 import { TaskDto } from "../dto/requests";
 
-import { HttpStatusCode } from "../enums";
+import { HttpStatusCode, Task } from "../enums";
 
 import { ProjectDto } from "../dto/common/ProjectDto";
 
 import { CustomerDto } from "../dto/common/CustomerDto";
 
 import { ProjectUsersDto, ProjectTasksDto } from "../../app/dto/responses";
+import { UserDTO } from "../dto/common/UserDto";
 
 class ProjectService extends BaseService<ProjectRepository> {
   private _taskRepos = new TaskRepository();
-
-  private _taskProjectRepos = new ProjectTaskRepository();
 
   private _projectUsersRepos = new ProjectUsersRepository();
 
@@ -74,6 +73,7 @@ class ProjectService extends BaseService<ProjectRepository> {
           await this._customerRepos.findCustomerByCustomerId(
             project.customerId
           );
+
         /**----------------------------- */
 
         /**
@@ -193,10 +193,54 @@ class ProjectService extends BaseService<ProjectRepository> {
     }
   };
 
-  public get = async (id: number) => {
+  public get = async (id: number): Promise<ProjectDto> => {
     //return ProjectDto
     try {
-      return await this._repos.get(id);
+      const project = await this._repos.get(id);
+
+      const tasks: ProjectTasksDto[] = [];
+
+      const users: ProjectUsersDto[] = [];
+
+      const projectUsers: ProjectUsersDto[] =
+        await this._projectUsersRepos.findByMembersByProjectId(id);
+
+      const projectTasks: ProjectTasksDto[] =
+        await this._projectTasksRepos.findByProjectId(id);
+
+      for (let projectUser of projectUsers) {
+        const user: UserDTO = await this._userRepos.findById(
+          projectUser.userId
+        );
+
+        users.push(projectUser);
+      }
+
+      for (let projectTask of projectTasks) {
+        const task: TaskDto = await this._taskRepos.findById(
+          projectTask.taskId
+        );
+
+        tasks.push(projectTask);
+      }
+
+      const item = {
+        name: project.name,
+        code: project.code,
+        status: project.status,
+        timeStart: project.timeStart,
+        timeEnd: project.timeEnd,
+        note: project.note,
+        projectType: project.projectType,
+        customerId: project.customerId,
+        tasks,
+        users,
+        projectTargetUsers: [],
+        isAllUserBelongTo: true,
+        id: project.id,
+      };
+
+      return item as ProjectDto;
     } catch (error) {
       throw new ApiError(
         HttpStatusCode.BAD_REQUEST,
@@ -226,20 +270,23 @@ class ProjectService extends BaseService<ProjectRepository> {
         await this._customerRepos.findCustomerByCustomerId(project.customerId);
 
       const tasksProject: ProjectTasksDto[] =
-        await this._taskProjectRepos.findByProjectId(projectId);
+        await this._projectTasksRepos.findByProjectId(projectId);
 
       for (let taskProject of tasksProject) {
+        console.log(taskProject.taskId);
         const task: TaskDto = await this._taskRepos.findById(
           taskProject.taskId
         );
+        if (task) {
+          console.log(task.name);
+          const taskInfo: PTaskDto = await {
+            projectTaskId: taskProject.id,
+            billable: taskProject.billable,
+            taskName: task.name,
+          };
 
-        const taskInfo: PTaskDto = {
-          projectTaskId: taskProject.id,
-          billable: taskProject.billable,
-          taskName: task.name,
-        };
-
-        tasks.push(taskInfo);
+          tasks.push(taskInfo);
+        }
       }
 
       const listPM: string[] = await this._userRepos.findProjectManagers(

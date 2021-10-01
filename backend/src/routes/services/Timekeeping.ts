@@ -1,5 +1,9 @@
 import { Request, Response } from "express";
+
+import { authenticator } from "../../app/core";
+
 import { TimekeepingController } from "../../app/controllers";
+
 import { BaseRouter } from "../base";
 
 class TimeKeepingRouter extends BaseRouter {
@@ -10,7 +14,11 @@ class TimeKeepingRouter extends BaseRouter {
   }
 
   public init() {
-    this._router.get("/GetMyDetails", this.controller.getMyDetails);
+    this._router.get(
+      "/GetMyDetails",
+      authenticator.authenticate,
+      this.controller.getMyDetails
+    );
   }
 }
 

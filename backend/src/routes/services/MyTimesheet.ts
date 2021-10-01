@@ -2,7 +2,8 @@ import { MyTimesheetController } from "../../app/controllers";
 
 import { BaseRouter } from "../base";
 
-import Authenticator from "../../app/core/middlewares/authenticator";
+import { authenticator, Authorization } from "../../app/core";
+
 class MyTimesheetRouter extends BaseRouter {
   private controller: MyTimesheetController = new MyTimesheetController();
   constructor() {
@@ -13,47 +14,59 @@ class MyTimesheetRouter extends BaseRouter {
   public init() {
     this._router.post(
       "/SaveList",
-      Authenticator.authenticate,
+      authenticator.authenticate,
+      Authorization.confirm("BASICUSER"),
       this.controller.saveList
     );
 
     this._router.delete(
       "/Delete",
-      Authenticator.authenticate,
+      authenticator.authenticate,
+      Authorization.confirm("BASICUSER"),
       this.controller.delete
     );
 
     this._router.post(
       "/SaveAndReset",
-      Authenticator.authenticate,
+      authenticator.authenticate,
+      Authorization.confirm("BASICUSER"),
       this.controller.save
     );
 
     this._router.put(
       "/Update",
-      Authenticator.authenticate,
+      authenticator.authenticate,
+      Authorization.confirm("BASICUSER"),
       this.controller.save
     );
 
     this._router.post(
       "/SubmitToPending",
-      Authenticator.authenticate,
+      authenticator.authenticate,
+      Authorization.confirm("BASICUSER"),
       this.controller.submitToPending
     );
 
     this._router.post(
       "/Create",
-      Authenticator.authenticate,
+      authenticator.authenticate,
+      Authorization.confirm("BASICUSER"),
       this.controller.save
     );
 
     this._router.get(
       "/GetAllTimesheetOfUser",
-      Authenticator.authenticate,
+      authenticator.authenticate,
+      Authorization.confirm("BASICUSER"),
       this.controller.getAllTimesheetOfUser
     );
 
-    this._router.get("/Get", Authenticator.authenticate, this.controller.get);
+    this._router.get(
+      "/Get",
+      authenticator.authenticate,
+      Authorization.confirm("BASICUSER"),
+      this.controller.get
+    );
   }
 }
 

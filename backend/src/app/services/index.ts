@@ -45,3 +45,9 @@ export { ProjectService } from "./ProjectService";
  */
 export { MyTimesheetService } from "./MyTimesheetService";
 /**------------------------------------------------------ */
+
+/**
+ * timesheet service
+ */
+export { TimesheetService } from "./TimesheetService";
+/**------------------------------------------------------ */

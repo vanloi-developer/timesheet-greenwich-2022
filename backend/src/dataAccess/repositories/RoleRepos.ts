@@ -7,11 +7,23 @@ import { RoleSchema } from "../schemas";
 import { ApiError } from "../../app/core";
 
 import { HttpStatusCode } from "../../app/enums";
+import { RoleDto } from "src/app/dto/responses";
 
 class RoleRepository extends BaseRepository<IRole> {
   constructor() {
     super("Roles", RoleSchema);
   }
+
+  public getRoles = async (): Promise<RoleDto[]> => {
+    try {
+      return await this._model.find();
+    } catch (error) {
+      throw new ApiError(
+        HttpStatusCode.BAD_REQUEST,
+        `Error in layer dataAccess: ${error}`
+      );
+    }
+  };
 
   public getAll = async (query: {
     keyword: string;

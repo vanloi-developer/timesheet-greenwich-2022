@@ -4,9 +4,14 @@ import morgan from "morgan";
 
 import cors from "cors";
 
+import path from "path";
+
 import { PORT } from "./configs";
+
 import { ApiRouter } from "./routes/ApiRouter";
+
 import { handlingError, catch404 } from "./app/core";
+
 import { DataAccess } from "./dataAccess/mongo/connection";
 
 class Application {
@@ -14,7 +19,9 @@ class Application {
 
   constructor() {
     this.initializeMiddleware();
-    this.connectDatabase()
+
+    this.connectDatabase();
+
     this.start();
 
     this.initializeHttpException();
@@ -27,7 +34,7 @@ class Application {
 
     this._server.use(express.json());
 
-    this._server.use(express.urlencoded({ extended: false }));
+    this._server.use(express.urlencoded({ extended: true }));
   }
 
   public async initializeHttpException() {
@@ -43,6 +50,11 @@ class Application {
     });
 
     this._server.use("/api", new ApiRouter()._router);
+
+    this._server.use(
+      "/avatars",
+      express.static(path.resolve("public/avatars"))
+    );
   }
 }
 

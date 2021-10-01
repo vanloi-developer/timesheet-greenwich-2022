@@ -1,6 +1,10 @@
 import { Request, NextFunction, Response } from "express";
 
-import { GetAllUserDto, GetUserDto } from "../dto/responses";
+import {
+  GetAllUserDto,
+  GetUserDto,
+  PagedResultRoleDto,
+} from "../dto/responses";
 
 import { IResponse } from "../core/responses/interfaces";
 
@@ -23,6 +27,47 @@ class UserController extends BaseController<UserService> {
     super(new UserService());
   }
 
+  public getRoles = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const result: PagedResultRoleDto = await this._business.getRoles();
+
+      const response: IResponse = {
+        ...ApiResponse,
+        result,
+      };
+
+      return res.status(HttpStatusCode.OK).json(response);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public updateOwnAvatar = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const userId: number = +req.app.locals.currentUser.id;
+
+      const avatarPath: string = `/avatars/${req.file.filename}`;
+
+      const result: string = await this._business.updateOwnAvatar(
+        userId,
+        avatarPath
+      );
+
+      const response: IResponse = {
+        ...ApiResponse,
+        result,
+      };
+
+      return res.status(HttpStatusCode.OK).json(response);
+    } catch (error) {
+      next(error);
+    }
+  };
+
   public getAllPagging = async (
     req: Request,
     res: Response,
@@ -31,7 +76,7 @@ class UserController extends BaseController<UserService> {
     try {
       const filter: GridParam = req.body;
 
-      const result: GetAllUserDto = await this._business.getAllPagging(filter);
+      const result = await this._business.getAllPagging(filter);
 
       const response: IResponse = {
         ...ApiResponse,
@@ -68,6 +113,7 @@ class UserController extends BaseController<UserService> {
   ) => {
     try {
       const result: GetUserDto[] = await this._business.getUserNotPagging();
+
       const response: IResponse = {
         ...ApiResponse,
         result,
