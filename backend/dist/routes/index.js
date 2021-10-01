@@ -8,6 +8,8 @@ const BaseRouter_1 = require("./BaseRouter");
 const express_1 = __importDefault(require("express"));
 // import bodyParser = require("body-parser");
 const cors = require("cors");
+const path = require("path");
+const bodyParser = require("body-parser");
 class IndexRouter extends BaseRouter_1.BaseRouter {
     constructor() {
         super();
@@ -16,8 +18,9 @@ class IndexRouter extends BaseRouter_1.BaseRouter {
     }
     configure() {
         this.router.use(cors());
-        this.router.use(express_1.default.json());
-        this.router.use(express_1.default.urlencoded({ extended: true }));
+        this.router.use(bodyParser.json());
+        this.router.use(bodyParser.urlencoded({ extended: true }));
+        this.router.use(express_1.default.static(path.resolve('src/public')));
     }
     //Manage all routes
     init() {

@@ -1,5 +1,5 @@
-import { IFilterItems } from './../dto/reqDto/AllPaggingDto';
-import { ICustomerModel } from './Models/ICustomerModel';
+import { IFilterItems } from './../../dto/reqDto/AllPaggingDto';
+import { ICustomerModel } from './../Models/ICustomerModel';
 export interface ICustomerRepository {
    findAll();
    findByName(name: string);

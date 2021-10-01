@@ -13,7 +13,7 @@ const logger_1 = __importDefault(require("./config/logger"));
  * @description Handle init config and components.
  */
 dotenv_1.default.config({
-    path: ".env",
+    path: '.env',
 });
 class Application {
     init() {

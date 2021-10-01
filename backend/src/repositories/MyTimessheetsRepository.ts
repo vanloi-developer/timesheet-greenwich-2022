@@ -1,17 +1,8 @@
 import { TimesheetsReqDto } from './../dto/reqDto/TimesheetsReqDto';
 import { IMyTimesheetsModel } from './../types/Models/IMyTimesheetsModel';
-import { SEARCH_TEXT_FIELD_PROJECTS } from './../constants/index';
-import { IUsers_in_projectModel } from './../types/Models/IUsers_in_projectModel';
-import { ITasks_in_projectModel } from './../types/Models/ITasks_in_projectModel';
-// import { IMyTimesheetsReqDto } from './../dto/reqDto/IMyTimesheetsReqDto';
-import { searchTextFieldOpt } from './../utils/index';
-import generateID from '../utils/generateID';
 import { IMyTimesheetsRepository } from '../types/Repositories/IMyTimesheetsRepository';
 import db from '../models';
 import logger from '../config/logger';
-import TasksInProjectRepository from './TasksInProjectRepository';
-// import UsersInMyTimesheetsRepository from './UsersInMyTimesheetsRepository';
-// import TasksInMyTimesheetsRepository from './TasksInMyTimesheetsRepository';
 class MyTimesheetsRepository implements IMyTimesheetsRepository {
    private readonly _db = db.MyTimesheets;
 

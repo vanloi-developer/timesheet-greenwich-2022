@@ -1,4 +1,3 @@
-// import { ITaskFilterOpt } from './../types/ICustomFilterOpt';
 import { searchTextFieldOpt } from './../utils/index';
 import { REQUIRED_FIELD_SAVE_CUSTOMER } from './../constants/index';
 import { IFilterItems, IFilterOpt } from './../dto/reqDto/AllPaggingDto';

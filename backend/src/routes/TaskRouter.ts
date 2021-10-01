@@ -18,8 +18,6 @@ class TaskRouter extends BaseRouter {
       this.router.post('/DeArchive', this._service.deArchive);
       this.router.delete('/Archive', validQueryID, this._service.archive);
 
-      // this.router.post('/GetAllPagging', this._service.getAllPagging);
-
       this.router.delete('/Delete', validQueryID, this._service.delete);
    }
 }

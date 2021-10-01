@@ -2,10 +2,8 @@ import { error } from './../middlewares/error';
 import ApiRouter from './ApiRouter';
 import { BaseRouter } from './BaseRouter';
 import express from 'express';
-// import bodyParser = require("body-parser");
 import cors = require('cors');
 import path = require('path');
-import bodyParser = require('body-parser');
 
 class IndexRouter extends BaseRouter {
    constructor() {
@@ -16,8 +14,8 @@ class IndexRouter extends BaseRouter {
 
    private configure() {
       this.router.use(cors());
-      this.router.use(bodyParser.json());
-      this.router.use(bodyParser.urlencoded({ extended: true }));
+      this.router.use(express.json());
+      this.router.use(express.urlencoded({ extended: true }));
       this.router.use(express.static(path.resolve('src/public')));
    }
 

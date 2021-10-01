@@ -1,33 +1,34 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createUser = void 0;
-const BaseErrorDto_1 = require("../../dto/BaseErrorDto");
+exports.validCreate = void 0;
+const BaseErrorDto_1 = require("../../dto/resDto/BaseErrorDto");
 const REQUIRED_FIELD = ['name', 'surname', 'userName', 'emailAddress'];
-const createUser = (req, res, next) => {
+const validCreate = (req, res, next) => {
     const data = Object.assign({}, req.body);
     const { emailAddress } = data;
-    BaseErrorDto_1.INVALID_REQUEST.error.validationErrors = [];
+    let RESPONSE_JSON = Object.assign({}, BaseErrorDto_1.INVALID_REQUEST);
+    RESPONSE_JSON.error.validationErrors = [];
     // Check missing required field
     const invalidField = checkField(REQUIRED_FIELD);
-    const invalidEmail = checkFormatEmail(emailAddress);
     if (invalidField)
-        return res.status(400).json(Object.assign({}, invalidField));
+        return res.status(400).json(RESPONSE_JSON);
+    const invalidEmail = checkFormatEmail(emailAddress);
     if (invalidEmail)
-        return res.status(400).json(Object.assign({}, invalidEmail));
+        return res.status(400).json(RESPONSE_JSON);
     next();
     function checkField(arr) {
         arr.forEach((item) => {
             if (!data[item])
                 errorMess(item);
         });
-        if (BaseErrorDto_1.INVALID_REQUEST.error.validationErrors.length)
-            return Object.assign({}, BaseErrorDto_1.INVALID_REQUEST);
+        if (RESPONSE_JSON.error.validationErrors.length)
+            return true;
         return false;
     }
     function checkFormatEmail(emailAddress) {
         if (!emailAddress.includes('@')) {
             errorMess('emailAddress', 'field is not a valid e-mail address');
-            return Object.assign({}, BaseErrorDto_1.INVALID_REQUEST);
+            return true;
         }
         return false;
     }
@@ -37,12 +38,12 @@ const createUser = (req, res, next) => {
             members: [field],
         };
         // If invalidate. Create error messages and details
-        BaseErrorDto_1.INVALID_REQUEST.error.validationErrors.push(error);
-        BaseErrorDto_1.INVALID_REQUEST.error.details += `- ${error.message} .\r\n `;
+        RESPONSE_JSON.error.validationErrors.push(error);
+        RESPONSE_JSON.error.details += `- ${error.message} .\r\n `;
         function upperFirstChar(text) {
             return text.charAt(0).toUpperCase() + text.slice(1);
         }
     }
 };
-exports.createUser = createUser;
+exports.validCreate = validCreate;
 //# sourceMappingURL=UserValidate.js.map

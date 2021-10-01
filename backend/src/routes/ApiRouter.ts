@@ -15,11 +15,7 @@ class ApiRouter extends BaseRouter {
       this.init();
    }
 
-   /**
-    * Connect routes to their matching routers.
-    */
    protected init() {
-      // this.router.use("/test", testRouter);
       this.router.get(
          '/services/app/Session/GetCurrentLoginInformations',
          this._userService.getUserLoginInfo,
