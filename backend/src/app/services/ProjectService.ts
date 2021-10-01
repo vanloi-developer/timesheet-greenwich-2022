@@ -119,8 +119,13 @@ class ProjectService extends BaseService<ProjectRepository> {
 
   public save = async (item: ProjectDto): Promise<ProjectDto> => {
     try {
+      await this._projectTasksRepos.deleteMany(item.id);
+      await this._projectUsersRepos.deleteMany(item.id);
+
       const tasks: ProjectTasksDto[] = [];
+
       const users: ProjectUsersDto[] = [];
+
       const projectTasks: ProjectTasksDto[] = item.tasks;
 
       const projectUsers: ProjectUsersDto[] = item.users;

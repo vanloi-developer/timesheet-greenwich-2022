@@ -1,3 +1,7 @@
+export const USER_IS_ACTIVE: boolean = true;
+
+export const USER_IS_DEACTIVE: boolean = false;
+
 export const CONFIGURATION_WORKING_TIME = {
   "0": {
     morningStartAt: "08:30",

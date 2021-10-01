@@ -11,14 +11,60 @@ import { ApiError } from "../../app/core";
 import { UserSchema } from "../schemas";
 
 import { BaseRepository } from "./base";
-import { GetUserDto } from "src/app/dto/responses";
-import { UserDTO } from "src/app/dto/common/UserDto";
+
+import { GetUserDto } from "../../app/dto/responses";
+
+import { USER_IS_ACTIVE, USER_IS_DEACTIVE } from "../../app/constants";
 
 class UserRepository extends BaseRepository<IUser> {
   private _projectUsersRepos = new ProjectUsersRepository();
   constructor() {
     super("users", UserSchema);
   }
+
+  public resetPassword = async (
+    adminPassword: string,
+    id: number,
+    newPassword: string
+  ) => {
+    try {
+      if (await this._model.find({ id, password: adminPassword })) {
+        return await this._model.updateOne({ id }, { password: newPassword });
+      }
+
+      return false;
+    } catch (error) {
+      throw new ApiError(
+        HttpStatusCode.NOT_FOUND,
+        `Having error in dataAccess: ${error}`
+      );
+    }
+  };
+
+  public deactive = async (id: number) => {
+    try {
+      return await this._model.updateOne(
+        { id },
+        { isActive: USER_IS_DEACTIVE }
+      );
+    } catch (error) {
+      throw new ApiError(
+        HttpStatusCode.NOT_FOUND,
+        `Having error in dataAccess: ${error}`
+      );
+    }
+  };
+
+  public active = async (id: number) => {
+    try {
+      return await this._model.updateOne({ id }, { isActive: USER_IS_ACTIVE });
+    } catch (error) {
+      throw new ApiError(
+        HttpStatusCode.NOT_FOUND,
+        `Having error in dataAccess: ${error}`
+      );
+    }
+  };
 
   public findManager = async (managerId: number) => {
     try {

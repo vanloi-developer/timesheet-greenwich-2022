@@ -27,6 +27,117 @@ class UserController extends BaseController<UserService> {
     super(new UserService());
   }
 
+  public active = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const id: number = +req.body.id;
+
+      const result: boolean = await this._business.active(id);
+
+      const response: IResponse = {
+        ...ApiResponse,
+        result,
+      };
+
+      return res.status(HttpStatusCode.OK).json(response);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public deactive = async (req: Request, res: Response, next: NextFunction) => {
+    const id: number = +req.body.id;
+
+    const result: boolean = await this._business.deactive(id);
+
+    const response: IResponse = {
+      ...ApiResponse,
+      result,
+    };
+
+    return res.status(HttpStatusCode.OK).json(response);
+  };
+
+  public update = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const item: UserDTO = req.body;
+
+      const result: UserDTO = await this._business.update(item);
+
+      const response: IResponse = {
+        ...ApiResponse,
+        result,
+      };
+
+      return res.status(HttpStatusCode.OK).json(response);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public get = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const id: number = +req.query.Id;
+
+      const result: UserDTO = await this._business.get(id);
+
+      const response: IResponse = {
+        ...ApiResponse,
+        result,
+      };
+
+      return res.status(HttpStatusCode.OK).json(response);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public resetPassword = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const { adminPassword, userId, newPassword } = req.body;
+
+      const result: boolean = await this._business.resetPassword(
+        adminPassword,
+        userId,
+        newPassword
+      );
+
+      const response: IResponse = {
+        ...ApiResponse,
+        result,
+      };
+
+      return res.status(HttpStatusCode.OK).json(response);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public updateAvatar = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    const userId: number = +req.body.userId;
+
+    const avatarPath: string = `/avatars/${req.file.filename}`;
+
+    const result: string = await this._business.updateOwnAvatar(
+      userId,
+      avatarPath
+    );
+
+    const response: IResponse = {
+      ...ApiResponse,
+      result,
+    };
+
+    return res.status(HttpStatusCode.OK).json(response);
+  };
+
   public getRoles = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const result: PagedResultRoleDto = await this._business.getRoles();

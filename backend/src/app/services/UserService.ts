@@ -39,6 +39,55 @@ class UserService extends BaseService<UserRepository> {
     super(new UserRepository());
   }
 
+  public update = async (item: UserDTO): Promise<UserDTO> => {
+    try {
+      return await this._repos.save(item);
+    } catch (error) {
+      throw new ApiError(HttpStatusCode.BAD_REQUEST, `Error is: ${error}`);
+    }
+  };
+
+  public get = async (id: number): Promise<UserDTO> => {
+    return await this._repos.findById(id);
+  };
+
+  public resetPassword = async (
+    adminPassword: string,
+    id: number,
+    newPassword: string
+  ) => {
+    try {
+      return await this._repos.resetPassword(adminPassword, id, newPassword);
+    } catch (error) {
+      throw new ApiError(
+        HttpStatusCode.NOT_FOUND,
+        `Having error in business: ${error}`
+      );
+    }
+  };
+
+  public active = async (id: number): Promise<boolean> => {
+    try {
+      return await this._repos.active(id);
+    } catch (error) {
+      throw new ApiError(
+        HttpStatusCode.NOT_FOUND,
+        `Having error in business: ${error}`
+      );
+    }
+  };
+
+  public deactive = async (id: number): Promise<boolean> => {
+    try {
+      return await this._repos.deactive(id);
+    } catch (error) {
+      throw new ApiError(
+        HttpStatusCode.NOT_FOUND,
+        `Having error in business: ${error}`
+      );
+    }
+  };
+
   public getRoles = async (): Promise<PagedResultRoleDto> => {
     try {
       const items = await this._roleRepos.getRoles();
@@ -76,7 +125,6 @@ class UserService extends BaseService<UserRepository> {
           `username is already exist, try again`
         );
       }
-      console.log(user.roleNames);
 
       const result: UserDTO = await this._repos.save(user);
 
@@ -146,11 +194,7 @@ class UserService extends BaseService<UserRepository> {
           "id",
         ]);
 
-        console.log(user.managerId);
-
         const manager: UserDTO = await this._repos.findManager(user.managerId);
-
-        console.log(manager);
 
         const projectUsers: PUDto[] = [];
 

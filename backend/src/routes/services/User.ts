@@ -64,17 +64,48 @@ class UserRouter extends BaseRouter {
       this.controller.getAllPagging
     );
 
-    this._router.post("/ActiveUser");
+    this._router.post(
+      "/ActiveUser",
+      authenticator.authenticate,
+      Authorization.confirm("ADMIN"),
+      this.controller.active
+    );
 
-    this._router.post("/DeactiveUser");
+    this._router.post(
+      "/DeactiveUser",
+      authenticator.authenticate,
+      Authorization.confirm("ADMIN"),
+      this.controller.deactive
+    );
 
-    this._router.post("/UpdateAvatar", (req: Request, res: Response) => {
-      return req.body;
-    });
+    this._router.post(
+      "/UpdateAvatar",
+      authenticator.authenticate,
+      Authorization.confirm("ADMIN"),
+      upload.single("file"),
+      this.controller.updateAvatar
+    );
 
-    this._router.post("/ResetPassword");
+    this._router.post(
+      "/ResetPassword",
+      authenticator.authenticate,
+      Authorization.confirm("ADMIN"),
+      this.controller.resetPassword
+    );
 
-    this._router.get("/get");
+    this._router.get(
+      "/get",
+      authenticator.authenticate,
+      Authorization.confirm("ADMIN"),
+      this.controller.get
+    );
+
+    this._router.put(
+      "/update",
+      authenticator.authenticate,
+      Authorization.confirm("ADMIN"),
+      this.controller.update
+    );
   }
 }
 export { UserRouter };

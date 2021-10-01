@@ -1,5 +1,3 @@
-import { Request, Response } from "express";
-
 import { authenticator } from "../../app/core";
 
 import { TimekeepingController } from "../../app/controllers";
