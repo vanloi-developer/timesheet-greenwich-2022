@@ -38,7 +38,6 @@ class AuthService extends BaseService<UserRepository> {
       );
 
       if (!isValidPassword) {
-        console.log(isValidPassword);
         throw new ApiError(
           HttpStatusCode.BAD_REQUEST,
           "Password is not match, try again."

@@ -279,12 +279,10 @@ class ProjectService extends BaseService<ProjectRepository> {
         await this._projectTasksRepos.findByProjectId(projectId);
 
       for (let taskProject of tasksProject) {
-        console.log(taskProject.taskId);
         const task: TaskDto = await this._taskRepos.findById(
           taskProject.taskId
         );
         if (task) {
-          console.log(task.name);
           const taskInfo: PTaskDto = await {
             projectTaskId: taskProject.id,
             billable: taskProject.billable,
