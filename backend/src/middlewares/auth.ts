@@ -29,7 +29,7 @@ const author = (ROLE_TYPE) => {
       const { roleNames } = req.local;
 
       try {
-         if (!roleNames.includes(ROLE_TYPE)) res.status(403).json(AUTHOR_ERR);
+         if (!roleNames.includes(ROLE_TYPE)) return res.status(403).json(AUTHOR_ERR);
 
          next();
       } catch (ex) {

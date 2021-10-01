@@ -198,7 +198,6 @@ class UserService {
 
    public updateImg = async (req, res: Response, next: NextFunction) => {
       let userId: number = 0;
-      console.log(req.body);
       if (req.body.userId) {
          userId = Number(JSON.parse(JSON.stringify(req.body)).userId);
       } else {

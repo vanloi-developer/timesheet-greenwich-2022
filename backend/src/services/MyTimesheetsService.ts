@@ -62,7 +62,7 @@ class MyTimesheetsService {
       const { startDate, endDate } = req.body;
 
       try {
-         const numberOfSubmit = await this._repository.updateStatus(
+         const numberOfSubmit = await this._repository.updateStatusByUserId(
             userId,
             startDate as string,
             endDate as string,

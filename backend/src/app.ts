@@ -1,13 +1,13 @@
-import { Server } from "./Server";
-import dotenv from "dotenv";
-import db from "./config/db";
-import logger from "./config/logger";
+import { Server } from './Server';
+import dotenv from 'dotenv';
+import db from './config/db';
+import logger from './config/logger';
 /**
  * Application class.
  * @description Handle init config and components.
  */
 dotenv.config({
-   path: ".env",
+   path: '.env',
 });
 
 export class Application {
@@ -25,9 +25,7 @@ export class Application {
 
    start() {
       ((port = process.env.APP_PORT || 5000) => {
-         this.server.app.listen(port, () =>
-            logger.cyan(`> Listening on port ${port}`)
-         );
+         this.server.app.listen(port, () => logger.cyan(`> Listening on port ${port}`));
       })();
    }
 }

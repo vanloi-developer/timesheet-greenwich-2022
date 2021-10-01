@@ -24,7 +24,6 @@ class ProjectService {
 
       try {
          const result = await this._repository.findById(id);
-         console.log(result);
          if (!result)
             return res.status(500).json({
                ...NOT_EXIST_PROJECT,
@@ -49,8 +48,6 @@ class ProjectService {
          const projectIds: Array<number> = await this._userInProjectRepository.findProjectIds(
             userId,
          );
-
-         console.log(projectIds);
 
          if (!projectIds.length)
             return res.status(200).json({
