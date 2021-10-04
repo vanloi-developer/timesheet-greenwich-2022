@@ -74,6 +74,8 @@ class UserService {
          const result: IUserModel = await this._repository.findOne({ id });
          if (!result) return res.status(400).json(NOT_EXIST_USER);
 
+         delete result['password'];
+
          return res.status(200).json({
             ...UserResDTO,
             result,
@@ -94,6 +96,8 @@ class UserService {
 
          const user: IUserModel = await this._repository.findOne({ id });
          if (!user) return res.status(400).json(INVALID_TOKEN);
+
+         delete user['password'];
 
          return res.status(200).json({
             ...UserResDTO,

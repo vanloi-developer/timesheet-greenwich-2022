@@ -24,7 +24,7 @@ export abstract class BaseRepository<T> implements IWrite<T>, IRead<T>, IDelete<
 
    async findOne(field: object): Promise<T> {
       try {
-         return await this._db.find(field).select('-_id');
+         return await this._db.findOne(field).select('-_id');
       } catch (error) {
          logger.error(`findOne ${this._repoName} error: `, error.message);
       }

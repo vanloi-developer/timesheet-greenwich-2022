@@ -8,8 +8,6 @@ export const validate = (requestFeild) => {
       const INVALID_ERR = { ...INVALID_REQUEST };
       INVALID_ERR.error.validationErrors = [];
 
-      const { emailAddress } = data;
-
       // Check missing required field
       const invalidField = checkField(REQUIRED_FIELD);
 

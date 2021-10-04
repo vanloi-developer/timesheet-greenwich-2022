@@ -55,8 +55,8 @@ class MyTimesheetsService {
 
    public submit = async (req: IRequest, res: Response, next: NextFunction) => {
       const userId: number = req.local.id;
-      const startDate: string = String(req.query.startDate);
-      const endDate: string = String(req.query.endDate);
+      const startDate: string = String(req.body.startDate);
+      const endDate: string = String(req.body.endDate);
 
       try {
          const numberOfSubmit =

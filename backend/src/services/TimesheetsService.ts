@@ -9,15 +9,12 @@ class TimesheetsService {
    private _repository: IMyTimesheetsRepository = MyTimessheetsRepository;
 
    public getAll = async (req: IRequest, res: Response, next: NextFunction) => {
-      const { startDate, endDate } = req.query;
+      const startDate: string = String(req.query.startDate);
+      const endDate: string = String(req.query.endDate);
       const status: number = Number(req.query.status);
 
       try {
-         const result = await this._repository.filterAll(
-            status as number,
-            startDate as string,
-            endDate as string,
-         );
+         const result = await this._repository.filterAll(status, startDate, endDate);
 
          return res.status(200).json({
             ...BaseResDto,
