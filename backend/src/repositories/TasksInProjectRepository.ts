@@ -1,25 +1,11 @@
 import { ITasks_in_projectModel } from './../types/Models/ITasks_in_projectModel';
-import { ITasksInProjectRepository } from '../types/Repositories/ITasksInProjectRepository';
 import db from '../models';
 import logger from '../config/logger';
+import { BaseRepository } from './base/BaseRepository';
 
-class TasksInProjectRepository implements ITasksInProjectRepository {
-   private readonly _db = db.Tasks_in_project;
-
-   async findById(id: number) {
-      try {
-         return await this._db.findOne({ id }).select('-_id');
-      } catch (err) {
-         logger.error('findByName TasksInProjectRepository error: ', err.message);
-      }
-   }
-
-   async findByName(name: string) {
-      try {
-         return await this._db.findOne({ name }).select('-_id');
-      } catch (err) {
-         logger.error('findByName TasksInProjectRepository error: ', err.message);
-      }
+class TasksInProjectRepository extends BaseRepository<ITasks_in_projectModel> {
+   constructor() {
+      super(db.Tasks_in_project, 'TasksInProjectRepository');
    }
 
    async createMany(tasksInput: ITasks_in_projectModel[]): Promise<ITasks_in_projectModel[]> {

@@ -2,42 +2,13 @@ import { ResAllPageCus } from './../dto/resDto/ResAllPageCus';
 import { searchTextFieldOpt } from './../utils/index';
 import { REQUIRED_FIELD_SAVE_CUSTOMER } from './../constants/index';
 import { IFilterItems, IFilterOpt } from './../dto/reqDto/AllPaggingDto';
-import { ICustomerRepository } from '../types/Repositories/ICustomerRepository';
 import db from '../models';
 import { ICustomerModel } from '../types/Models/ICustomerModel';
 import logger from '../config/logger';
-class CustomerRepository implements ICustomerRepository {
-   private readonly _db = db.Customer;
-
-   async findAll() {
-      try {
-         return await this._db.find({}).select('-_id');
-      } catch (error) {
-         logger.error('findAll CustomerRepository error: ', error.message);
-      }
-   }
-
-   async findByName(name: string) {
-      try {
-         return await this._db.findOne({ name }).select('-_id');
-      } catch (error) {
-         logger.error('findByName CustomerRepository error: ', error.message);
-      }
-   }
-
-   async findById(id: number) {
-      try {
-         return await this._db.findOne({ id }).select('-_id');
-      } catch (error) {
-         logger.error('findByName CustomerRepository error: ', error.message);
-      }
-   }
-   async create(customer: ICustomerModel) {
-      try {
-         return await this._db.create(customer);
-      } catch (error) {
-         logger.error('create CustomerRepository error: ', error.message);
-      }
+import { BaseRepository } from './base/BaseRepository';
+class CustomerRepository extends BaseRepository<ICustomerModel> {
+   constructor() {
+      super(db.Customer, 'CustomerRepository');
    }
 
    async filterUserPagging(
@@ -67,23 +38,7 @@ class CustomerRepository implements ICustomerRepository {
             items,
          };
       } catch (error) {
-         logger.error('findUserPagging CutomerRepository error: ', error.message);
-      }
-   }
-
-   async update(id: number, updateFeild: Object) {
-      try {
-         await this._db.findOneAndUpdate({ id }, updateFeild);
-      } catch (error) {
-         logger.error('update UserRepository error: ', error.message);
-      }
-   }
-
-   async deleteById(id: number) {
-      try {
-         await this._db.deleteOne({ id });
-      } catch (error) {
-         logger.error('DeleteUserById UserRepository error: ', error.message);
+         logger.error(`findUserPagging ${this._repoName} error: `, error.message);
       }
    }
 }

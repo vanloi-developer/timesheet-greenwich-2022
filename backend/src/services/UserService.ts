@@ -28,13 +28,11 @@ class UserService {
 
    public create = async (req: Request, res: Response, next: NextFunction) => {
       const userInput = { ...req.body };
+      const { userName, emailAddress } = userInput;
 
       try {
          //Check if userName or email existed
-         const exitstedUser = await this._repository.findByUserNameEmail(
-            userInput.userName,
-            userInput.emailAddress,
-         );
+         const exitstedUser = await this._repository.findByUserNameEmail(userName, emailAddress);
          if (exitstedUser) {
             let message = 'is already taken.';
             const ERR_RES = baseError();
@@ -53,7 +51,7 @@ class UserService {
          userInput.password = hashPass;
          userInput.id = id;
 
-         const result = await this._repository.create(userInput);
+         const result: IUserModel = await this._repository.create(userInput);
          if (result) throw new Error('Create user failed');
 
          delete result['password'];
@@ -73,7 +71,7 @@ class UserService {
       const id: number = parseInt(req.query.Id as string);
 
       try {
-         const result: IUserModel = await this._repository.findById(id);
+         const result: IUserModel = await this._repository.findOne({ id });
          if (!result) return res.status(400).json(NOT_EXIST_USER);
 
          return res.status(200).json({
@@ -94,7 +92,7 @@ class UserService {
       try {
          const { id }: IUserDecodeToken = await jwt.verify(token, JWT_KEY);
 
-         const user = await this._repository.findById(id);
+         const user: IUserModel = await this._repository.findOne({ id });
          if (!user) return res.status(400).json(INVALID_TOKEN);
 
          return res.status(200).json({
@@ -160,10 +158,10 @@ class UserService {
    public delete = async (req: Request, res: Response, next: NextFunction) => {
       const id: number = parseInt(req.query.Id as string);
       try {
-         const data = await this._repository.findById(id);
+         const data = await this._repository.findOne({ id });
          if (!data) return res.status(500).json(NOT_EXIST_USER);
 
-         await this._repository.deleteUserById(id);
+         await this._repository.delete(id);
          return res.status(200).json({
             ...UserResDTO,
             result: { message: 'Delete user successfully!' },
@@ -177,7 +175,8 @@ class UserService {
    public updateBase = (updatefield?: Object) => {
       return async (req: Request, res: Response, next: NextFunction) => {
          try {
-            const data = await this._repository.findById(req.body.id as number);
+            const id: number = req.body.id;
+            const data: IUserModel = await this._repository.findOne({ id });
             if (!data) return res.status(500).json(NOT_EXIST_USER);
 
             const result = await this._repository.update(
@@ -207,7 +206,7 @@ class UserService {
       }
       try {
          const avatarPath = '/avartar/' + req.files[0].filename;
-         const data = await this._repository.findById(userId as number);
+         const data = await this._repository.findOne({ id: userId });
          if (!data) return res.status(500).json(NOT_EXIST_USER);
          await this._repository.update(userId as number, { avatarPath });
          return res.status(200).json({
@@ -230,7 +229,7 @@ class UserService {
       try {
          if (adminPassword !== ADMIN_PASSWORD) return res.status(400).json(WRONG_ADMIN_PASS);
 
-         const user = await this._repository.findById(userId);
+         const user = await this._repository.findOne({ id: userId });
          if (!user) return res.status(500).json(NOT_EXIST_USER);
 
          const hashedPass = await bcrypt.hashSync(newPassword, saltRounds);

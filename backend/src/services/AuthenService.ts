@@ -12,7 +12,7 @@ class AuthenService {
    public authen = async (req: Request, res: Response, next: NextFunction) => {
       const { userNameOrEmailAddress, password } = req.body;
       try {
-         const exitstedUser = await this._repository.findByUserName(userNameOrEmailAddress);
+         const exitstedUser = await this._repository.findOne({ userName: userNameOrEmailAddress });
 
          if (!exitstedUser) return res.status(500).json(LOGIN_FAILED);
 

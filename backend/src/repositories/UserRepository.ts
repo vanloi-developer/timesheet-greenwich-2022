@@ -1,12 +1,14 @@
 import { searchTextFieldOpt } from './../utils/index';
 import { SEARCH_TEXT_FIELD_USER, FAKE_ALL_MANAGERS } from './../constants/index';
 import { IFilterItems, IFilterOpt } from './../dto/reqDto/AllPaggingDto';
-import { IUserRepository } from '../types/Repositories/IUserRepository';
 import db from '../models';
 import { IUserModel } from '../types/Models/IUserModel';
 import logger from '../config/logger';
-class UserRepository implements IUserRepository {
-   private readonly _db = db.User;
+import { BaseRepository } from './base/BaseRepository';
+class UserRepository extends BaseRepository<IUserModel> {
+   constructor() {
+      super(db.User, 'UserRepository');
+   }
 
    async findByUserNameEmail(userName: string, emailAddress: string) {
       try {
@@ -19,22 +21,6 @@ class UserRepository implements IUserRepository {
          return null;
       } catch (error) {
          logger.error('findByUserNameEmail UserRepository error: ', error.message);
-      }
-   }
-
-   async findByUserName(userName: string) {
-      try {
-         return await this._db.findOne({ userName });
-      } catch (error) {
-         logger.error('findByUserName UserRepository error: ', error.message);
-      }
-   }
-
-   async findById(id: Number) {
-      try {
-         return await await this._db.findOne({ id }).select('-_id -password');
-      } catch (error) {
-         logger.error('findByID UserRepository error: ', error.message);
       }
    }
 
@@ -80,14 +66,6 @@ class UserRepository implements IUserRepository {
       }
    }
 
-   async create(data) {
-      try {
-         return await this._db.create(data);
-      } catch (error) {
-         logger.error('findByUserNameEmail UserRepository error: ', error.message);
-      }
-   }
-
    async generateToken(userName) {
       try {
          const user = await this._db.findOne({ userName });
@@ -113,21 +91,6 @@ class UserRepository implements IUserRepository {
          return FAKE_ALL_MANAGERS;
       } catch (error) {
          logger.error('getAllMangagers UserRepository error: ', error.message);
-      }
-   }
-
-   async deleteUserById(id: number) {
-      try {
-         await this._db.deleteOne({ id });
-      } catch (error) {
-         logger.error('DeleteUserById UserRepository error: ', error.message);
-      }
-   }
-   async update(id: number, updateFeild) {
-      try {
-         await this._db.updateOne({ id }, updateFeild);
-      } catch (error) {
-         logger.error('update UserRepository error: ', error.message);
       }
    }
 

@@ -4,96 +4,15 @@ import { ITasks_in_projectModel } from './../types/Models/ITasks_in_projectModel
 import { IProjectReqDto } from './../dto/reqDto/IProjectReqDto';
 import { searchTextFieldOpt } from './../utils/index';
 import generateID from '../utils/generateID';
-import { IProjectRepository } from '../types/Repositories/IProjectRepository';
 import db from '../models';
 import logger from '../config/logger';
 import UsersInProjectRepository from './UsersInProjectRepository';
 import TasksInProjectRepository from './TasksInProjectRepository';
-class ProjectRepository implements IProjectRepository {
-   private readonly _db = db.Project;
-
-   async findById(id: number) {
-      try {
-         return await this._db.aggregate([
-            { $match: { id } },
-            {
-               $lookup: {
-                  from: 'tasks_in_projects',
-                  let: { id: '$id' },
-                  as: 'tasks',
-                  pipeline: [
-                     {
-                        $match: {
-                           $expr: {
-                              $eq: ['$projectId', '$$id'],
-                           },
-                        },
-                     },
-                     {
-                        $project: {
-                           _id: 0,
-                           taskId: '$taskId',
-                           billable: '$billable',
-                           id: '$id',
-                        },
-                     },
-                  ],
-               },
-            },
-            {
-               $lookup: {
-                  from: 'users_in_projects',
-                  let: { id: '$id' },
-                  as: 'users',
-                  pipeline: [
-                     {
-                        $match: {
-                           $expr: {
-                              $eq: ['$projectId', '$$id'],
-                           },
-                        },
-                     },
-                     {
-                        $project: {
-                           _id: 0,
-                           userId: '$userId',
-                           type: '$type',
-                           id: '$id',
-                        },
-                     },
-                  ],
-               },
-            },
-            {
-               $project: {
-                  _id: 0,
-                  name: '$name',
-                  code: '$code',
-                  status: '$status',
-                  timeStart: '$timeStart',
-                  timeEnd: '$timeEnd',
-                  note: '$note',
-                  projectType: '$projectType',
-                  customerId: '$customerId',
-                  tasks: '$tasks',
-                  users: '$users',
-                  projectTargetUsers: '$projectTargetUsers',
-                  isAllUserBelongTo: '$isAllUserBelongTo',
-                  id: '$id',
-               },
-            },
-         ]);
-      } catch (err) {
-         logger.error('findByName ProjectRepository error: ', err.message);
-      }
-   }
-
-   async findByName(name: string) {
-      try {
-         return await await this._db.findOne({ name }).select('-_id');
-      } catch (err) {
-         logger.error('findByName ProjectRepository error: ', err.message);
-      }
+import { IProjectModel } from '../types/Models/IProjectModel';
+import { BaseRepository } from './base/BaseRepository';
+class ProjectRepository extends BaseRepository<IProjectModel> {
+   constructor() {
+      super(db.Project, 'ProjectRepository');
    }
 
    async createOrUpdate(projectInput: IProjectReqDto) {
@@ -378,14 +297,6 @@ class ProjectRepository implements IProjectRepository {
       }
    }
 
-   async update(id: number, updateFeild: Object) {
-      try {
-         await this._db.findOneAndUpdate({ id }, updateFeild);
-      } catch (error) {
-         logger.error('update UserRepository error: ', error.message);
-      }
-   }
-
    async updateWithUserAndTask(projectInput: IProjectReqDto) {
       try {
          const projectId = projectInput.id;
@@ -396,17 +307,6 @@ class ProjectRepository implements IProjectRepository {
          return await this.createOrUpdate(projectInput);
       } catch (error) {
          logger.error('create ProjectRepository error: ', error.message);
-      }
-   }
-
-   async deleteById(id: number) {
-      try {
-         await UsersInProjectRepository.deleteMany(id);
-         await TasksInProjectRepository.deleteMany(id);
-
-         await this._db.deleteOne({ id });
-      } catch (error) {
-         logger.error('DeleteUserById UserRepository error: ', error.message);
       }
    }
 }

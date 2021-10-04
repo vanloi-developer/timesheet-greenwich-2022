@@ -1,11 +1,12 @@
 import { TimesheetsReqDto } from './../dto/reqDto/TimesheetsReqDto';
 import { IMyTimesheetsModel } from './../types/Models/IMyTimesheetsModel';
-import { IMyTimesheetsRepository } from '../types/Repositories/IMyTimesheetsRepository';
 import db from '../models';
 import logger from '../config/logger';
-class MyTimesheetsRepository implements IMyTimesheetsRepository {
-   private readonly _db = db.MyTimesheets;
-
+import { BaseRepository } from './base/BaseRepository';
+class MyTimesheetsRepository extends BaseRepository<IMyTimesheetsModel> {
+   constructor() {
+      super(db.MyTimesheets, 'MyTimesheetsRepository');
+   }
    async filterByUserId(userId: number, startDate: string, endDate: string) {
       try {
          return await this._db.aggregate([
@@ -357,14 +358,6 @@ class MyTimesheetsRepository implements IMyTimesheetsRepository {
          );
       } catch (error) {
          logger.error('findAndSumit MyTimesheetsRepository error: ', error.message);
-      }
-   }
-
-   async create(myTimesheetsInput: IMyTimesheetsModel) {
-      try {
-         return await this._db.create(myTimesheetsInput);
-      } catch (error) {
-         logger.error('create MyTimesheetsRepository error: ', error.message);
       }
    }
 }

@@ -2,7 +2,6 @@ import { IMyTimesheetsModel } from '../types/Models/IMyTimesheetsModel';
 // import { ITasksInMyTimesheetsRepository } from './../types/Repositories/ITasksInMyTimesheetsRepository';
 // import { IUsers_in_myTimesheetsModel } from '../types/Models/IUsers_in_myTimesheetsModel';
 // import { ITasks_in_myTimesheetsModel } from '../types/Models/ITasks_in_myTimesheetsModel';
-import { IMyTimesheetsReqDto } from './../dto/reqDto/IMyTimesheetsReqDto';
 // import { IMyTimesheetsRepository } from './../types/Repositories/IMyTimesheetsRepository';
 import { BaseResDto } from '../dto/resDto/BaseResDto';
 import { NextFunction, Response } from 'express';
@@ -17,14 +16,11 @@ class MyTimesheetsService {
 
    public getAllOfUser = async (req: IRequest, res: Response, next: NextFunction) => {
       const userId: number = req.local.id;
-      const { startDate, endDate } = req.query;
+      const startDate: string = String(req.query.startDate);
+      const endDate: string = String(req.query.endDate);
 
       try {
-         const result = await this._repository.filterByUserId(
-            userId,
-            startDate as string,
-            endDate as string,
-         );
+         const result = await this._repository.filterByUserId(userId, startDate, endDate);
 
          return res.status(200).json({
             ...BaseResDto,
@@ -37,15 +33,15 @@ class MyTimesheetsService {
    };
 
    public create = async (req: IRequest, res: Response, next: NextFunction) => {
-      const myTimesheetsInput: IMyTimesheetsReqDto = { ...req.body };
+      const myTimesheetsInput: IMyTimesheetsModel = { ...req.body };
 
       try {
          //Auto generate id
-         const id = generateID('mytimesheets');
+         const id: number = generateID('mytimesheets');
          myTimesheetsInput.id = id;
          myTimesheetsInput.userId = req.local.id;
 
-         let result = await this._repository.create(myTimesheetsInput);
+         let result: IMyTimesheetsModel = await this._repository.create(myTimesheetsInput);
 
          return res.status(200).json({
             ...BaseResDto,
@@ -59,14 +55,12 @@ class MyTimesheetsService {
 
    public submit = async (req: IRequest, res: Response, next: NextFunction) => {
       const userId: number = req.local.id;
-      const { startDate, endDate } = req.body;
+      const startDate: string = String(req.query.startDate);
+      const endDate: string = String(req.query.endDate);
 
       try {
-         const numberOfSubmit = await this._repository.updateStatusByUserId(
-            userId,
-            startDate as string,
-            endDate as string,
-         );
+         const numberOfSubmit =
+            (await this._repository.updateStatusByUserId(userId, startDate, endDate)) || 0;
 
          return res.status(200).json({
             ...BaseResDto,

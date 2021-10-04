@@ -1,12 +1,10 @@
+import { IBaseRepository } from './base/IBaseRepository';
 import { IFilterItems } from '../../dto/reqDto/AllPaggingDto';
 import { IUserModel } from '../Models/IUserModel';
-export interface IUserRepository {
+export interface IUserRepository extends IBaseRepository<IUserModel> {
    findByUserNameEmail(userName: string, emailAddress: string);
-   create(data: IUserModel);
    generateToken(userName: string);
    comparePassword(userName: string, plainPass: string);
-   findById(id: number);
-   findByUserName(userName: string);
    findUserNotPagging();
    filterUserPagging(
       filterItems: IFilterItems[],
@@ -15,7 +13,5 @@ export interface IUserRepository {
       searchText: string,
    );
    getAllMangagers();
-   deleteUserById(id: number);
-   update(id: number, updateFeild);
    resetPassword(id: number, password: Object);
 }

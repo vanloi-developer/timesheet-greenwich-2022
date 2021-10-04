@@ -12,7 +12,7 @@ class RoleService {
 
    public findAll = async (req: Request, res: Response, next: NextFunction) => {
       try {
-         const result = await this._repository.findAll();
+         const result: IRoleModel[] = await this._repository.findAll();
 
          return res.status(200).json({ ...BaseResDto, result });
       } catch (error) {
@@ -26,17 +26,18 @@ class RoleService {
 
       try {
          //Check if task name exist
-         const exitstedTask = await this._repository.findByName(roleInput.name);
+         const name: string = roleInput.name;
+         const exitstedTask: IRoleModel = await this._repository.findOne({ name });
 
          if (exitstedTask)
             return res.status(500).json(baseError(`Role ${exitstedTask.name} already existed`));
 
          //Auto generate id and normalizedName
-         const id = generateID('role');
+         const id: number = generateID('role');
          roleInput.id = id;
          roleInput.normalizedName = roleInput.name.toUpperCase();
 
-         const result = await this._repository.create(roleInput);
+         const result: IRoleModel = await this._repository.create(roleInput);
 
          return res.status(200).json({
             ...BaseResDto,
@@ -69,7 +70,7 @@ class RoleService {
    public delete = async (req: Request, res: Response, next: NextFunction) => {
       const id: number = parseInt(req.query.Id as string);
       try {
-         const data = await this._repository.findById(id);
+         const data = await this._repository.findOne({ id });
          if (!data) return res.status(500).json(NOT_EXIST_ROLE);
 
          await this._repository.delete(id);

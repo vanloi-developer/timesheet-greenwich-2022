@@ -1,3 +1,4 @@
+import { ITaskModel } from './../types/Models/ITaskModel';
 import { ITaskRepository } from './../types/Repositories/ITaskRepository';
 import { TaskDto } from './../dto/resDto/TaskDto';
 import { BaseResDto } from '../dto/resDto/BaseResDto';
@@ -12,18 +13,17 @@ class TaskService {
 
    public create = async (req: Request, res: Response, next: NextFunction) => {
       const taskInfo: TaskDto = req.body;
-      // Task name quang already existed
       try {
          //Check if task existed
-         const exitstedTask = await this._repository.findByName(taskInfo.name);
+         const name: string = taskInfo.name;
+         const exitstedTask = await this._repository.findOne({ name });
          if (exitstedTask)
             return res.status(500).json(baseError(`Task ${exitstedTask.name} already existed`));
 
-         const id = genarateID('task');
-
+         const id: number = genarateID('task');
          taskInfo.id = id;
 
-         const result = await this._repository.create(taskInfo);
+         const result: ITaskModel = await this._repository.create(taskInfo);
 
          return res.status(200).json({ ...BaseResDto, result });
       } catch (error) {
@@ -31,9 +31,10 @@ class TaskService {
          next(error);
       }
    };
+
    public getAll = async (req: Request, res: Response, next: NextFunction) => {
       try {
-         const result = await this._repository.findAll();
+         const result: ITaskModel[] = await this._repository.findAll();
          return res.status(200).json({
             ...BaseResDto,
             result,
@@ -47,13 +48,12 @@ class TaskService {
    public UpdateBase = (updatefield?: Object) => {
       return async (req: Request, res: Response, next: NextFunction) => {
          try {
-            const data = await this._repository.findById(req.body.id as number);
+            const id: number = req.body.id;
+            const data: ITaskModel = await this._repository.findOne({ id });
+
             if (!data) return res.status(500).json(NOT_EXIST_TASK);
 
-            const result = await this._repository.update(
-               req.body.id,
-               updatefield ? updatefield : req.body,
-            );
+            await this._repository.update(id, updatefield ? updatefield : req.body);
 
             return res.status(200).json({
                ...BaseResDto,
@@ -70,10 +70,10 @@ class TaskService {
    public archive = async (req: Request, res: Response, next: NextFunction) => {
       const id: number = parseInt(req.query.Id as string);
       try {
-         const data = await this._repository.findById(id);
+         const data = await this._repository.findOne({ id });
          if (!data) return res.status(500).json(NOT_EXIST_TASK);
-         console.log(data);
-         const result = await this._repository.update(id, { isDeleted: true });
+
+         await this._repository.update(id, { isDeleted: true });
 
          return res.status(200).json({
             ...BaseResDto,
@@ -87,10 +87,11 @@ class TaskService {
    public delete = async (req: Request, res: Response, next: NextFunction) => {
       const id: number = parseInt(req.query.Id as string);
       try {
-         const data = await this._repository.findById(id);
+         const data = await this._repository.findOne({ id });
+
          if (!data) return res.status(500).json(NOT_EXIST_TASK);
 
-         await this._repository.deleteById(id);
+         await this._repository.delete(id);
 
          return res.status(200).json({
             ...BaseResDto,

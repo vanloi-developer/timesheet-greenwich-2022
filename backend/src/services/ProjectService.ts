@@ -1,17 +1,12 @@
 import { IRequest } from './../types/IRequest';
-import { ITasksInProjectRepository } from './../types/Repositories/ITasksInProjectRepository';
-import { IUsers_in_projectModel } from './../types/Models/IUsers_in_projectModel';
-import { ITasks_in_projectModel } from './../types/Models/ITasks_in_projectModel';
 import { IProjectReqDto } from './../dto/reqDto/IProjectReqDto';
-import { IProjectModel } from './../types/Models/IProjectModel';
 import { IProjectRepository } from './../types/Repositories/IProjectRepository';
 import { BaseResDto } from './../dto/resDto/BaseResDto';
-import { baseError, NOT_EXIST_PROJECT } from './../dto/resDto/BaseErrorDto';
+import { NOT_EXIST_PROJECT, EXISTED_PROJECT } from './../dto/resDto/BaseErrorDto';
 import { NextFunction, Request, Response } from 'express';
 import ProjectRepository from '../repositories/ProjectRepository';
 import logger from '../config/logger';
 import generateID from '../utils/generateID';
-import TasksInProjectRepository from '../repositories/TasksInProjectRepository';
 import UsersInProjectRepository from '../repositories/UsersInProjectRepository';
 import { IUsersInProjectRepository } from '../types/Repositories/IUsersInProjectRepository';
 
@@ -23,7 +18,7 @@ class ProjectService {
       const id: number = Number(req.query.input);
 
       try {
-         const result = await this._repository.findById(id);
+         const result = await this._repository.findOne({ id });
          if (!result)
             return res.status(500).json({
                ...NOT_EXIST_PROJECT,
@@ -97,6 +92,12 @@ class ProjectService {
                result,
             });
          }
+
+         const name: string = projectInput.name;
+         const exitedName = await this._repository.findOne({ name });
+
+         if (exitedName) return res.status(200).json(EXISTED_PROJECT);
+
          //Auto generate id
          const id = generateID('project');
          projectInput.id = id;
@@ -116,15 +117,13 @@ class ProjectService {
    public UpdateBase = (updatefield?: Object) => {
       return async (req: Request, res: Response, next: NextFunction) => {
          try {
-            const data = await this._repository.findById(req.body.id as number);
+            const id: number = req.body.id;
+            const data = await this._repository.findOne({ id });
             if (!data) return res.status(500).json(NOT_EXIST_PROJECT);
 
-            const result = await this._repository.update(
-               req.body.id,
-               updatefield ? updatefield : req.body,
-            );
+            await this._repository.update(req.body.id, updatefield ? updatefield : req.body);
 
-            return res.status(200).json({ ...BaseResDto });
+            return res.status(200).json(BaseResDto);
          } catch (error) {
             logger.error('createUser UserService error: ', error.message);
             next(error);
@@ -139,10 +138,10 @@ class ProjectService {
    public deleteById = async (req: Request, res: Response, next: NextFunction) => {
       const id: number = parseInt(req.query.Id as string);
       try {
-         const data = await this._repository.findById(id);
+         const data = await this._repository.findOne({ id });
          if (!data) return res.status(500).json(NOT_EXIST_PROJECT);
 
-         await this._repository.deleteById(id);
+         await this._repository.delete(id);
 
          return res.status(200).json({
             ...BaseResDto,
