@@ -11,27 +11,19 @@ class UserRepository extends BaseRepository<IUserModel> {
    }
 
    async findByUserNameEmail(userName: string, emailAddress: string) {
-      try {
-         let user: IUserModel = await this._db.findOne({ userName });
-         if (user) return { userName: user.userName };
+      let user: IUserModel = await this._db.findOne({ userName });
+      if (user) return { userName: user.userName };
 
-         let userByEmail = await this._db.findOne({ emailAddress });
-         if (userByEmail) return { emailAddress: userByEmail.emailAddress };
+      let userByEmail = await this._db.findOne({ emailAddress });
+      if (userByEmail) return { emailAddress: userByEmail.emailAddress };
 
-         return null;
-      } catch (error) {
-         logger.error('findByUserNameEmail UserRepository error: ', error.message);
-      }
+      return null;
    }
 
    async findUserNotPagging() {
-      try {
-         return await this._db
-            .find({})
-            .select('name isActive type jobTitle level userCode avatarPath branch id -_id');
-      } catch (error) {
-         logger.error('findUserNotPagging UserRepository error: ', error.message);
-      }
+      return await this._db
+         .find({})
+         .select('name isActive type jobTitle level userCode avatarPath branch id -_id');
    }
 
    async filterUserPagging(
@@ -55,51 +47,31 @@ class UserRepository extends BaseRepository<IUserModel> {
 
       const findOpt = filterOpt.length ? { $and: filterOpt } : {};
 
-      try {
-         const items = await this._db.find(findOpt).skip(skipCount).limit(maxResultCount);
-         return {
-            totalCount: items.length,
-            items,
-         };
-      } catch (error) {
-         logger.error('findUserPagging UserRepository error: ', error.message);
-      }
+      const items = await this._db.find(findOpt).skip(skipCount).limit(maxResultCount);
+      return {
+         totalCount: items.length,
+         items,
+      };
    }
 
    async generateToken(userName) {
-      try {
-         const user = await this._db.findOne({ userName });
+      const user = await this._db.findOne({ userName });
 
-         return await user.generateAuthToken();
-      } catch (error) {
-         logger.error('generateToken UserRepository error: ', error.message);
-      }
+      return await user.generateAuthToken();
    }
 
    async comparePassword(userName, plainPass) {
-      try {
-         const user = await this._db.findOne({ userName });
+      const user = await this._db.findOne({ userName });
 
-         return await user.comparePassHash(plainPass);
-      } catch (error) {
-         logger.error('comparePassword UserRepository error: ', error.message);
-      }
+      return await user.comparePassHash(plainPass);
    }
 
    async getAllMangagers() {
-      try {
-         return FAKE_ALL_MANAGERS;
-      } catch (error) {
-         logger.error('getAllMangagers UserRepository error: ', error.message);
-      }
+      return FAKE_ALL_MANAGERS;
    }
 
    async resetPassword(id: number, password: Object) {
-      try {
-         await this._db.findOneAndUpdate({ id }, password);
-      } catch (error) {
-         logger.error('findByID UserRepository error: ', error.message);
-      }
+      await this._db.findOneAndUpdate({ id }, password);
    }
 }
 

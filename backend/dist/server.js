@@ -14,7 +14,7 @@ class Server {
     constructor() {
         this.app = (0, express_1.default)();
         this.initRouter = () => {
-            this.app.use("/", routes_1.default);
+            this.app.use('/', routes_1.default);
         };
     }
 }

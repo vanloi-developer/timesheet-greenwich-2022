@@ -18,7 +18,8 @@ class TimesheetsService {
     constructor() {
         this._repository = MyTimessheetsRepository_1.default;
         this.getAll = (req, res, next) => __awaiter(this, void 0, void 0, function* () {
-            const { startDate, endDate } = req.query;
+            const startDate = String(req.query.startDate);
+            const endDate = String(req.query.endDate);
             const status = Number(req.query.status);
             try {
                 const result = yield this._repository.filterAll(status, startDate, endDate);

@@ -18,7 +18,7 @@ class ProjectService {
       const id: number = Number(req.query.input);
 
       try {
-         const result = await this._repository.findOne({ id });
+         const result = await this._repository.findById(id);
          if (!result)
             return res.status(500).json({
                ...NOT_EXIST_PROJECT,

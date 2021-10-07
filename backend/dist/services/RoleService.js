@@ -33,7 +33,8 @@ class RoleService {
             const roleInput = Object.assign({}, req.body);
             try {
                 //Check if task name exist
-                const exitstedTask = yield this._repository.findByName(roleInput.name);
+                const name = roleInput.name;
+                const exitstedTask = yield this._repository.findOne({ name });
                 if (exitstedTask)
                     return res.status(500).json((0, BaseErrorDto_1.baseError)(`Role ${exitstedTask.name} already existed`));
                 //Auto generate id and normalizedName
@@ -64,7 +65,7 @@ class RoleService {
         this.delete = (req, res, next) => __awaiter(this, void 0, void 0, function* () {
             const id = parseInt(req.query.Id);
             try {
-                const data = yield this._repository.findById(id);
+                const data = yield this._repository.findOne({ id });
                 if (!data)
                     return res.status(500).json(BaseErrorDto_1.NOT_EXIST_ROLE);
                 yield this._repository.delete(id);

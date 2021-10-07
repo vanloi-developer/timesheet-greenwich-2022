@@ -8,7 +8,6 @@ const validate = (requestFeild) => {
         const REQUIRED_FIELD = requestFeild;
         const INVALID_ERR = Object.assign({}, BaseErrorDto_1.INVALID_REQUEST);
         INVALID_ERR.error.validationErrors = [];
-        const { emailAddress } = data;
         // Check missing required field
         const invalidField = checkField(REQUIRED_FIELD);
         if (invalidField)

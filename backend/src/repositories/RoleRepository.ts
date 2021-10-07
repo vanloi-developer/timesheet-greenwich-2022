@@ -16,19 +16,16 @@ class RoleRepository extends BaseRepository<IRoleModel> {
          let orOpt = searchTextFieldOpt(Keyword, REQUIRED_FIELD_CREATE_ROLE);
          if (orOpt.length) filterOpt.$or = orOpt;
       }
-      try {
-         const items = await this._db
-            .find(filterOpt)
-            .skip(SkipCount)
-            .limit(MaxResultCount)
-            .select('-_id');
-         return {
-            totalCount: items.length,
-            items,
-         };
-      } catch (error) {
-         logger.error('filterAll UserRepository error: ', error.message);
-      }
+
+      const items = await this._db
+         .find(filterOpt)
+         .skip(SkipCount)
+         .limit(MaxResultCount)
+         .select('-_id');
+      return {
+         totalCount: items.length,
+         items,
+      };
    }
 }
 

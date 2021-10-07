@@ -21,10 +21,10 @@ class TaskService {
         this._repository = TaskRepository_1.default;
         this.create = (req, res, next) => __awaiter(this, void 0, void 0, function* () {
             const taskInfo = req.body;
-            // Task name quang already existed
             try {
                 //Check if task existed
-                const exitstedTask = yield this._repository.findByName(taskInfo.name);
+                const name = taskInfo.name;
+                const exitstedTask = yield this._repository.findOne({ name });
                 if (exitstedTask)
                     return res.status(500).json((0, BaseErrorDto_1.baseError)(`Task ${exitstedTask.name} already existed`));
                 const id = (0, generateID_1.default)('task');
@@ -50,10 +50,11 @@ class TaskService {
         this.UpdateBase = (updatefield) => {
             return (req, res, next) => __awaiter(this, void 0, void 0, function* () {
                 try {
-                    const data = yield this._repository.findById(req.body.id);
+                    const id = req.body.id;
+                    const data = yield this._repository.findOne({ id });
                     if (!data)
                         return res.status(500).json(BaseErrorDto_1.NOT_EXIST_TASK);
-                    const result = yield this._repository.update(req.body.id, updatefield ? updatefield : req.body);
+                    yield this._repository.update(id, updatefield ? updatefield : req.body);
                     return res.status(200).json(Object.assign({}, BaseResDto_1.BaseResDto));
                 }
                 catch (error) {
@@ -66,11 +67,10 @@ class TaskService {
         this.archive = (req, res, next) => __awaiter(this, void 0, void 0, function* () {
             const id = parseInt(req.query.Id);
             try {
-                const data = yield this._repository.findById(id);
+                const data = yield this._repository.findOne({ id });
                 if (!data)
                     return res.status(500).json(BaseErrorDto_1.NOT_EXIST_TASK);
-                console.log(data);
-                const result = yield this._repository.update(id, { isDeleted: true });
+                yield this._repository.update(id, { isDeleted: true });
                 return res.status(200).json(Object.assign({}, BaseResDto_1.BaseResDto));
             }
             catch (error) {
@@ -81,10 +81,10 @@ class TaskService {
         this.delete = (req, res, next) => __awaiter(this, void 0, void 0, function* () {
             const id = parseInt(req.query.Id);
             try {
-                const data = yield this._repository.findById(id);
+                const data = yield this._repository.findOne({ id });
                 if (!data)
                     return res.status(500).json(BaseErrorDto_1.NOT_EXIST_TASK);
-                yield this._repository.deleteById(id);
+                yield this._repository.delete(id);
                 return res.status(200).json(Object.assign({}, BaseResDto_1.BaseResDto));
             }
             catch (error) {

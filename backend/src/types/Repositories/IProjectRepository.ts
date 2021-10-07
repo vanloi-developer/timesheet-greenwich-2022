@@ -3,6 +3,7 @@ import { IProjectReqDto } from '../../dto/reqDto/IProjectReqDto';
 import { IProjectModel } from '../Models/IProjectModel';
 export interface IProjectRepository extends IBaseRepository<IProjectModel> {
    findProjectsIncludingTasks(projectIds: number[], userId: number);
+   findById(id: number);
    createOrUpdate(ProjectInput: IProjectReqDto);
    filterAll(status: number | null, search: string);
    updateWithUserAndTask(ProjectInput: IProjectReqDto);

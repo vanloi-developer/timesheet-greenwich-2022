@@ -9,38 +9,22 @@ class TasksInProjectRepository extends BaseRepository<ITasks_in_projectModel> {
    }
 
    async createMany(tasksInput: ITasks_in_projectModel[]): Promise<ITasks_in_projectModel[]> {
-      try {
-         return await this._db.insertMany(tasksInput);
-      } catch (error) {
-         logger.error('create TasksInProjectRepository error: ', error.message);
-      }
+      return await this._db.insertMany(tasksInput);
    }
 
    async findTasksInProject(projectId: number) {
-      try {
-         return await this._db.find({ projectId }).select('-_id');
-      } catch (err) {
-         logger.error('findTaskInProject TasksInProjectRepository error: ', err.message);
-      }
+      return await this._db.find({ projectId }).select('-_id');
    }
 
    async deleteMany(projectId: number) {
-      try {
-         return await this._db.deleteMany({ projectId });
-      } catch (err) {
-         logger.error('findTaskInProject TasksInProjectRepository error: ', err.message);
-      }
+      return await this._db.deleteMany({ projectId });
    }
 
    async updateMany(tasksInput, projectId) {
-      try {
-         return await this._db.updateMany({ projectId }, tasksInput, {
-            upsert: true,
-            setDefaultsOnInsert: true,
-         });
-      } catch (error) {
-         logger.error('create TasksInProjectRepository error: ', error.message);
-      }
+      return await this._db.updateMany({ projectId }, tasksInput, {
+         upsert: true,
+         setDefaultsOnInsert: true,
+      });
    }
 }
 

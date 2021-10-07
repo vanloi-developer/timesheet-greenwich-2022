@@ -16,6 +16,7 @@ class IndexRouter extends BaseRouter {
       this.router.use(cors());
       this.router.use(express.json());
       this.router.use(express.urlencoded({ extended: true }));
+      this.router.use(express.static(path.resolve('../frontend')));
       this.router.use(express.static(path.resolve('src/public')));
    }
 

@@ -24,7 +24,7 @@ class ProjectService {
         this.getById = (req, res, next) => __awaiter(this, void 0, void 0, function* () {
             const id = Number(req.query.input);
             try {
-                const result = yield this._repository.findById(id);
+                const result = yield this._repository.findOne({ id });
                 if (!result)
                     return res.status(500).json(Object.assign({}, BaseErrorDto_1.NOT_EXIST_PROJECT));
                 return res.status(200).json(Object.assign(Object.assign({}, BaseResDto_1.BaseResDto), { result: result[0] }));
@@ -70,6 +70,10 @@ class ProjectService {
                     let result = yield this._repository.updateWithUserAndTask(projectInput);
                     return res.status(200).json(Object.assign(Object.assign({}, BaseResDto_1.BaseResDto), { result }));
                 }
+                const name = projectInput.name;
+                const exitedName = yield this._repository.findOne({ name });
+                if (exitedName)
+                    return res.status(200).json(BaseErrorDto_1.EXISTED_PROJECT);
                 //Auto generate id
                 const id = (0, generateID_1.default)('project');
                 projectInput.id = id;
@@ -84,11 +88,12 @@ class ProjectService {
         this.UpdateBase = (updatefield) => {
             return (req, res, next) => __awaiter(this, void 0, void 0, function* () {
                 try {
-                    const data = yield this._repository.findById(req.body.id);
+                    const id = req.body.id;
+                    const data = yield this._repository.findOne({ id });
                     if (!data)
                         return res.status(500).json(BaseErrorDto_1.NOT_EXIST_PROJECT);
-                    const result = yield this._repository.update(req.body.id, updatefield ? updatefield : req.body);
-                    return res.status(200).json(Object.assign({}, BaseResDto_1.BaseResDto));
+                    yield this._repository.update(req.body.id, updatefield ? updatefield : req.body);
+                    return res.status(200).json(BaseResDto_1.BaseResDto);
                 }
                 catch (error) {
                     logger_1.default.error('createUser UserService error: ', error.message);
@@ -101,10 +106,10 @@ class ProjectService {
         this.deleteById = (req, res, next) => __awaiter(this, void 0, void 0, function* () {
             const id = parseInt(req.query.Id);
             try {
-                const data = yield this._repository.findById(id);
+                const data = yield this._repository.findOne({ id });
                 if (!data)
                     return res.status(500).json(BaseErrorDto_1.NOT_EXIST_PROJECT);
-                yield this._repository.deleteById(id);
+                yield this._repository.delete(id);
                 return res.status(200).json(Object.assign({}, BaseResDto_1.BaseResDto));
             }
             catch (error) {

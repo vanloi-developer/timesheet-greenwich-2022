@@ -20,7 +20,7 @@ class UsersInProjectRepository {
     findByName(name) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                return yield yield this._db.findOne({ name }).select('-_id');
+                return yield this._db.findOne({ name }).select('-_id');
             }
             catch (err) {
                 logger_1.default.error('findByName UsersInProjectRepository error: ', err.message);

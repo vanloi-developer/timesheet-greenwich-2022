@@ -8,7 +8,7 @@ class UsersInProjectRepository implements IUsersInProjectRepository {
 
    async findByName(name: string) {
       try {
-         return await await this._db.findOne({ name }).select('-_id');
+         return await this._db.findOne({ name }).select('-_id');
       } catch (err) {
          logger.error('findByName UsersInProjectRepository error: ', err.message);
       }

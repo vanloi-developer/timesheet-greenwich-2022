@@ -55,12 +55,15 @@ class MyTimesheetsService {
       const endDate: string = String(req.body.endDate);
 
       try {
-         const numberOfSubmit =
-            (await this._repository.updateStatusByUserId(userId, startDate, endDate)) || 0;
+         const numberOfSubmit = await this._repository.updateStatusByUserId(
+            userId,
+            startDate,
+            endDate,
+         );
 
          return res.status(200).json({
             ...BaseResDto,
-            result: `Submit success ${numberOfSubmit} timesheets`,
+            result: `Submit success ${numberOfSubmit.length ? numberOfSubmit : 0} timesheets`,
          });
       } catch (error) {
          logger.error('submit MyTimesheetsService error: ', error.message);

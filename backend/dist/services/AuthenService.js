@@ -22,7 +22,7 @@ class AuthenService {
         this.authen = (req, res, next) => __awaiter(this, void 0, void 0, function* () {
             const { userNameOrEmailAddress, password } = req.body;
             try {
-                const exitstedUser = yield this._repository.findByUserName(userNameOrEmailAddress);
+                const exitstedUser = yield this._repository.findOne({ userName: userNameOrEmailAddress });
                 if (!exitstedUser)
                     return res.status(500).json(BaseErrorDto_1.LOGIN_FAILED);
                 const checkPass = yield this._repository.comparePassword(userNameOrEmailAddress, password);

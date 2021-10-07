@@ -15,132 +15,39 @@ const index_1 = require("./../constants/index");
 const index_2 = require("./../utils/index");
 const generateID_1 = __importDefault(require("../utils/generateID"));
 const models_1 = __importDefault(require("../models"));
-const logger_1 = __importDefault(require("../config/logger"));
 const UsersInProjectRepository_1 = __importDefault(require("./UsersInProjectRepository"));
 const TasksInProjectRepository_1 = __importDefault(require("./TasksInProjectRepository"));
-class ProjectRepository {
+const BaseRepository_1 = require("./base/BaseRepository");
+class ProjectRepository extends BaseRepository_1.BaseRepository {
     constructor() {
-        this._db = models_1.default.Project;
-    }
-    findById(id) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                return yield this._db.aggregate([
-                    { $match: { id } },
-                    {
-                        $lookup: {
-                            from: 'tasks_in_projects',
-                            let: { id: '$id' },
-                            as: 'tasks',
-                            pipeline: [
-                                {
-                                    $match: {
-                                        $expr: {
-                                            $eq: ['$projectId', '$$id'],
-                                        },
-                                    },
-                                },
-                                {
-                                    $project: {
-                                        _id: 0,
-                                        taskId: '$taskId',
-                                        billable: '$billable',
-                                        id: '$id',
-                                    },
-                                },
-                            ],
-                        },
-                    },
-                    {
-                        $lookup: {
-                            from: 'users_in_projects',
-                            let: { id: '$id' },
-                            as: 'users',
-                            pipeline: [
-                                {
-                                    $match: {
-                                        $expr: {
-                                            $eq: ['$projectId', '$$id'],
-                                        },
-                                    },
-                                },
-                                {
-                                    $project: {
-                                        _id: 0,
-                                        userId: '$userId',
-                                        type: '$type',
-                                        id: '$id',
-                                    },
-                                },
-                            ],
-                        },
-                    },
-                    {
-                        $project: {
-                            _id: 0,
-                            name: '$name',
-                            code: '$code',
-                            status: '$status',
-                            timeStart: '$timeStart',
-                            timeEnd: '$timeEnd',
-                            note: '$note',
-                            projectType: '$projectType',
-                            customerId: '$customerId',
-                            tasks: '$tasks',
-                            users: '$users',
-                            projectTargetUsers: '$projectTargetUsers',
-                            isAllUserBelongTo: '$isAllUserBelongTo',
-                            id: '$id',
-                        },
-                    },
-                ]);
-            }
-            catch (err) {
-                logger_1.default.error('findByName ProjectRepository error: ', err.message);
-            }
-        });
-    }
-    findByName(name) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                return yield yield this._db.findOne({ name }).select('-_id');
-            }
-            catch (err) {
-                logger_1.default.error('findByName ProjectRepository error: ', err.message);
-            }
-        });
+        super(models_1.default.Project, 'ProjectRepository');
     }
     createOrUpdate(projectInput) {
         return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const { tasks, users } = projectInput;
-                tasks.forEach((item) => {
-                    if (item.id === undefined)
-                        item.id = (0, generateID_1.default)('tasks_in_project');
-                    if (item.projectId === undefined)
-                        item.projectId = projectInput.id;
-                });
-                users.forEach((item) => {
-                    if (item.id === undefined)
-                        item.id = (0, generateID_1.default)('tasks_in_project');
-                    if (item.projectId === undefined)
-                        item.projectId = projectInput.id;
-                });
-                delete projectInput['tasks'];
-                delete projectInput['users'];
-                const project = yield this._db.findOneAndUpdate({ id: projectInput.id }, projectInput, {
-                    upsert: true,
-                    new: true,
-                    setDefaultsOnInsert: true,
-                });
-                const createdTasks = yield TasksInProjectRepository_1.default.createMany(tasks);
-                const createdUsers = yield UsersInProjectRepository_1.default.createMany(users);
-                let result = Object.assign(Object.assign({}, project), { tasks: createdTasks, users: createdUsers });
-                return result;
-            }
-            catch (error) {
-                logger_1.default.error('create ProjectRepository error: ', error.message);
-            }
+            const { tasks, users } = projectInput;
+            tasks.forEach((item) => {
+                if (item.id === undefined)
+                    item.id = (0, generateID_1.default)('tasks_in_project');
+                if (item.projectId === undefined)
+                    item.projectId = projectInput.id;
+            });
+            users.forEach((item) => {
+                if (item.id === undefined)
+                    item.id = (0, generateID_1.default)('tasks_in_project');
+                if (item.projectId === undefined)
+                    item.projectId = projectInput.id;
+            });
+            delete projectInput['tasks'];
+            delete projectInput['users'];
+            const project = yield this._db.findOneAndUpdate({ id: projectInput.id }, projectInput, {
+                upsert: true,
+                new: true,
+                setDefaultsOnInsert: true,
+            });
+            const createdTasks = yield TasksInProjectRepository_1.default.createMany(tasks);
+            const createdUsers = yield UsersInProjectRepository_1.default.createMany(users);
+            let result = Object.assign(Object.assign({}, project), { tasks: createdTasks, users: createdUsers });
+            return result;
         });
     }
     filterAll(status, search) {
@@ -246,177 +153,140 @@ class ProjectRepository {
                 ...formatReturnFields,
                 ...searchFilter,
             ];
-            try {
-                return yield this._db.aggregate(filterOpt);
-            }
-            catch (error) {
-                logger_1.default.error('findUserPagging UserRepository error: ', error.message);
-            }
+            return yield this._db.aggregate(filterOpt);
         });
     }
     findProjectsIncludingTasks(projectIds, userId) {
         return __awaiter(this, void 0, void 0, function* () {
-            try {
-                return yield this._db.aggregate([
-                    { $match: { id: { $in: projectIds } } },
-                    {
-                        $lookup: {
-                            from: 'tasks_in_projects',
-                            let: { id: '$id' },
-                            as: 'tasks',
-                            pipeline: [
-                                {
-                                    $match: {
-                                        $expr: {
-                                            $eq: ['$projectId', '$$id'],
-                                        },
+            return yield this._db.aggregate([
+                { $match: { id: { $in: projectIds } } },
+                {
+                    $lookup: {
+                        from: 'tasks_in_projects',
+                        let: { id: '$id' },
+                        as: 'tasks',
+                        pipeline: [
+                            {
+                                $match: {
+                                    $expr: {
+                                        $eq: ['$projectId', '$$id'],
                                     },
                                 },
-                                {
-                                    $lookup: {
-                                        from: 'tasks',
-                                        localField: 'taskId',
-                                        foreignField: 'id',
-                                        as: 'taskName',
-                                    },
+                            },
+                            {
+                                $lookup: {
+                                    from: 'tasks',
+                                    localField: 'taskId',
+                                    foreignField: 'id',
+                                    as: 'taskName',
                                 },
-                                { $unwind: '$taskName' },
-                                {
-                                    $project: {
-                                        _id: 0,
-                                        projectTaskId: '$id',
-                                        taskName: '$taskName.name',
-                                        billable: '$billable',
-                                    },
+                            },
+                            { $unwind: '$taskName' },
+                            {
+                                $project: {
+                                    _id: 0,
+                                    projectTaskId: '$id',
+                                    taskName: '$taskName.name',
+                                    billable: '$billable',
                                 },
-                            ],
-                        },
+                            },
+                        ],
                     },
-                    {
-                        $lookup: {
-                            from: 'users_in_projects',
-                            let: { id: '$id' },
-                            as: 'projectUserType',
-                            pipeline: [
-                                {
-                                    $match: {
-                                        $expr: {
-                                            $and: [{ $eq: ['$projectId', '$$id'] }, { $eq: ['$userId', userId] }],
-                                        },
+                },
+                {
+                    $lookup: {
+                        from: 'users_in_projects',
+                        let: { id: '$id' },
+                        as: 'projectUserType',
+                        pipeline: [
+                            {
+                                $match: {
+                                    $expr: {
+                                        $and: [{ $eq: ['$projectId', '$$id'] }, { $eq: ['$userId', userId] }],
                                     },
                                 },
-                                {
-                                    $project: {
-                                        _id: 0,
-                                        userId: '$userId',
-                                        type: '$type',
-                                        id: '$id',
-                                    },
+                            },
+                            {
+                                $project: {
+                                    _id: 0,
+                                    userId: '$userId',
+                                    type: '$type',
+                                    id: '$id',
                                 },
-                            ],
-                        },
+                            },
+                        ],
                     },
-                    {
-                        $lookup: {
-                            from: 'users_in_projects',
-                            let: { id: '$id' },
-                            as: 'listPM',
-                            pipeline: [
-                                {
-                                    $match: {
-                                        $expr: {
-                                            $and: [{ $eq: ['$projectId', '$$id'] }, { $ne: ['$type', 3] }],
-                                        },
+                },
+                {
+                    $lookup: {
+                        from: 'users_in_projects',
+                        let: { id: '$id' },
+                        as: 'listPM',
+                        pipeline: [
+                            {
+                                $match: {
+                                    $expr: {
+                                        $and: [{ $eq: ['$projectId', '$$id'] }, { $ne: ['$type', 3] }],
                                     },
                                 },
-                                {
-                                    $lookup: {
-                                        from: 'users',
-                                        let: { userId: '$userId', type: '$type' },
-                                        as: 'name',
-                                        pipeline: [
-                                            {
-                                                $match: {
-                                                    $expr: {
-                                                        $and: [{ $eq: ['$id', '$$userId'] }, { $eq: ['$$type', 1] }],
-                                                    },
+                            },
+                            {
+                                $lookup: {
+                                    from: 'users',
+                                    let: { userId: '$userId', type: '$type' },
+                                    as: 'name',
+                                    pipeline: [
+                                        {
+                                            $match: {
+                                                $expr: {
+                                                    $and: [{ $eq: ['$id', '$$userId'] }, { $eq: ['$$type', 1] }],
                                                 },
                                             },
-                                            {
-                                                $project: {
-                                                    name: { $concat: ['$name', ' ', '$surname'] },
-                                                },
+                                        },
+                                        {
+                                            $project: {
+                                                name: { $concat: ['$name', ' ', '$surname'] },
                                             },
-                                        ],
-                                    },
+                                        },
+                                    ],
                                 },
-                                { $unwind: '$name' },
-                            ],
-                        },
+                            },
+                            { $unwind: '$name' },
+                        ],
                     },
-                    {
-                        $lookup: {
-                            from: 'customers',
-                            localField: 'customerId',
-                            foreignField: 'id',
-                            as: 'customerName',
-                        },
+                },
+                {
+                    $lookup: {
+                        from: 'customers',
+                        localField: 'customerId',
+                        foreignField: 'id',
+                        as: 'customerName',
                     },
-                    { $unwind: '$customerName' },
-                    { $unwind: '$projectUserType' },
-                    {
-                        $project: {
-                            _id: 0,
-                            projectName: '$name',
-                            customerName: '$customerName.name',
-                            projectCode: '$code',
-                            projectUserType: '$projectUserType.type',
-                            listPM: '$listPM.name.name',
-                            tasks: '$tasks',
-                            targetUsers: '$projectTargetUsers',
-                            id: '$id',
-                        },
+                },
+                { $unwind: '$customerName' },
+                { $unwind: '$projectUserType' },
+                {
+                    $project: {
+                        _id: 0,
+                        projectName: '$name',
+                        customerName: '$customerName.name',
+                        projectCode: '$code',
+                        projectUserType: '$projectUserType.type',
+                        listPM: '$listPM.name.name',
+                        tasks: '$tasks',
+                        targetUsers: '$projectTargetUsers',
+                        id: '$id',
                     },
-                ]);
-            }
-            catch (err) {
-                logger_1.default.error('findByName ProjectRepository error: ', err.message);
-            }
-        });
-    }
-    update(id, updateFeild) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                yield this._db.findOneAndUpdate({ id }, updateFeild);
-            }
-            catch (error) {
-                logger_1.default.error('update UserRepository error: ', error.message);
-            }
+                },
+            ]);
         });
     }
     updateWithUserAndTask(projectInput) {
         return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const projectId = projectInput.id;
-                yield UsersInProjectRepository_1.default.deleteMany(projectId);
-                yield TasksInProjectRepository_1.default.deleteMany(projectId);
-                return yield this.createOrUpdate(projectInput);
-            }
-            catch (error) {
-                logger_1.default.error('create ProjectRepository error: ', error.message);
-            }
-        });
-    }
-    deleteById(id) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                yield UsersInProjectRepository_1.default.deleteMany(id);
-                yield TasksInProjectRepository_1.default.deleteMany(id);
-                yield this._db.deleteOne({ id });
-            }
-            catch (error) {
-                logger_1.default.error('DeleteUserById UserRepository error: ', error.message);
-            }
+            const projectId = projectInput.id;
+            yield UsersInProjectRepository_1.default.deleteMany(projectId);
+            yield TasksInProjectRepository_1.default.deleteMany(projectId);
+            return yield this.createOrUpdate(projectInput);
         });
     }
 }

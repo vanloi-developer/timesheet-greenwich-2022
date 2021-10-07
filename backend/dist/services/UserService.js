@@ -29,9 +29,10 @@ class UserService {
         this._repository = UserRepository_1.default;
         this.create = (req, res, next) => __awaiter(this, void 0, void 0, function* () {
             const userInput = Object.assign({}, req.body);
+            const { userName, emailAddress } = userInput;
             try {
                 //Check if userName or email existed
-                const exitstedUser = yield this._repository.findByUserNameEmail(userInput.userName, userInput.emailAddress);
+                const exitstedUser = yield this._repository.findByUserNameEmail(userName, emailAddress);
                 if (exitstedUser) {
                     let message = 'is already taken.';
                     const ERR_RES = (0, BaseErrorDto_1.baseError)();
@@ -62,9 +63,10 @@ class UserService {
         this.findById = (req, res, next) => __awaiter(this, void 0, void 0, function* () {
             const id = parseInt(req.query.Id);
             try {
-                const result = yield this._repository.findById(id);
+                const result = yield this._repository.findOne({ id });
                 if (!result)
                     return res.status(400).json(BaseErrorDto_1.NOT_EXIST_USER);
+                delete result['password'];
                 return res.status(200).json(Object.assign(Object.assign({}, UserResDto_1.UserResDTO), { result }));
             }
             catch (error) {
@@ -78,9 +80,10 @@ class UserService {
             const token = req.headers['authorization'].split(' ')[1];
             try {
                 const { id } = yield jsonwebtoken_1.default.verify(token, JWT_KEY);
-                const user = yield this._repository.findById(id);
+                const user = yield this._repository.findOne({ id });
                 if (!user)
                     return res.status(400).json(BaseErrorDto_1.INVALID_TOKEN);
+                delete user['password'];
                 return res.status(200).json(Object.assign(Object.assign({}, UserResDto_1.UserResDTO), { result: Object.assign(Object.assign({}, UserResDto_1.UserResDTO.result), { user }) }));
             }
             catch (error) {
@@ -122,10 +125,10 @@ class UserService {
         this.delete = (req, res, next) => __awaiter(this, void 0, void 0, function* () {
             const id = parseInt(req.query.Id);
             try {
-                const data = yield this._repository.findById(id);
+                const data = yield this._repository.findOne({ id });
                 if (!data)
                     return res.status(500).json(BaseErrorDto_1.NOT_EXIST_USER);
-                yield this._repository.deleteUserById(id);
+                yield this._repository.delete(id);
                 return res.status(200).json(Object.assign(Object.assign({}, UserResDto_1.UserResDTO), { result: { message: 'Delete user successfully!' } }));
             }
             catch (error) {
@@ -136,7 +139,8 @@ class UserService {
         this.updateBase = (updatefield) => {
             return (req, res, next) => __awaiter(this, void 0, void 0, function* () {
                 try {
-                    const data = yield this._repository.findById(req.body.id);
+                    const id = req.body.id;
+                    const data = yield this._repository.findOne({ id });
                     if (!data)
                         return res.status(500).json(BaseErrorDto_1.NOT_EXIST_USER);
                     const result = yield this._repository.update(req.body.id, updatefield ? updatefield : req.body);
@@ -159,7 +163,7 @@ class UserService {
             }
             try {
                 const avatarPath = '/avartar/' + req.files[0].filename;
-                const data = yield this._repository.findById(userId);
+                const data = yield this._repository.findOne({ id: userId });
                 if (!data)
                     return res.status(500).json(BaseErrorDto_1.NOT_EXIST_USER);
                 yield this._repository.update(userId, { avatarPath });
@@ -177,7 +181,7 @@ class UserService {
             try {
                 if (adminPassword !== index_1.ADMIN_PASSWORD)
                     return res.status(400).json(BaseErrorDto_1.WRONG_ADMIN_PASS);
-                const user = yield this._repository.findById(userId);
+                const user = yield this._repository.findOne({ id: userId });
                 if (!user)
                     return res.status(500).json(BaseErrorDto_1.NOT_EXIST_USER);
                 const hashedPass = yield bcrypt_1.default.hashSync(newPassword, saltRounds);

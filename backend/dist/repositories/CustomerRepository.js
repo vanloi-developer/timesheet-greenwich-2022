@@ -14,50 +14,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 const index_1 = require("./../utils/index");
 const index_2 = require("./../constants/index");
 const models_1 = __importDefault(require("../models"));
-const logger_1 = __importDefault(require("../config/logger"));
-class CustomerRepository {
+const BaseRepository_1 = require("./base/BaseRepository");
+class CustomerRepository extends BaseRepository_1.BaseRepository {
     constructor() {
-        this._db = models_1.default.Customer;
-    }
-    findAll() {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                return yield this._db.find({}).select('-_id');
-            }
-            catch (error) {
-                logger_1.default.error('findAll CustomerRepository error: ', error.message);
-            }
-        });
-    }
-    findByName(name) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                return yield this._db.findOne({ name }).select('-_id');
-            }
-            catch (error) {
-                logger_1.default.error('findByName CustomerRepository error: ', error.message);
-            }
-        });
-    }
-    findById(id) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                return yield this._db.findOne({ id }).select('-_id');
-            }
-            catch (error) {
-                logger_1.default.error('findByName CustomerRepository error: ', error.message);
-            }
-        });
-    }
-    create(customer) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                return yield this._db.create(customer);
-            }
-            catch (error) {
-                logger_1.default.error('create CustomerRepository error: ', error.message);
-            }
-        });
+        super(models_1.default.Customer, 'CustomerRepository');
     }
     filterUserPagging(filterItems, maxResultCount, skipCount, searchText) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -73,37 +33,12 @@ class CustomerRepository {
                 if (orOpt.length)
                     filterOpt.push({ $or: orOpt });
             }
-            try {
-                const findOpt = filterOpt.length ? { $and: filterOpt } : {};
-                const items = yield this._db.find(findOpt).skip(skipCount).limit(maxResultCount);
-                return {
-                    totalCount: items.length,
-                    items,
-                };
-            }
-            catch (error) {
-                logger_1.default.error('findUserPagging CutomerRepository error: ', error.message);
-            }
-        });
-    }
-    update(id, updateFeild) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                yield this._db.findOneAndUpdate({ id }, updateFeild);
-            }
-            catch (error) {
-                logger_1.default.error('update UserRepository error: ', error.message);
-            }
-        });
-    }
-    deleteById(id) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                yield this._db.deleteOne({ id });
-            }
-            catch (error) {
-                logger_1.default.error('DeleteUserById UserRepository error: ', error.message);
-            }
+            const findOpt = filterOpt.length ? { $and: filterOpt } : {};
+            const items = yield this._db.find(findOpt).skip(skipCount).limit(maxResultCount);
+            return {
+                totalCount: items.length,
+                items,
+            };
         });
     }
 }

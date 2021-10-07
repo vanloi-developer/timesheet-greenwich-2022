@@ -29,17 +29,14 @@ class CustomerRepository extends BaseRepository<ICustomerModel> {
          let orOpt = searchTextFieldOpt(searchText, REQUIRED_FIELD_SAVE_CUSTOMER);
          if (orOpt.length) filterOpt.push({ $or: orOpt });
       }
-      try {
-         const findOpt = filterOpt.length ? { $and: filterOpt } : {};
 
-         const items: any = await this._db.find(findOpt).skip(skipCount).limit(maxResultCount);
-         return {
-            totalCount: items.length,
-            items,
-         };
-      } catch (error) {
-         logger.error(`findUserPagging ${this._repoName} error: `, error.message);
-      }
+      const findOpt = filterOpt.length ? { $and: filterOpt } : {};
+
+      const items: any = await this._db.find(findOpt).skip(skipCount).limit(maxResultCount);
+      return {
+         totalCount: items.length,
+         items,
+      };
    }
 }
 

@@ -16,45 +16,113 @@ class ProjectRepository extends BaseRepository<IProjectModel> {
    }
 
    async createOrUpdate(projectInput: IProjectReqDto) {
-      try {
-         const { tasks, users } = projectInput;
-         tasks.forEach((item) => {
-            if (item.id === undefined) item.id = generateID('tasks_in_project');
-            if (item.projectId === undefined) item.projectId = projectInput.id;
-         });
+      const { tasks, users } = projectInput;
+      tasks.forEach((item) => {
+         if (item.id === undefined) item.id = generateID('tasks_in_project');
+         if (item.projectId === undefined) item.projectId = projectInput.id;
+      });
 
-         users.forEach((item) => {
-            if (item.id === undefined) item.id = generateID('tasks_in_project');
-            if (item.projectId === undefined) item.projectId = projectInput.id;
-         });
+      users.forEach((item) => {
+         if (item.id === undefined) item.id = generateID('tasks_in_project');
+         if (item.projectId === undefined) item.projectId = projectInput.id;
+      });
 
-         delete projectInput['tasks'];
-         delete projectInput['users'];
+      delete projectInput['tasks'];
+      delete projectInput['users'];
 
-         const project = await this._db.findOneAndUpdate({ id: projectInput.id }, projectInput, {
-            upsert: true,
-            new: true,
-            setDefaultsOnInsert: true,
-         });
+      const project = await this._db.findOneAndUpdate({ id: projectInput.id }, projectInput, {
+         upsert: true,
+         new: true,
+         setDefaultsOnInsert: true,
+      });
 
-         const createdTasks: ITasks_in_projectModel[] = await TasksInProjectRepository.createMany(
-            tasks,
-         );
+      const createdTasks: ITasks_in_projectModel[] = await TasksInProjectRepository.createMany(
+         tasks,
+      );
 
-         const createdUsers: IUsers_in_projectModel[] = await UsersInProjectRepository.createMany(
-            users,
-         );
+      const createdUsers: IUsers_in_projectModel[] = await UsersInProjectRepository.createMany(
+         users,
+      );
 
-         let result = {
-            ...project,
-            tasks: createdTasks,
-            users: createdUsers,
-         };
+      let result = {
+         ...project,
+         tasks: createdTasks,
+         users: createdUsers,
+      };
 
-         return result;
-      } catch (error) {
-         logger.error('create ProjectRepository error: ', error.message);
-      }
+      return result;
+   }
+
+   async findById(id: number) {
+      return await this._db.aggregate([
+         { $match: { id } },
+         {
+            $lookup: {
+               from: 'tasks_in_projects',
+               let: { id: '$id' },
+               as: 'tasks',
+               pipeline: [
+                  {
+                     $match: {
+                        $expr: {
+                           $eq: ['$projectId', '$$id'],
+                        },
+                     },
+                  },
+                  {
+                     $project: {
+                        _id: 0,
+                        taskId: '$taskId',
+                        billable: '$billable',
+                        id: '$id',
+                     },
+                  },
+               ],
+            },
+         },
+         {
+            $lookup: {
+               from: 'users_in_projects',
+               let: { id: '$id' },
+               as: 'users',
+               pipeline: [
+                  {
+                     $match: {
+                        $expr: {
+                           $eq: ['$projectId', '$$id'],
+                        },
+                     },
+                  },
+                  {
+                     $project: {
+                        _id: 0,
+                        userId: '$userId',
+                        type: '$type',
+                        id: '$id',
+                     },
+                  },
+               ],
+            },
+         },
+         {
+            $project: {
+               _id: 0,
+               name: '$name',
+               code: '$code',
+               status: '$status',
+               timeStart: '$timeStart',
+               timeEnd: '$timeEnd',
+               note: '$note',
+               projectType: '$projectType',
+               customerId: '$customerId',
+               tasks: '$tasks',
+               users: '$users',
+               projectTargetUsers: '$projectTargetUsers',
+               isAllUserBelongTo: '$isAllUserBelongTo',
+               id: '$id',
+            },
+         },
+      ]);
    }
 
    async filterAll(status: number | null, search: string) {
@@ -162,152 +230,141 @@ class ProjectRepository extends BaseRepository<IProjectModel> {
          ...formatReturnFields,
          ...searchFilter,
       ];
-      try {
-         return await this._db.aggregate(filterOpt);
-      } catch (error) {
-         logger.error('findUserPagging UserRepository error: ', error.message);
-      }
+
+      return await this._db.aggregate(filterOpt);
    }
 
    async findProjectsIncludingTasks(projectIds: number[], userId: number) {
-      try {
-         return await this._db.aggregate([
-            { $match: { id: { $in: projectIds } } },
-            {
-               $lookup: {
-                  from: 'tasks_in_projects',
-                  let: { id: '$id' },
-                  as: 'tasks',
-                  pipeline: [
-                     {
-                        $match: {
-                           $expr: {
-                              $eq: ['$projectId', '$$id'],
-                           },
+      return await this._db.aggregate([
+         { $match: { id: { $in: projectIds } } },
+         {
+            $lookup: {
+               from: 'tasks_in_projects',
+               let: { id: '$id' },
+               as: 'tasks',
+               pipeline: [
+                  {
+                     $match: {
+                        $expr: {
+                           $eq: ['$projectId', '$$id'],
                         },
                      },
-                     {
-                        $lookup: {
-                           from: 'tasks',
-                           localField: 'taskId',
-                           foreignField: 'id',
-                           as: 'taskName',
-                        },
+                  },
+                  {
+                     $lookup: {
+                        from: 'tasks',
+                        localField: 'taskId',
+                        foreignField: 'id',
+                        as: 'taskName',
                      },
-                     { $unwind: '$taskName' },
-                     {
-                        $project: {
-                           _id: 0,
-                           projectTaskId: '$id',
-                           taskName: '$taskName.name',
-                           billable: '$billable',
-                        },
+                  },
+                  { $unwind: '$taskName' },
+                  {
+                     $project: {
+                        _id: 0,
+                        projectTaskId: '$id',
+                        taskName: '$taskName.name',
+                        billable: '$billable',
                      },
-                  ],
-               },
+                  },
+               ],
             },
-            {
-               $lookup: {
-                  from: 'users_in_projects',
-                  let: { id: '$id' },
-                  as: 'projectUserType',
-                  pipeline: [
-                     {
-                        $match: {
-                           $expr: {
-                              $and: [{ $eq: ['$projectId', '$$id'] }, { $eq: ['$userId', userId] }],
-                           },
+         },
+         {
+            $lookup: {
+               from: 'users_in_projects',
+               let: { id: '$id' },
+               as: 'projectUserType',
+               pipeline: [
+                  {
+                     $match: {
+                        $expr: {
+                           $and: [{ $eq: ['$projectId', '$$id'] }, { $eq: ['$userId', userId] }],
                         },
                      },
-                     {
-                        $project: {
-                           _id: 0,
-                           userId: '$userId',
-                           type: '$type',
-                           id: '$id',
-                        },
+                  },
+                  {
+                     $project: {
+                        _id: 0,
+                        userId: '$userId',
+                        type: '$type',
+                        id: '$id',
                      },
-                  ],
-               },
+                  },
+               ],
             },
-            {
-               $lookup: {
-                  from: 'users_in_projects',
-                  let: { id: '$id' },
-                  as: 'listPM',
-                  pipeline: [
-                     {
-                        $match: {
-                           $expr: {
-                              $and: [{ $eq: ['$projectId', '$$id'] }, { $ne: ['$type', 3] }],
-                           },
+         },
+         {
+            $lookup: {
+               from: 'users_in_projects',
+               let: { id: '$id' },
+               as: 'listPM',
+               pipeline: [
+                  {
+                     $match: {
+                        $expr: {
+                           $and: [{ $eq: ['$projectId', '$$id'] }, { $ne: ['$type', 3] }],
                         },
                      },
-                     {
-                        $lookup: {
-                           from: 'users',
-                           let: { userId: '$userId', type: '$type' },
-                           as: 'name',
-                           pipeline: [
-                              {
-                                 $match: {
-                                    $expr: {
-                                       $and: [{ $eq: ['$id', '$$userId'] }, { $eq: ['$$type', 1] }],
-                                    },
+                  },
+                  {
+                     $lookup: {
+                        from: 'users',
+                        let: { userId: '$userId', type: '$type' },
+                        as: 'name',
+                        pipeline: [
+                           {
+                              $match: {
+                                 $expr: {
+                                    $and: [{ $eq: ['$id', '$$userId'] }, { $eq: ['$$type', 1] }],
                                  },
                               },
-                              {
-                                 $project: {
-                                    name: { $concat: ['$name', ' ', '$surname'] },
-                                 },
+                           },
+                           {
+                              $project: {
+                                 name: { $concat: ['$name', ' ', '$surname'] },
                               },
-                           ],
-                        },
+                           },
+                        ],
                      },
-                     { $unwind: '$name' },
-                  ],
-               },
+                  },
+                  { $unwind: '$name' },
+               ],
             },
-            {
-               $lookup: {
-                  from: 'customers',
-                  localField: 'customerId',
-                  foreignField: 'id',
-                  as: 'customerName',
-               },
+         },
+         {
+            $lookup: {
+               from: 'customers',
+               localField: 'customerId',
+               foreignField: 'id',
+               as: 'customerName',
             },
-            { $unwind: '$customerName' },
-            { $unwind: '$projectUserType' },
-            {
-               $project: {
-                  _id: 0,
-                  projectName: '$name',
-                  customerName: '$customerName.name',
-                  projectCode: '$code',
-                  projectUserType: '$projectUserType.type',
-                  listPM: '$listPM.name.name',
-                  tasks: '$tasks',
-                  targetUsers: '$projectTargetUsers',
-                  id: '$id',
-               },
+         },
+         { $unwind: '$customerName' },
+         { $unwind: '$projectUserType' },
+         {
+            $project: {
+               _id: 0,
+               projectName: '$name',
+               customerName: '$customerName.name',
+               projectCode: '$code',
+               projectUserType: '$projectUserType.type',
+               listPM: '$listPM.name.name',
+               tasks: '$tasks',
+               targetUsers: '$projectTargetUsers',
+               id: '$id',
             },
-         ]);
-      } catch (err) {
-         logger.error('findByName ProjectRepository error: ', err.message);
-      }
+         },
+      ]);
    }
 
    async updateWithUserAndTask(projectInput: IProjectReqDto) {
-      try {
-         const projectId = projectInput.id;
+      const projectId = projectInput.id;
 
-         await UsersInProjectRepository.deleteMany(projectId);
-         await TasksInProjectRepository.deleteMany(projectId);
+      await UsersInProjectRepository.deleteMany(projectId);
+      await TasksInProjectRepository.deleteMany(projectId);
 
-         return await this.createOrUpdate(projectInput);
-      } catch (error) {
-         logger.error('create ProjectRepository error: ', error.message);
-      }
+      return await this.createOrUpdate(projectInput);
    }
 }
 

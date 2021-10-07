@@ -32,7 +32,16 @@ class TimesheetsService {
          try {
             await this._repository.updateManyStatus(myTiemsheetsIdsArr, status);
 
-            return res.status(200).json(BaseResDto);
+            return res.status(200).json({
+               ...BaseResDto,
+               result: {
+                  fail: ' - Fail 0 timesheets.',
+                  failedCount: 0,
+                  lockDate: ` - Locked date: ${new Date().toLocaleDateString()}.`,
+                  success: ` - Success ${myTiemsheetsIdsArr.length} timesheets.`,
+                  successCount: myTiemsheetsIdsArr.length,
+               },
+            });
          } catch (error) {
             logger.error('updateBase UserService error: ', error.message);
             next(error);

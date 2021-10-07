@@ -25,7 +25,9 @@ export class Application {
 
    start() {
       ((port = process.env.APP_PORT || 5000) => {
-         this.server.app.listen(port, () => logger.cyan(`> Listening on port ${port}`));
+         this.server.app.listen(port, () =>
+            logger.cyan(`> Server is running at http://localhost:${port}`),
+         );
       })();
    }
 }

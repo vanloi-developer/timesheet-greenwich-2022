@@ -20,10 +20,7 @@ class CustomerService {
     constructor() {
         this._repository = CustomerRepository_1.default;
         this.getAll = (req, res, next) => __awaiter(this, void 0, void 0, function* () {
-            const customerInfo = req.body;
-            // Customer name quang already existed
             try {
-                //Check if customer existed
                 const result = yield this._repository.findAll();
                 return res.status(200).json(Object.assign(Object.assign({}, BaseResDto_1.BaseResDto), { result }));
             }
@@ -34,11 +31,12 @@ class CustomerService {
         });
         this.create = (req, res, next) => __awaiter(this, void 0, void 0, function* () {
             const customerInfo = req.body;
-            // Customer name quang already existed
             try {
                 // If exist then update
                 if (customerInfo.id !== undefined) {
-                    const exitstedCustomer = yield this._repository.findByName(customerInfo.name);
+                    //find customer by name
+                    const name = customerInfo.name;
+                    const exitstedCustomer = yield this._repository.findOne({ name });
                     // Check if existed customer had the name
                     if (exitstedCustomer && exitstedCustomer.id !== customerInfo.id) {
                         return res
@@ -48,9 +46,11 @@ class CustomerService {
                     const result = yield this._repository.update(customerInfo.id, customerInfo);
                     return res.status(200).json(Object.assign(Object.assign({}, BaseResDto_1.BaseResDto), { result }));
                 }
-                //If exist check if duplicate customers's name
-                const exitstedCustomer = yield this._repository.findByName(customerInfo.name);
-                if (exitstedCustomer) {
+                //find customer by name
+                const name = customerInfo.name;
+                const exitstedCustomer = yield this._repository.findOne({ name });
+                // Check if existed customer had the name
+                if (exitstedCustomer && exitstedCustomer.id !== customerInfo.id) {
                     return res
                         .status(500)
                         .json((0, BaseErrorDto_1.baseError)(`Customer name ${exitstedCustomer.name} already existed`));
@@ -77,26 +77,13 @@ class CustomerService {
                 next(error);
             }
         });
-        this.Update = (req, res, next) => __awaiter(this, void 0, void 0, function* () {
-            try {
-                const user = yield this._repository.findById(req.body.id);
-                if (!user)
-                    return res.status(500);
-                const result = yield this._repository.update(req.body.id, req.body);
-                return res.status(200).json(Object.assign(Object.assign({}, BaseResDto_1.BaseResDto), { result }));
-            }
-            catch (error) {
-                logger_1.default.error('createUser UserService error: ', error.message);
-                next(error);
-            }
-        });
         this.delete = (req, res, next) => __awaiter(this, void 0, void 0, function* () {
             const id = parseInt(req.query.Id);
             try {
-                const data = yield this._repository.findById(id);
+                const data = yield this._repository.findOne({ id });
                 if (!data)
                     return res.status(500).json(BaseErrorDto_1.NOT_EXIST_CUSTOMERS);
-                yield this._repository.deleteById(id);
+                yield this._repository.delete(id);
                 return res.status(200).json(Object.assign({}, BaseResDto_1.BaseResDto));
             }
             catch (error) {
