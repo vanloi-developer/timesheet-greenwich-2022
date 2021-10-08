@@ -860,3 +860,5 @@ export const REQUIRED_FIELD_CREATE_MYTIMSHEETS = [
 export const REQUIRED_FIELD_SUBMIT_MYTIMSHEETS = ['startDate', 'endDate'];
 export const SEARCH_TEXT_FIELD_PROJECTS = ['customerName', 'name'];
 export const SEARCH_TEXT_FIELD_USER = ['userName', 'name', 'surname', 'emailAddress'];
+
+export const CREATE_USER_FAILED = 'Create user failed';

@@ -38,5 +38,17 @@ const author = (ROLE_TYPE) => {
       }
    };
 };
+export const authorPM = (req: IRequest, res: Response, next: NextFunction) => {
+   const { roleNames } = req.local;
 
+   try {
+      if (roleNames.includes('ADMIN') || roleNames.includes('ADMIN')) {
+         return next();
+      }
+      return res.status(403).json(AUTHOR_ERR);
+   } catch (ex) {
+      logger.error('Authorization middleware false: ', ex.message);
+      res.status(400).json(INVALID_TOKEN);
+   }
+};
 export const authorAdmin = author('ADMIN');

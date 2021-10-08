@@ -2,7 +2,7 @@ import { IUserModel } from './../types/Models/IUserModel';
 import { ReqUserNotPagging } from './../dto/resDto/ReqUserNotPagging';
 import { BaseResDto } from './../dto/resDto/BaseResDto';
 import { UserResDTO } from './../dto/resDto/UserResDto';
-import { ADMIN_PASSWORD } from './../constants/index';
+import { ADMIN_PASSWORD, CREATE_USER_FAILED } from './../constants/index';
 import { NextFunction, Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import { IUserRepository } from '../types/Repositories/IUserRepository';
@@ -52,7 +52,7 @@ class UserService {
          userInput.id = id;
 
          const result: IUserModel = await this._repository.create(userInput);
-         if (result) throw new Error('Create user failed');
+         if (!result) throw new Error(CREATE_USER_FAILED);
 
          delete result['password'];
          delete result['_id'];

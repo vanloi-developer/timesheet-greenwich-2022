@@ -1,4 +1,4 @@
-import { authorAdmin } from './../middlewares/auth';
+import { authorAdmin, authorPM } from './../middlewares/auth';
 import UserRouter = require('./UserRouter');
 import { BaseRouter } from './BaseRouter';
 import WorkTimeService = require('../services/WorkTimeService');
@@ -30,7 +30,7 @@ class AppRouter extends BaseRouter {
       this.router.use('/Task', authorAdmin, TaskRouter);
       this.router.use('/Project', ProjectRouter);
       this.router.use('/MyTimesheets', MyTimesheetsRouter);
-      this.router.use('/Timesheet', authorAdmin, TimesheetsRouter);
+      this.router.use('/Timesheet', authorPM, TimesheetsRouter);
 
       this.router.use('/Timekeeping', TimekeepingRouter);
    }
