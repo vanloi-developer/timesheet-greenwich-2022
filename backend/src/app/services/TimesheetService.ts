@@ -98,10 +98,6 @@ class TimesheetService extends BaseService<MyTimesheetRepository> {
       }
 
       for (let myTimesheet of myTimesheets) {
-        const user: UserDTO = await this._userRepos.findById(
-          myTimesheet.userId
-        );
-
         const projectTask: ProjectTasksDto =
           await this._projectTaskRepos.findById(myTimesheet.projectTaskId);
 
@@ -109,71 +105,76 @@ class TimesheetService extends BaseService<MyTimesheetRepository> {
           projectTask.projectId
         );
 
-        let isUserInProject: boolean = false;
+        const projectUsers: ProjectUsersDto[] =
+          await this._projectUserRepos.findByMembersByProjectId(project.id);
 
-        if (await this._projectUserRepos.findByMembersByProjectId(project.id)) {
-          isUserInProject = true;
-        }
-
-        const task: TaskDto = await this._taskRepos.findById(
-          projectTask.taskId
-        );
-
-        const customer: CustomerDto =
-          await this._customerRepos.findCustomerByCustomerId(
-            project.customerId
+        for (let projectUser of projectUsers) {
+          const user: UserDTO = await this._userRepos.findById(
+            projectUser.userId
           );
 
-        const listPM: string[] = await this._userRepos.findProjectManagers(
-          project.id
-        );
+          let isUserInProject: boolean = true;
 
-        const item: TimesheetDto = await {
-          id: myTimesheet.id,
+          const task: TaskDto = await this._taskRepos.findById(
+            projectTask.taskId
+          );
 
-          projectId: project.id,
+          const customer: CustomerDto =
+            await this._customerRepos.findCustomerByCustomerId(
+              project.customerId
+            );
 
-          userId: user.id,
+          const listPM: string[] = await this._userRepos.findProjectManagers(
+            project.id
+          );
 
-          user: user.name,
-          customerName: customer.name,
+          const item: TimesheetDto = await {
+            id: myTimesheet.id,
 
-          projectCode: project.code,
+            projectId: project.id,
 
-          projectName: project.name,
+            userId: user.id,
 
-          taskId: task.id,
+            user: user.name,
+            customerName: customer.name,
 
-          taskName: task.name,
+            projectCode: project.code,
 
-          status: myTimesheet.status,
+            projectName: project.name,
 
-          typeOfWork: myTimesheet.typeOfWork,
+            taskId: task.id,
 
-          workingTime: myTimesheet.workingTime,
+            taskName: task.name,
 
-          dateAt: myTimesheet.dateAt,
+            status: myTimesheet.status,
 
-          mytimesheetNote: myTimesheet.note,
+            typeOfWork: myTimesheet.typeOfWork,
 
-          isCharged: myTimesheet.isCharged,
+            workingTime: myTimesheet.workingTime,
 
-          isUserInProject,
+            dateAt: myTimesheet.dateAt,
 
-          branch: user.branch,
+            mytimesheetNote: myTimesheet.note,
 
-          branchName: user.branch + "",
+            isCharged: myTimesheet.isCharged,
 
-          type: user.type,
+            isUserInProject,
 
-          level: user.level,
+            branch: user.branch,
 
-          avatarPath: user.avatarPath,
+            branchName: user.branch + "",
 
-          listPM,
-        };
+            type: user.type,
 
-        result.push(item);
+            level: user.level,
+
+            avatarPath: user.avatarPath,
+
+            listPM,
+          };
+
+          result.push(item);
+        }
       }
 
       return result;

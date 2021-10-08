@@ -1,5 +1,3 @@
-import { BaseController } from "./base";
-
 import { RoleService } from "../services";
 
 import { NextFunction, Request, Response } from "express";
@@ -14,10 +12,8 @@ import { HttpStatusCode } from "../enums";
 
 import { ApiResponse } from "../core";
 
-class RoleController extends BaseController<RoleService> {
-  constructor() {
-    super(new RoleService());
-  }
+class RoleController {
+  private _business: RoleService = new RoleService();
 
   public create = async (req: Request, res: Response, next: NextFunction) => {
     try {

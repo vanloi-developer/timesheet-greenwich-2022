@@ -12,12 +12,8 @@ import { ApiResponse } from "../core/responses";
 
 import { HttpStatusCode } from "../enums";
 
-import { BaseController } from "./base";
-
-class MyTimesheetController extends BaseController<MyTimesheetService> {
-  constructor() {
-    super(new MyTimesheetService());
-  }
+class MyTimesheetController {
+  private _business: MyTimesheetService = new MyTimesheetService();
 
   public saveList = async (req: Request, res: Response, next: NextFunction) => {
     try {

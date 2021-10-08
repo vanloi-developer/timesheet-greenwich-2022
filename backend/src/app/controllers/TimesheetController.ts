@@ -2,8 +2,6 @@ import { NextFunction, Request, Response } from "express";
 
 import { ApiResponse } from "../core";
 
-import { BaseController } from "./base";
-
 import { HttpStatusCode } from "../enums";
 
 import { TimesheetService } from "../services";
@@ -12,10 +10,8 @@ import { IResponse } from "../core/responses/interfaces";
 
 import { TimesheetDto } from "../dto/responses";
 
-class TimesheetController extends BaseController<TimesheetService> {
-  constructor() {
-    super(new TimesheetService());
-  }
+class TimesheetController {
+  private _business: TimesheetService = new TimesheetService();
 
   public retrieve = async (req: Request, res: Response, next: NextFunction) => {
     try {

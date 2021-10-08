@@ -1,12 +1,8 @@
 import { BaseRepository } from "./base";
 
-import { ApiError } from "../../app/core";
-
 import { ProjectSchema } from "../schemas";
 
 import { IProject } from "../../interfaces";
-
-import { HttpStatusCode } from "../../app/enums";
 
 import { ACTIVE_PROJECT, INACTIVE_PROJECT } from "../../app/constants";
 
@@ -33,47 +29,19 @@ class ProjectRepository extends BaseRepository<IProject> {
   };
 
   public create = async (item: IProject): Promise<IProject> => {
-    try {
-      return await this.save(item);
-    } catch (error) {
-      throw new ApiError(
-        HttpStatusCode.BAD_REQUEST,
-        `Error in layer dataAccess, ${error}`
-      );
-    }
+    return await this.save(item);
   };
 
   public get = async (id: number): Promise<IProject> => {
-    try {
-      return await this._model.findOne({ id });
-    } catch (error) {
-      throw new ApiError(
-        HttpStatusCode.BAD_REQUEST,
-        `Error in layer dataAccess, ${error}`
-      );
-    }
+    return await this._model.findOne({ id });
   };
 
   public inActive = async (id: number): Promise<boolean> => {
-    try {
-      return await this._model.updateOne({ id }, { status: INACTIVE_PROJECT });
-    } catch (error) {
-      throw new ApiError(
-        HttpStatusCode.BAD_REQUEST,
-        `Error in layer dataAccess, ${error}`
-      );
-    }
+    return await this._model.updateOne({ id }, { status: INACTIVE_PROJECT });
   };
 
   public active = async (id: number): Promise<boolean> => {
-    try {
-      return await this._model.updateOne({ id }, { status: ACTIVE_PROJECT });
-    } catch (error) {
-      throw new ApiError(
-        HttpStatusCode.BAD_REQUEST,
-        `Error in layer dataAccess, ${error}`
-      );
-    }
+    return await this._model.updateOne({ id }, { status: ACTIVE_PROJECT });
   };
 
   public getProjectIncludingTasks = async () => {};

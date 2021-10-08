@@ -12,14 +12,10 @@ import { CustomerService } from "../services";
 
 import { HttpStatusCode } from "../enums";
 
-import { BaseController } from "./base";
-
 import { ApiResponse } from "../core";
 
-class CustomerController extends BaseController<CustomerService> {
-  constructor() {
-    super(new CustomerService());
-  }
+class CustomerController {
+  private _business: CustomerService = new CustomerService();
 
   public save = async (req: Request, res: Response, next: NextFunction) => {
     try {

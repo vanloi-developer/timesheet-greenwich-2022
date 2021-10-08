@@ -1,10 +1,13 @@
 import { StartEndDateDto } from "../../app/dto/common/StartEndDateDto";
-import { ApiError } from "../../app/core";
-import { HttpStatusCode } from "../../app/enums";
+
 import { IMyTimesheet } from "../../interfaces";
+
 import { MyTimesheetSchema } from "../schemas";
+
 import { BaseRepository } from "./base";
+
 import { MyTimesheetDto } from "../../app/dto/responses";
+
 import { APPROVE_TIMESHEET, REJECT_TIMESHEET } from "../../app/constants";
 
 class MyTimesheetRepository extends BaseRepository<IMyTimesheet> {
@@ -13,27 +16,13 @@ class MyTimesheetRepository extends BaseRepository<IMyTimesheet> {
   }
 
   public approveTimesheet = async (id: number) => {
-    try {
-      return await this._model
-        .updateOne({ id }, { status: APPROVE_TIMESHEET })
-        .lean(true);
-    } catch (error) {
-      throw new ApiError(
-        HttpStatusCode.BAD_REQUEST,
-        `Error in repository: ${error}`
-      );
-    }
+    return await this._model
+      .updateOne({ id }, { status: APPROVE_TIMESHEET })
+      .lean(true);
   };
 
   public rejectTimesheet = async (id: number) => {
-    try {
-      return await this._model.updateOne({ id }, { status: REJECT_TIMESHEET });
-    } catch (error) {
-      throw new ApiError(
-        HttpStatusCode.BAD_REQUEST,
-        `Error in repository: ${error}`
-      );
-    }
+    return await this._model.updateOne({ id }, { status: REJECT_TIMESHEET });
   };
 
   public getAllTimesheetOfUserByStatus = async (
@@ -42,39 +31,25 @@ class MyTimesheetRepository extends BaseRepository<IMyTimesheet> {
     endDate: Date,
     status: number
   ): Promise<MyTimesheetDto[]> => {
-    try {
-      return await this._model.find({
-        userId,
-        status,
-        $and: [{ dateAt: { $gte: startDate } }, { dateAt: { $lte: endDate } }],
-      });
-    } catch (error) {
-      throw new ApiError(
-        HttpStatusCode.BAD_REQUEST,
-        `Error in repository: ${error}`
-      );
-    }
+    return await this._model.find({
+      userId,
+      status,
+      $and: [{ dateAt: { $gte: startDate } }, { dateAt: { $lte: endDate } }],
+    });
   };
 
   public submitToPending = async (userId: number, date: StartEndDateDto) => {
-    try {
-      return await this._model.updateMany(
-        {
-          userId,
-          status: 0,
-          $and: [
-            { dateAt: { $gte: date.startDate } },
-            { dateAt: { $lte: date.endDate } },
-          ],
-        },
-        { status: 1 }
-      );
-    } catch (error) {
-      throw new ApiError(
-        HttpStatusCode.BAD_REQUEST,
-        `Error in repository: ${error}`
-      );
-    }
+    return await this._model.updateMany(
+      {
+        userId,
+        status: 0,
+        $and: [
+          { dateAt: { $gte: date.startDate } },
+          { dateAt: { $lte: date.endDate } },
+        ],
+      },
+      { status: 1 }
+    );
   };
 
   public getAllTimesheetOfUser = async (
@@ -82,17 +57,10 @@ class MyTimesheetRepository extends BaseRepository<IMyTimesheet> {
     startDate: Date,
     endDate: Date
   ) => {
-    try {
-      return await this._model.find({
-        userId,
-        $and: [{ dateAt: { $gte: startDate } }, { dateAt: { $lte: endDate } }],
-      });
-    } catch (error) {
-      throw new ApiError(
-        HttpStatusCode.BAD_REQUEST,
-        `Error in repository: ${error}`
-      );
-    }
+    return await this._model.find({
+      userId,
+      $and: [{ dateAt: { $gte: startDate } }, { dateAt: { $lte: endDate } }],
+    });
   };
 }
 

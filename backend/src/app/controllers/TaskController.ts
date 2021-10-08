@@ -8,14 +8,10 @@ import { HttpStatusCode } from "../enums";
 
 import { TaskService } from "../services";
 
-import { BaseController } from "./base";
-
 import { ApiResponse } from "../core";
 
-class TaskController extends BaseController<TaskService> {
-  constructor() {
-    super(new TaskService());
-  }
+class TaskController {
+  private _business: TaskService = new TaskService();
 
   public save = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -69,7 +65,7 @@ class TaskController extends BaseController<TaskService> {
   public archive = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const id: number = +req.query.Id;
-      
+
       const result: boolean = await this._business.archive(id);
 
       const response: IResponse = {

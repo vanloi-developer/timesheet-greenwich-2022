@@ -39,6 +39,10 @@ class UserService extends BaseService<UserRepository> {
     super(new UserRepository());
   }
 
+  public delete = async (id: number): Promise<boolean> => {
+    return await this._repos.delete(id);
+  };
+
   public update = async (item: UserDTO): Promise<UserDTO> => {
     try {
       return await this._repos.save(item);

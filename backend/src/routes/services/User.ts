@@ -44,9 +44,12 @@ class UserRouter extends BaseRouter {
       this.controller.getAllManager
     );
 
-    this._router.put("/update");
-
-    this._router.delete("/delete");
+    this._router.delete(
+      "/delete",
+      authenticator.authenticate,
+      Authorization.confirm("ADMIN"),
+      this.controller.delete
+    );
 
     this._router.get(
       "/getUserNotPagging",

@@ -2,8 +2,6 @@ import * as express from "express";
 
 import { ApiResponse } from "../core";
 
-import { BaseController } from "./base";
-
 import { IResponse } from "../core/responses/interfaces";
 
 import { SessionService } from "../services";
@@ -12,10 +10,8 @@ import { APP_VERSION } from "../../configs";
 
 import { HttpStatusCode } from "../enums";
 
-class SessionController extends BaseController<SessionService> {
-  constructor() {
-    super(new SessionService());
-  }
+class SessionController {
+  private _business: SessionService = new SessionService();
 
   public getCurrentLoginInformations = async (
     req: express.Request,

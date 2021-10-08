@@ -1,7 +1,5 @@
 import * as express from "express";
 
-import { BaseController } from "./base";
-
 import { AuthenticateModel } from "../dto/requests";
 
 import { AuthenticateResultModel } from "../dto/responses";
@@ -10,10 +8,8 @@ import { AuthService } from "../services";
 
 import { HttpStatusCode } from "../enums";
 
-class AuthController extends BaseController<AuthService> {
-  constructor() {
-    super(new AuthService());
-  }
+class AuthController {
+  private _business: AuthService = new AuthService();
 
   public authenticate = async (
     req: express.Request,

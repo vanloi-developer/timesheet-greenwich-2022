@@ -4,9 +4,6 @@ import { IRole } from "../../interfaces";
 
 import { RoleSchema } from "../schemas";
 
-import { ApiError } from "../../app/core";
-
-import { HttpStatusCode } from "../../app/enums";
 import { RoleDto } from "src/app/dto/responses";
 
 class RoleRepository extends BaseRepository<IRole> {
@@ -15,14 +12,7 @@ class RoleRepository extends BaseRepository<IRole> {
   }
 
   public getRoles = async (): Promise<RoleDto[]> => {
-    try {
-      return await this._model.find();
-    } catch (error) {
-      throw new ApiError(
-        HttpStatusCode.BAD_REQUEST,
-        `Error in layer dataAccess: ${error}`
-      );
-    }
+    return await this._model.find();
   };
 
   public getAll = async (query: {
@@ -30,32 +20,25 @@ class RoleRepository extends BaseRepository<IRole> {
     skipCount: number;
     maxResultCount: number;
   }) => {
-    try {
-      const keyword = new RegExp(query.keyword, "i");
+    const keyword = new RegExp(query.keyword, "i");
 
-      const totalCount = await this._model.countDocuments({});
+    const totalCount = await this._model.countDocuments({});
 
-      const items = await this._model
-        .find({
-          $or: [
-            { name: keyword },
-            { displayName: keyword },
-            { description: keyword },
-          ],
-        })
-        .skip(query.skipCount)
-        .limit(query.maxResultCount);
+    const items = await this._model
+      .find({
+        $or: [
+          { name: keyword },
+          { displayName: keyword },
+          { description: keyword },
+        ],
+      })
+      .skip(query.skipCount)
+      .limit(query.maxResultCount);
 
-      return {
-        totalCount,
-        items,
-      };
-    } catch (error) {
-      throw new ApiError(
-        HttpStatusCode.BAD_REQUEST,
-        `Error in layer dataAccess: ${error}`
-      );
-    }
+    return {
+      totalCount,
+      items,
+    };
   };
 }
 

@@ -2,11 +2,7 @@ import { GridParam } from "../../app/dto/requests/GridParam";
 
 import { IProjectUsers, IUser } from "../../interfaces";
 
-import { HttpStatusCode } from "../../app/enums";
-
 import { ProjectUsersRepository } from ".";
-
-import { ApiError } from "../../app/core";
 
 import { UserSchema } from "../schemas";
 
@@ -27,68 +23,33 @@ class UserRepository extends BaseRepository<IUser> {
     id: number,
     newPassword: string
   ) => {
-    try {
-      if (await this._model.find({ id, password: adminPassword })) {
-        return await this._model.updateOne({ id }, { password: newPassword });
-      }
-
-      return false;
-    } catch (error) {
-      throw new ApiError(
-        HttpStatusCode.NOT_FOUND,
-        `Having error in dataAccess: ${error}`
-      );
+    if (await this._model.find({ id, password: adminPassword })) {
+      return await this._model.updateOne({ id }, { password: newPassword });
     }
+
+    return false;
   };
 
   public deactive = async (id: number) => {
-    try {
-      return await this._model.updateOne({ id }, { isActive: DEACTIVE_USER });
-    } catch (error) {
-      throw new ApiError(
-        HttpStatusCode.NOT_FOUND,
-        `Having error in dataAccess: ${error}`
-      );
-    }
+    return await this._model.updateOne({ id }, { isActive: DEACTIVE_USER });
   };
 
   public active = async (id: number) => {
-    try {
-      return await this._model.updateOne({ id }, { isActive: ACTIVE_USER });
-    } catch (error) {
-      throw new ApiError(
-        HttpStatusCode.NOT_FOUND,
-        `Having error in dataAccess: ${error}`
-      );
-    }
+    return await this._model.updateOne({ id }, { isActive: ACTIVE_USER });
   };
 
   public findManager = async (managerId: number) => {
-    try {
-      return await this._model.findOne({ managerId });
-    } catch (error) {
-      throw new ApiError(
-        HttpStatusCode.BAD_REQUEST,
-        `Error in layer dataAccess: ${error}`
-      );
-    }
+    return await this._model.findOne({ managerId });
   };
 
   public setAvatar = async (
     id: number,
     avatarPath: string
   ): Promise<string> => {
-    try {
-      const result = await this._model.updateOne({ id }, { avatarPath });
+    const result = await this._model.updateOne({ id }, { avatarPath });
 
-      if (result) {
-        return avatarPath;
-      }
-    } catch (error) {
-      throw new ApiError(
-        HttpStatusCode.BAD_REQUEST,
-        `Error in layer dataAccess: ${error}`
-      );
+    if (result) {
+      return avatarPath;
     }
   };
 
@@ -112,17 +73,10 @@ class UserRepository extends BaseRepository<IUser> {
   };
 
   public getUserNotPagging = async () => {
-    try {
-      return await this._model.find(
-        {},
-        "id name isActive type jobTitle level userCode branch avatarPath"
-      );
-    } catch (error) {
-      throw new ApiError(
-        HttpStatusCode.BAD_REQUEST,
-        `Error in layer dataAccess: ${error}`
-      );
-    }
+    return await this._model.find(
+      {},
+      "id name isActive type jobTitle level userCode branch avatarPath"
+    );
   };
 
   public getAllManager = async (): Promise<GetUserDto[]> => {

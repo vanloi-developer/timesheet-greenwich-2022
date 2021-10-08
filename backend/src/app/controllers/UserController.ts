@@ -18,14 +18,10 @@ import { UserService } from "../services";
 
 import { HttpStatusCode } from "../enums";
 
-import { BaseController } from "./base";
-
 import { ApiResponse } from "../core";
 
-class UserController extends BaseController<UserService> {
-  constructor() {
-    super(new UserService());
-  }
+class UserController {
+  private _business: UserService = new UserService();
 
   public active = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -229,6 +225,22 @@ class UserController extends BaseController<UserService> {
         ...ApiResponse,
         result,
       };
+      return res.status(HttpStatusCode.OK).json(response);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public delete = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const id: number = +req.query.Id;
+      const result: boolean = await this._business.delete(id);
+
+      const response: IResponse = {
+        ...ApiResponse,
+        result,
+      };
+
       return res.status(HttpStatusCode.OK).json(response);
     } catch (error) {
       next(error);

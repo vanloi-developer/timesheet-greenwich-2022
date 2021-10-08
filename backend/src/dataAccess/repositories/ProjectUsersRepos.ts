@@ -4,11 +4,7 @@ import { BaseRepository } from "../repositories/base";
 
 import { IProjectUsers } from "../../interfaces";
 
-import { HttpStatusCode } from "../../app/enums";
-
 import { ProjectUsersSchema } from "../schemas";
-
-import { ApiError } from "../../app/core";
 
 class ProjectUsersRepository extends BaseRepository<IProjectUsers> {
   constructor() {
@@ -24,14 +20,7 @@ class ProjectUsersRepository extends BaseRepository<IProjectUsers> {
   };
 
   public deleteMany = async (projectId: number) => {
-    try {
-      return await this._model.deleteMany({ projectId });
-    } catch (error) {
-      throw new ApiError(
-        HttpStatusCode.BAD_REQUEST,
-        `Error in repository: ${error}`
-      );
-    }
+    return await this._model.deleteMany({ projectId });
   };
 
   public findActiveMembers = async (projectId: number): Promise<number> => {

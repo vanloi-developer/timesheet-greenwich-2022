@@ -4,8 +4,6 @@ import {
   ProjectIncludingTaskDto,
 } from "../dto/responses";
 
-import { BaseController } from "./base";
-
 import { ApiResponse } from "../core/responses";
 
 import { Request, Response, NextFunction } from "express";
@@ -16,10 +14,8 @@ import { ProjectService } from "../services";
 
 import { HttpStatusCode } from "../enums";
 
-class ProjectController extends BaseController<ProjectService> {
-  constructor() {
-    super(new ProjectService());
-  }
+class ProjectController {
+  private _business: ProjectService = new ProjectService();
 
   public save = async (req: Request, res: Response, next: NextFunction) => {
     try {

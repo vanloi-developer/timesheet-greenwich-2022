@@ -6,8 +6,6 @@ import { CustomerSchema } from "../schemas";
 
 import { ICustomer } from "../../interfaces";
 
-import { HttpStatusCode } from "../../app/enums";
-
 import { CustomerDto } from "src/app/dto/common/CustomerDto";
 
 import { GridParam } from "../../app/dto/requests/GridParam";
@@ -24,38 +22,24 @@ class CustomerRepository extends BaseRepository<ICustomer> {
   };
 
   public getAll = async () => {
-    try {
-      return await this._model.find({}, "id name");
-    } catch (error) {
-      throw new ApiError(
-        HttpStatusCode.BAD_REQUEST,
-        `Error in layer dataAccess: ${error}`
-      );
-    }
+    return await this._model.find({}, "id name");
   };
 
   public getAllPagging = async (filter: GridParam) => {
-    try {
-      const keyword = new RegExp(filter.searchText, "i");
+    const keyword = new RegExp(filter.searchText, "i");
 
-      let items = await this._model
-        .find({ $or: [{ name: keyword }, { address: keyword }] })
-        .select("name address id")
-        .skip(filter.skipCount)
-        .limit(filter.maxResultCount);
+    let items = await this._model
+      .find({ $or: [{ name: keyword }, { address: keyword }] })
+      .select("name address id")
+      .skip(filter.skipCount)
+      .limit(filter.maxResultCount);
 
-      const totalCount = await items.length;
+    const totalCount = await items.length;
 
-      return {
-        totalCount,
-        items,
-      };
-    } catch (error) {
-      throw new ApiError(
-        HttpStatusCode.BAD_REQUEST,
-        `Error in layer dataAccess: ${error}`
-      );
-    }
+    return {
+      totalCount,
+      items,
+    };
   };
 }
 
