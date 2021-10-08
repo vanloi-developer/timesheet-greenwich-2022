@@ -10,7 +10,9 @@ import {
 import { ApiError } from "../core";
 
 import { CustomerDto } from "../dto/common/CustomerDto";
+
 import { UserDTO } from "../dto/common/UserDto";
+
 import { TaskDto } from "../dto/requests";
 
 import {
@@ -44,9 +46,20 @@ class TimesheetService extends BaseService<MyTimesheetRepository> {
 
   public approve = async (ids: number[]) => {
     try {
+      let i = 0;
       for (let id of ids) {
-        await this._repos.approveTimesheet(id);
+        if (await this._repos.approveTimesheet(id)) {
+          i++;
+        }
       }
+
+      return {
+        fail: " - Fail 0 timesheets.",
+        failedCount: 0,
+        lockDate: ` - Locked date: ${new Date().toLocaleDateString()}.`,
+        success: ` - Success ${i} timesheets.`,
+        successCount: i,
+      };
     } catch (error) {
       throw new ApiError(
         HttpStatusCode.BAD_REQUEST,
@@ -57,9 +70,20 @@ class TimesheetService extends BaseService<MyTimesheetRepository> {
 
   public reject = async (ids: number[]) => {
     try {
+      let i = 0;
       for (let id of ids) {
-        await this._repos.rejectTimesheet(id);
+        if (await this._repos.rejectTimesheet(id)) {
+          i++;
+        }
       }
+
+      return {
+        lockDate: ` - Locked date: ${new Date().toLocaleDateString()}.`,
+        success: ` - Success ${i} timesheets.`,
+        successCount: i,
+        fail: " - Fail 0 timesheets.",
+        failedCount: 0,
+      };
     } catch (error) {
       throw new ApiError(
         HttpStatusCode.BAD_REQUEST,
@@ -68,12 +92,7 @@ class TimesheetService extends BaseService<MyTimesheetRepository> {
     }
   };
 
-  public getAll = async (
-    userId: number,
-    start: string,
-    end: string,
-    status: number
-  ) => {
+  public getAll = async (start: string, end: string, status: number) => {
     try {
       const result: TimesheetDto[] = [];
 
@@ -82,28 +101,34 @@ class TimesheetService extends BaseService<MyTimesheetRepository> {
 
       let myTimesheets: MyTimesheetDto[];
 
-      if (status == -1) {
-        myTimesheets = await this._repos.getAllTimesheetOfUser(
-          userId,
-          startDate,
-          endDate
-        );
-      } else {
-        myTimesheets = await this._repos.getAllTimesheetOfUserByStatus(
-          userId,
-          startDate,
-          endDate,
-          status
-        );
-      }
+      myTimesheets = await this._repos.getAllTimeSheetByStatus(
+        status,
+        startDate,
+        endDate
+      );
 
       for (let myTimesheet of myTimesheets) {
         const projectTask: ProjectTasksDto =
           await this._projectTaskRepos.findById(myTimesheet.projectTaskId);
 
+        const task: TaskDto = await this._taskRepos.findById(
+          projectTask.taskId
+        );
+
         const project: ProjectDto = await this._projectRepos.findById(
           projectTask.projectId
         );
+
+        const listPM: string[] = await this._userRepos.findProjectManagers(
+          project.id
+        );
+
+        const customer: CustomerDto =
+          await this._customerRepos.findCustomerByCustomerId(
+            project.customerId
+          );
+
+        let isUserInProject: boolean = true;
 
         const projectUsers: ProjectUsersDto[] =
           await this._projectUserRepos.findByMembersByProjectId(project.id);
@@ -113,70 +138,56 @@ class TimesheetService extends BaseService<MyTimesheetRepository> {
             projectUser.userId
           );
 
-          let isUserInProject: boolean = true;
+          if (myTimesheet.userId === user.id) {
+            const item: TimesheetDto = await {
+              id: myTimesheet.id,
 
-          const task: TaskDto = await this._taskRepos.findById(
-            projectTask.taskId
-          );
+              projectId: project.id,
 
-          const customer: CustomerDto =
-            await this._customerRepos.findCustomerByCustomerId(
-              project.customerId
-            );
+              userId: user.id,
 
-          const listPM: string[] = await this._userRepos.findProjectManagers(
-            project.id
-          );
+              user: user.name,
+              customerName: customer.name,
 
-          const item: TimesheetDto = await {
-            id: myTimesheet.id,
+              projectCode: project.code,
 
-            projectId: project.id,
+              projectName: project.name,
 
-            userId: user.id,
+              taskId: task.id,
 
-            user: user.name,
-            customerName: customer.name,
+              taskName: task.name,
 
-            projectCode: project.code,
+              status: myTimesheet.status,
 
-            projectName: project.name,
+              typeOfWork: myTimesheet.typeOfWork,
 
-            taskId: task.id,
+              workingTime: myTimesheet.workingTime,
 
-            taskName: task.name,
+              dateAt: myTimesheet.dateAt,
 
-            status: myTimesheet.status,
+              mytimesheetNote: myTimesheet.note,
 
-            typeOfWork: myTimesheet.typeOfWork,
+              isCharged: myTimesheet.isCharged,
 
-            workingTime: myTimesheet.workingTime,
+              isUserInProject,
 
-            dateAt: myTimesheet.dateAt,
+              branch: user.branch,
 
-            mytimesheetNote: myTimesheet.note,
+              branchName: user.branch + "",
 
-            isCharged: myTimesheet.isCharged,
+              type: user.type,
 
-            isUserInProject,
+              level: user.level,
 
-            branch: user.branch,
+              avatarPath: user.avatarPath,
 
-            branchName: user.branch + "",
+              listPM,
+            };
 
-            type: user.type,
-
-            level: user.level,
-
-            avatarPath: user.avatarPath,
-
-            listPM,
-          };
-
-          result.push(item);
+            result.push(item);
+          }
         }
       }
-
       return result;
     } catch (error) {
       throw new ApiError(

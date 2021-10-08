@@ -18,25 +18,42 @@ class MyTimesheetRepository extends BaseRepository<IMyTimesheet> {
   public approveTimesheet = async (id: number) => {
     return await this._model
       .updateOne({ id }, { status: APPROVE_TIMESHEET })
-      .lean(true);
+      .exec();
   };
 
   public rejectTimesheet = async (id: number) => {
-    return await this._model.updateOne({ id }, { status: REJECT_TIMESHEET });
+    return await this._model
+      .updateOne({ id }, { status: REJECT_TIMESHEET })
+      .lean()
+      .exec();
   };
 
-  public getAllTimesheetOfUserByStatus = async (
-    userId: number,
+  public async getAllTimeSheetByStatus(
+    status: number,
     startDate: Date,
-    endDate: Date,
-    status: number
-  ): Promise<MyTimesheetDto[]> => {
-    return await this._model.find({
-      userId,
-      status,
-      $and: [{ dateAt: { $gte: startDate } }, { dateAt: { $lte: endDate } }],
-    });
-  };
+    endDate: Date
+  ): Promise<MyTimesheetDto[]> {
+    if (status === -1) {
+      return await this._model
+        .find({
+          $and: [
+            { dateAt: { $gte: startDate } },
+            { dateAt: { $lte: endDate } },
+          ],
+        })
+        .lean();
+    } else {
+      return await this._model
+        .find({
+          status,
+          $and: [
+            { dateAt: { $gte: startDate } },
+            { dateAt: { $lte: endDate } },
+          ],
+        })
+        .lean();
+    }
+  }
 
   public submitToPending = async (userId: number, date: StartEndDateDto) => {
     return await this._model.updateMany(
