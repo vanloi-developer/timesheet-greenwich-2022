@@ -1,31 +1,62 @@
-import { Server } from "./Server";
-import dotenv from "dotenv";
+import express from "express";
 
-/**
- * Application class.
- * @description Handle init config and components.
- */
- dotenv.config({
-  path: ".env",
-});
+import morgan from "morgan";
 
-export class Application {
-  server: Server;
+import cors from "cors";
 
-  init() {
-    this.initServer();
+import path from "path";
+
+import { PORT } from "./configs";
+
+import { ApiRouter } from "./routes/ApiRouter";
+
+import { handlingError, catch404 } from "./app/core";
+
+import { DataAccess } from "./dataAccess/mongo/connection";
+
+class Application {
+  private _server = express();
+
+  constructor() {
+    this.initializeMiddleware();
+
+    this.connectDatabase();
+
+    this.start();
+
+    this.initializeHttpException();
   }
 
-  private initServer() {
-    this.server = new Server();
+  public initializeMiddleware() {
+    this._server.use(morgan("tiny"));
+
+    this._server.use(cors());
+
+    this._server.use(express.json());
+
+    this._server.use(express.urlencoded({ extended: true }));
   }
 
-  start() {
-    ((port = process.env.APP_PORT || 5000) => {
-      this.server.app.listen(port, () =>
-        console.log(`> Listening on port ${port}`)
-      );
-      this.server.app.use('/api', this.server.router);
-    })();
+  public async initializeHttpException() {
+    this._server.use([handlingError, catch404]);
+  }
+
+  public async connectDatabase() {
+    await DataAccess.connect();
+  }
+  public start() {
+    this._server.listen(PORT, () => {
+      console.log(`: ${PORT}`);
+    });
+
+    this._server.use("/api", new ApiRouter()._router);
+
+    this._server.use(
+      "/avatars",
+      express.static(path.resolve("public/avatars"))
+    );
   }
 }
+
+Object.seal(Application);
+export { Application };

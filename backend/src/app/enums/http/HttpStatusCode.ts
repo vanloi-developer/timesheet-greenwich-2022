@@ -1,0 +1,17 @@
+export enum HttpStatusCode {
+  OK = 200,
+
+  CREATEAD = 201,
+
+  UNAUTHORIZED = 401,
+
+  BAD_REQUEST = 400,
+
+  INTERNAL_SERVER_ERROR = 500,
+
+  NOT_FOUND = 404,
+
+  ALREADYEXIST = 400,
+
+  TOKEN_INVALID = 400,
+}
